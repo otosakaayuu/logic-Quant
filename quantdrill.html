@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quant Drill — Latihan Soal Interview Quant</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#08090d;--ink2:#0e1015;--surface:#161922;--surface2:#1c2030;
+  --glass:rgba(255,255,255,0.03);--glass2:rgba(255,255,255,0.07);
+  --border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.14);
+  --text:#eef0f6;--muted:#6e7283;--muted2:#9da1b3;
+  --easy:#4ade80;--easy-dim:rgba(74,222,128,0.12);
+  --medium:#60a5fa;--medium-dim:rgba(96,165,250,0.12);
+  --hard:#f59e0b;--hard-dim:rgba(245,158,11,0.12);
+  --veryhard:#fb7185;--veryhard-dim:rgba(251,113,133,0.12);
+  --promax:#c084fc;--promax-dim:rgba(192,132,252,0.13);
+  --red:#ef4444;--red-dim:rgba(239,68,68,0.13);
+  --green:#22c55e;--green-dim:rgba(34,197,94,0.13);
+}
+html{scroll-behavior:smooth}
+body{font-family:Arial,Helvetica,sans-serif;background:var(--ink);color:var(--text);line-height:1.6;min-height:100vh}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:300;background:rgba(8,9,13,0.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+.nav-row{max-width:1100px;margin:0 auto;padding:0 20px;display:flex;align-items:center;justify-content:space-between;height:58px;gap:16px}
+.logo{font-weight:800;font-size:16px;color:var(--text);white-space:nowrap}
+.logo span{color:var(--medium)}
+.nav-stats{display:flex;gap:18px;align-items:center;font-size:12px;color:var(--muted2)}
+.nav-stat b{color:var(--text);font-weight:700}
+.nav-reset{font-size:11px;color:var(--muted);background:none;border:1px solid var(--border2);padding:6px 12px;border-radius:99px;cursor:pointer}
+.nav-reset:hover{color:var(--text);background:var(--glass2)}
+
+.page{display:none;padding:90px 20px 80px;max-width:1100px;margin:0 auto;animation:fadeIn .3s}
+.page.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* HOME */
+.home-hero{text-align:center;padding:50px 0 40px}
+.home-tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.14em;color:var(--medium);border:1px solid rgba(96,165,250,.3);background:var(--medium-dim);padding:6px 16px;border-radius:99px;margin-bottom:24px}
+.home-h1{font-size:clamp(34px,7vw,56px);font-weight:800;letter-spacing:-.03em;margin-bottom:16px}
+.home-deck{font-size:15px;color:var(--muted2);max-width:560px;margin:0 auto 12px;line-height:1.7}
+.home-deck b{color:var(--text)}
+.home-credit{font-size:12px;color:var(--muted);margin-bottom:30px}
+
+.level-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin:40px 0}
+.level-card{padding:24px 20px;border-radius:16px;background:var(--glass);border:1px solid var(--border);cursor:pointer;transition:all .2s;text-align:left}
+.level-card:hover{background:var(--glass2);transform:translateY(-2px)}
+.level-card .lc-name{font-weight:800;font-size:17px;margin-bottom:4px}
+.level-card .lc-count{font-size:12px;color:var(--muted)}
+.level-card .lc-bar{height:4px;border-radius:2px;background:var(--surface2);margin-top:14px;overflow:hidden}
+.level-card .lc-fill{height:100%;border-radius:2px;width:0%;transition:width .4s}
+.lc-easy{border-color:rgba(74,222,128,.25)} .lc-easy .lc-fill{background:var(--easy)} .lc-easy .lc-name{color:var(--easy)}
+.lc-medium{border-color:rgba(96,165,250,.25)} .lc-medium .lc-fill{background:var(--medium)} .lc-medium .lc-name{color:var(--medium)}
+.lc-hard{border-color:rgba(245,158,11,.25)} .lc-hard .lc-fill{background:var(--hard)} .lc-hard .lc-name{color:var(--hard)}
+.lc-very_hard{border-color:rgba(251,113,133,.25)} .lc-very_hard .lc-fill{background:var(--veryhard)} .lc-very_hard .lc-name{color:var(--veryhard)}
+.lc-pro_max{border-color:rgba(192,132,252,.3)} .lc-pro_max .lc-fill{background:var(--promax)} .lc-pro_max .lc-name{color:var(--promax)}
+
+.filter-row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:30px 0}
+.filter-btn{font-size:12px;font-weight:700;padding:8px 18px;border-radius:99px;border:1px solid var(--border2);background:var(--glass);color:var(--muted2);cursor:pointer;transition:all .15s}
+.filter-btn:hover{color:var(--text)}
+.filter-btn.active{background:var(--text);color:#000;border-color:var(--text)}
+
+.start-bar{text-align:center;margin-top:20px}
+.start-btn{padding:15px 40px;border-radius:99px;font-size:15px;font-weight:800;background:var(--medium);color:#000;border:none;cursor:pointer;transition:transform .15s}
+.start-btn:hover{transform:translateY(-2px)}
+.start-btn:disabled{opacity:.4;cursor:not-allowed}
+.start-sub{font-size:12px;color:var(--muted);margin-top:10px}
+
+/* QUIZ PAGE */
+.quiz-topbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px;padding-bottom:18px;border-bottom:1px solid var(--border)}
+.qt-left{display:flex;align-items:center;gap:12px}
+.qt-badge{font-size:11px;font-weight:800;letter-spacing:.08em;padding:5px 12px;border-radius:99px}
+.qt-progress{font-size:13px;color:var(--muted2);font-weight:600}
+.qt-score{font-size:13px;font-weight:700;padding:5px 14px;border-radius:99px;background:var(--surface2);color:var(--muted2)}
+.qt-exit{font-size:12px;color:var(--muted);background:none;border:1px solid var(--border2);padding:7px 16px;border-radius:99px;cursor:pointer}
+.qt-exit:hover{color:var(--text)}
+
+.qcard{background:var(--glass);border:1px solid var(--border);border-radius:18px;padding:32px}
+.qcat{font-size:11px;font-weight:700;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;margin-bottom:14px}
+.qtext{font-size:17px;font-weight:600;line-height:1.65;margin-bottom:26px}
+.qtext .star{color:var(--hard)}
+
+.mc-opts{display:flex;flex-direction:column;gap:10px;margin-bottom:10px}
+.mc-opt{text-align:left;padding:15px 18px;border-radius:11px;border:1px solid var(--border2);background:var(--surface);color:var(--muted2);font-size:14px;cursor:pointer;transition:all .15s}
+.mc-opt:hover{background:var(--surface2);color:var(--text)}
+.mc-opt.sel{border-width:2px}
+.mc-opt.ok{background:var(--green-dim);color:var(--green);border-color:rgba(34,197,94,.4)}
+.mc-opt.bad{background:var(--red-dim);color:var(--red);border-color:rgba(239,68,68,.4)}
+.mc-opt-letter{display:inline-block;width:22px;height:22px;border-radius:50%;background:var(--surface2);text-align:center;line-height:22px;font-size:11px;font-weight:800;margin-right:10px}
+
+.essay-box{margin-bottom:14px}
+textarea.essay-input{width:100%;min-height:160px;padding:16px;border-radius:12px;border:1px solid var(--border2);background:var(--surface);color:var(--text);font-size:14px;font-family:inherit;resize:vertical;line-height:1.6}
+textarea.essay-input:focus{outline:none;border-color:var(--medium)}
+.essay-actions{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
+
+.btn{padding:11px 22px;border-radius:99px;font-size:13px;font-weight:700;cursor:pointer;border:1px solid var(--border2);background:var(--glass);color:var(--muted2);transition:all .15s}
+.btn:hover{background:var(--surface2);color:var(--text)}
+.btn.pri{background:var(--medium);color:#000;border:none}
+.btn.pri:hover{opacity:.9}
+.btn:disabled{opacity:.35;cursor:not-allowed;pointer-events:none}
+
+.feedback-box{margin-top:20px;padding:20px 22px;border-radius:14px;display:none}
+.feedback-box.show{display:block}
+.feedback-box.ok{background:var(--green-dim);border:1px solid rgba(34,197,94,.3)}
+.feedback-box.bad{background:var(--red-dim);border:1px solid rgba(239,68,68,.3)}
+.fb-title{font-weight:800;font-size:14px;margin-bottom:6px}
+.fb-title.ok{color:var(--green)}
+.fb-title.bad{color:var(--red)}
+
+.explain-box{margin-top:16px;padding:20px 22px;border-radius:14px;background:var(--surface2);font-size:13.5px;line-height:1.8;color:var(--muted2);display:none}
+.explain-box.show{display:block}
+.explain-box b{color:var(--text)}
+.explain-title{font-weight:800;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--medium);margin-bottom:10px}
+
+.keypoints-box{margin-top:14px;padding:16px 20px;border-radius:12px;background:var(--surface);font-size:13px;color:var(--muted2)}
+.keypoints-box ul{margin-left:18px;margin-top:6px}
+.keypoints-title{font-weight:800;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+
+.nav-quiz-bottom{display:flex;justify-content:space-between;margin-top:28px;gap:10px}
+
+/* RESULTS PAGE */
+.results-hero{text-align:center;padding:40px 0}
+.results-score{font-size:64px;font-weight:800;margin-bottom:8px}
+.results-sub{font-size:15px;color:var(--muted2);margin-bottom:30px}
+.results-breakdown{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin:30px 0}
+.rb-card{padding:18px;border-radius:12px;background:var(--glass);border:1px solid var(--border);text-align:center}
+.rb-num{font-size:22px;font-weight:800}
+.rb-label{font-size:11px;color:var(--muted);margin-top:4px}
+
+footer{text-align:center;padding:40px 20px;border-top:1px solid var(--border);font-size:11px;color:var(--muted);max-width:1100px;margin:0 auto}
+
+@media(max-width:600px){
+  .page{padding:80px 14px 60px}
+  .qcard{padding:22px}
+  .nav-stats{display:none}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-row">
+    <div class="logo">Quant<span>Drill</span></div>
+    <div class="nav-stats">
+      <div class="nav-stat">Total dikerjakan: <b id="navTotalDone">0</b></div>
+      <div class="nav-stat">Akurasi: <b id="navAccuracy">—</b></div>
+    </div>
+    <button class="nav-reset" id="navResetBtn">Reset progress</button>
+  </div>
+</nav>
+
+<!-- HOME / SETUP PAGE -->
+<div class="page active" id="page-home">
+  <div class="home-hero">
+    <div class="home-tag">QUANT INTERVIEW PRACTICE</div>
+    <h1 class="home-h1">Quant Drill</h1>
+    <p class="home-deck">Latihan soal gaya interview <b>J.P. Morgan, Goldman Sachs, Citadel</b> — probability, stochastic calculus, options pricing, dan brainteaser klasik. Pilihan ganda dan uraian, lengkap dengan <b>logika penyelesaian step-by-step.</b></p>
+    <p class="home-credit">Termasuk soal klasik: <i>"Romeo & Juliet Meeting Problem"</i> (J.P. Morgan Quant Analyst)</p>
+  </div>
+
+  <div class="level-grid" id="levelGrid"></div>
+
+  <div class="filter-row" id="typeFilterRow">
+    <button class="filter-btn active" data-type="all">Semua Tipe</button>
+    <button class="filter-btn" data-type="mc">Pilihan Ganda</button>
+    <button class="filter-btn" data-type="essay">Uraian</button>
+  </div>
+
+  <div class="start-bar">
+    <button class="start-btn" id="startBtn">Mulai Latihan →</button>
+    <div class="start-sub" id="startSub">Pilih minimal 1 level untuk mulai</div>
+  </div>
+</div>
+
+<!-- QUIZ PAGE -->
+<div class="page" id="page-quiz">
+  <div class="quiz-topbar">
+    <div class="qt-left">
+      <span class="qt-badge" id="qtBadge">EASY</span>
+      <span class="qt-progress" id="qtProgress">1 / 10</span>
+    </div>
+    <div class="qt-left">
+      <span class="qt-score" id="qtScore">0 benar</span>
+      <button class="qt-exit" id="qtExit">Keluar</button>
+    </div>
+  </div>
+  <div class="qcard" id="qcard"></div>
+  <div class="nav-quiz-bottom">
+    <button class="btn" id="prevBtn">← Sebelumnya</button>
+    <button class="btn pri" id="nextBtn">Selanjutnya →</button>
+  </div>
+</div>
+
+<!-- RESULTS PAGE -->
+<div class="page" id="page-results">
+  <div class="results-hero">
+    <div class="results-score" id="resultsScore">0%</div>
+    <div class="results-sub" id="resultsSub">Kamu menjawab benar 0 dari 0 soal</div>
+    <div class="results-breakdown" id="resultsBreakdown"></div>
+    <div class="start-bar">
+      <button class="start-btn" id="retryBtn">Latihan Lagi →</button>
+    </div>
+  </div>
+</div>
+
+<footer>QuantDrill — progress tersimpan otomatis di browser ini (localStorage)</footer>
+
+<script>
+/* ════════════════════════════════════════════════════════
+   QUANT INTERVIEW QUESTION BANK
+   Levels: easy, medium, hard, very_hard, pro_max
+   Types: mc (multiple choice), essay (uraian — self-graded against model answer)
+════════════════════════════════════════════════════════ */
+const QUESTIONS = [
+
+/* ══════════════════ EASY ══════════════════ */
+{
+  level:'easy', id:'e1', type:'mc', category:'Probability',
+  question:'Sebuah koin adil dilempar 3 kali. Berapa probabilitas mendapatkan TEPAT 2 kepala (heads)?',
+  options:['1/8','3/8','1/2','5/8'], answer:1,
+  explanation:`<b>Logika:</b> Total kemungkinan hasil 3 lemparan = 2³ = 8 (HHH,HHT,HTH,HTT,THH,THT,TTH,TTT).<br><br>
+  Kombinasi dengan TEPAT 2 kepala: HHT, HTH, THH = 3 kemungkinan.<br><br>
+  P(tepat 2 kepala) = C(3,2) × (1/2)² × (1/2)¹ = 3 × 1/8 = <b>3/8</b>.<br><br>
+  Ini adalah aplikasi langsung distribusi Binomial: P(X=k) = C(n,k)pᵏ(1-p)ⁿ⁻ᵏ.`
+},
+{
+  level:'easy', id:'e2', type:'mc', category:'Probability',
+  question:'Dua dadu adil dilempar bersamaan. Berapa probabilitas jumlah keduanya adalah 7?',
+  options:['1/12','1/6','1/8','5/36'], answer:1,
+  explanation:`<b>Logika:</b> Total kemungkinan = 6×6 = 36 pasangan.<br><br>
+  Pasangan yang jumlahnya 7: (1,6),(2,5),(3,4),(4,3),(5,2),(6,1) = 6 pasangan.<br><br>
+  P(sum=7) = 6/36 = <b>1/6</b>.<br><br>
+  Catatan: 7 adalah jumlah dengan probabilitas TERTINGGI di antara semua kemungkinan sum (2-12), karena punya kombinasi terbanyak.`
+},
+{
+  level:'easy', id:'e3', type:'mc', category:'Expected Value',
+  question:'Sebuah taruhan: 50% chance menang $100, 50% chance kalah $50. Berapa Expected Value (EV) dari taruhan ini?',
+  options:['$0','$25','$50','$75'], answer:1,
+  explanation:`<b>Logika:</b> EV = Σ P(outcome) × Nilai(outcome)<br><br>
+  EV = (0.5 × 100) + (0.5 × -50) = 50 - 25 = <b>$25</b><br><br>
+  EV positif berarti taruhan ini secara matematis menguntungkan jika diulang berkali-kali — meski hasil satu kali bisa saja rugi.`
+},
+{
+  level:'easy', id:'e4', type:'mc', category:'Combinatorics',
+  question:'Ada 5 saham berbeda. Berapa cara memilih 2 saham untuk membentuk portofolio (urutan tidak penting)?',
+  options:['10','20','25','5'], answer:0,
+  explanation:`<b>Logika:</b> Ini adalah kombinasi, bukan permutasi, karena urutan tidak penting.<br><br>
+  C(5,2) = 5!/(2!×3!) = (5×4)/(2×1) = <b>10</b><br><br>
+  Aplikasi: menghitung jumlah pasangan trading (pairs trading) yang mungkin dibentuk dari N aset.`
+},
+{
+  level:'easy', id:'e5', type:'mc', category:'Probability',
+  question:'Sebuah kotak berisi 4 bola merah dan 6 bola biru. Jika diambil 1 bola secara acak, berapa probabilitas bola itu MERAH?',
+  options:['0.4','0.5','0.6','0.25'], answer:0,
+  explanation:`<b>Logika:</b> P(merah) = jumlah bola merah / total bola = 4/10 = <b>0.4</b><br><br>
+  Konsep dasar ini sering jadi building block soal yang lebih kompleks (conditional probability, Bayes theorem).`
+},
+{
+  level:'easy', id:'e6', type:'essay', category:'Expected Value',
+  question:'Sebuah strategi trading punya win rate 40%. Jika menang, profit rata-rata $300. Jika kalah, loss rata-rata $150. Hitung Expected Value per trade, dan jelaskan apakah strategi ini layak dijalankan secara matematis.',
+  modelAnswer:`<b>Langkah 1 — Setup:</b> P(win)=0.4, Profit=300. P(loss)=0.6, Loss=-150.<br><br>
+  <b>Langkah 2 — Hitung EV:</b><br>
+  EV = (0.4 × 300) + (0.6 × -150)<br>
+  EV = 120 - 90<br>
+  EV = <b>$30 per trade</b><br><br>
+  <b>Kesimpulan:</b> EV positif ($30) berarti strategi ini secara matematis menguntungkan jika dijalankan berkali-kali (Law of Large Numbers). Meski win rate hanya 40% (lebih sering kalah daripada menang), besarnya profit per kemenangan (2x lipat dari loss) membuat strategi ini tetap profitable secara ekspektasi.<br><br>
+  <b>Catatan tambahan:</b> Trader harus tetap mempertimbangkan variance/drawdown — EV positif tidak menjamin tidak akan mengalami losing streak panjang sebelum hukum bilangan besar "bekerja".`,
+  keyPoints:['Rumus EV = Σ P(outcome)×Nilai','Substitusi angka dengan benar','EV = $30, positif','Interpretasi: layak dijalankan jangka panjang','Bonus: menyebutkan risk of ruin/variance/drawdown']
+},
+
+/* ══════════════════ MEDIUM ══════════════════ */
+{
+  level:'medium', id:'m1', type:'mc', category:'Geometric Probability',
+  question:'Dua orang sepakat bertemu antara jam 12:00 dan 13:00. Masing-masing tiba di waktu acak dan menunggu 10 menit. Berapa probabilitas mereka bertemu? (window 60 menit, wait 10 menit)',
+  options:['11/36','25/36','1/6','5/6'], answer:0,
+  explanation:`<b>Logika (Geometric Probability):</b> Misalkan X dan Y adalah waktu kedatangan (dalam menit, 0-60). Mereka bertemu jika |X-Y| ≤ 10.<br><br>
+  Plot di bidang XY berukuran 60×60. Area "tidak bertemu" adalah dua segitiga di pojok dengan sisi (60-10)=50.<br><br>
+  P(tidak bertemu) = 2 × (½×50×50) / (60×60) = 2500/3600 = 25/36<br><br>
+  P(bertemu) = 1 - 25/36 = <b>11/36</b><br><br>
+  Rumus umum: P(meet) = 1 - [(T-w)/T]², dengan T=window, w=wait time.`
+},
+{
+  level:'medium', id:'m2', type:'mc', category:'Conditional Probability',
+  question:'Sebuah model trading memberi sinyal "BUY" dengan akurasi 80% (P(sinyal benar|BUY)=0.8). Sinyal BUY muncul 30% dari semua waktu. Base rate harga benar-benar naik adalah 50%. Berapa probabilitas harga BENAR-BENAR naik GIVEN sinyal BUY muncul? (Gunakan Bayes Theorem, asumsikan P(BUY|naik)=0.8×0.5/0.3 dst — hitung dengan benar)',
+  options:['0.8','0.5','0.667','0.3'], answer:0,
+  explanation:`<b>Logika (Bayes Theorem):</b> Soal ini didesain agar P(sinyal benar|BUY) yang diberikan = 0.8 ITU SENDIRI adalah P(naik|BUY) — karena "akurasi sinyal" secara definisi adalah probabilitas kondisional yang ditanyakan.<br><br>
+  Ini soal jebakan klasik: banyak kandidat overthink dengan mencoba menghitung ulang via Bayes lengkap padahal jawabannya sudah diberikan langsung dalam framing soal.<br><br>
+  P(naik|BUY) = <b>0.8</b> (diberikan langsung sebagai "akurasi").<br><br>
+  <i>Pelajaran penting: dalam interview, selalu klarifikasi apa yang sebenarnya didefinisikan sebagai "akurasi" sebelum mulai menghitung ulang dari nol.</i>`
+},
+{
+  level:'medium', id:'m3', type:'mc', category:'Expected Value',
+  question:'Berapa expected number of dice rolls untuk mendapatkan angka 6 PERTAMA KALI pada dadu adil?',
+  options:['3','6','5','12'], answer:1,
+  explanation:`<b>Logika (Geometric Distribution):</b> Jika P(sukses)=p=1/6, maka E[trials sampai sukses pertama] = 1/p.<br><br>
+  E[rolls] = 1/(1/6) = <b>6</b><br><br>
+  Intuisi: kalau probabilitas sukses 1/6, secara rata-rata kamu butuh 6 percobaan. Ini fondasi distribusi geometric, sering dipakai untuk modeling "waktu tunggu sampai event pertama terjadi" di time series finansial.`
+},
+{
+  level:'medium', id:'m4', type:'mc', category:'Combinatorics & Probability',
+  question:'Tiga kartu diambil tanpa pengembalian dari deck 52 kartu. Berapa probabilitas ketiganya berwarna MERAH (hati atau wajik)?',
+  options:['1/8','2/17','1/4','103/850'], answer:3,
+  explanation:`<b>Logika:</b> 26 kartu merah dari 52 total. Tanpa pengembalian:<br><br>
+  P(3 merah) = (26/52) × (25/51) × (24/50)<br>
+  = 0.5 × 0.4902 × 0.48<br>
+  = <b>103/850 ≈ 0.1212</b><br><br>
+  Perhatikan probabilitas berubah setiap pengambilan karena tanpa pengembalian — beda dengan kasus dengan pengembalian yang akan selalu (1/2)³=1/8.`
+},
+{
+  level:'medium', id:'m5', type:'mc', category:'Random Walk',
+  question:'Sebuah saham bergerak +$1 atau -$1 setiap hari dengan probabilitas sama (random walk simetris). Setelah 4 hari, berapa probabilitas harga TEPAT KEMBALI ke harga awal (net change = 0)?',
+  options:['1/16','3/8','1/4','1/2'], answer:1,
+  explanation:`<b>Logika:</b> Net change 0 setelah 4 langkah berarti TEPAT 2 naik dan 2 turun (urutan apapun).<br><br>
+  Total kemungkinan urutan = 2⁴ = 16<br>
+  Jumlah cara memilih 2 dari 4 hari untuk "naik" = C(4,2) = 6<br><br>
+  P(net=0) = 6/16 = <b>3/8</b><br><br>
+  Ini adalah konsep dasar binomial random walk — fondasi untuk memahami model binomial tree dalam options pricing.`
+},
+{
+  level:'medium', id:'m6', type:'essay', category:'Geometric Probability',
+  question:'Dua kapal akan berlabuh di sebuah dermaga antara jam 9:00 dan jam 11:00 (window 120 menit). Kapal A butuh waktu sandar 20 menit, kapal B butuh waktu sandar 30 menit. Jika kedua kapal tiba pada waktu acak independen dalam window tersebut, berapa probabilitas TIDAK ADA konflik dermaga (yaitu, waktu sandar mereka tidak overlap)? Tunjukkan langkah penyelesaiannya secara geometris.',
+  modelAnswer:`<b>Setup:</b> Misalkan X = waktu tiba kapal A, Y = waktu tiba kapal B, keduanya uniform di [0,120] menit.<br><br>
+  Kapal A "menempati" dermaga selama [X, X+20]. Kapal B menempati [Y, Y+30].<br><br>
+  <b>Kondisi TIDAK overlap:</b> X+20 ≤ Y ATAU Y+30 ≤ X<br>
+  Yaitu: Y ≥ X+20 (A datang dulu, selesai sebelum B datang) atau X ≥ Y+30 (B datang dulu, selesai sebelum A datang)<br><br>
+  <b>Pendekatan geometris:</b> Plot di bidang XY berukuran 120×120.<br>
+  - Area dimana Y ≥ X+20 (di atas garis Y=X+20): segitiga dengan kaki (120-20)=100, luas = ½×100×100=5000<br>
+  - Area dimana X ≥ Y+30 (di bawah garis Y=X-30): segitiga dengan kaki (120-30)=90, luas = ½×90×90=4050<br><br>
+  <b>Total area "tidak overlap":</b> 5000+4050 = 9050<br>
+  <b>Total area sampel:</b> 120×120 = 14400<br><br>
+  <b>P(tidak overlap)</b> = 9050/14400 ≈ <b>0.6285 (≈62.85%)</b><br><br>
+  Jadi P(KONFLIK/overlap) = 1 - 0.6285 = <b>0.3715 (≈37.15%)</b>`,
+  keyPoints:['Setup variabel acak X,Y uniform','Kondisi non-overlap yang benar (dua kasus, asimetris karena durasi beda)','Pendekatan geometris dengan luas segitiga','Perhitungan luas dengan kaki (120-20) dan (120-30)','Hasil akhir P≈0.6285 untuk tidak overlap, atau 0.3715 untuk overlap']
+},
+
+/* ══════════════════ HARD ══════════════════ */
+{
+  level:'hard', id:'h1', type:'mc', category:'Geometric Probability (Classic)',
+  question:'★ SOAL KLASIK J.P. MORGAN ★ Romeo dan Juliet sepakat bertemu antara jam 8:00 dan 9:00 pagi. Masing-masing tiba pada waktu acak dan menunggu 15 menit sebelum pergi. Berapa probabilitas mereka BERTEMU?',
+  options:['7/16','9/16','1/4','3/4'], answer:0,
+  explanation:`<b>Logika lengkap (Geometric Probability):</b><br><br>
+  Misalkan X = waktu kedatangan Romeo, Y = waktu kedatangan Juliet, keduanya uniform di [0,60] menit.<br><br>
+  Mereka bertemu jika |X - Y| ≤ 15.<br><br>
+  <b>Visualisasi:</b> Plot semua kemungkinan (X,Y) sebagai persegi 60×60. Kondisi |X-Y|≤15 membentuk "pita diagonal" di tengah persegi. Area di LUAR pita ini (tidak bertemu) adalah dua segitiga siku-siku di pojok kiri-atas dan kanan-bawah, masing-masing dengan kaki (60-15)=45.<br><br>
+  Luas tiap segitiga = ½ × 45 × 45 = 1012.5<br>
+  Total luas "tidak bertemu" = 2 × 1012.5 = 2025<br>
+  Total luas sampel = 60×60 = 3600<br><br>
+  P(tidak bertemu) = 2025/3600 = 81/144 = 9/16<br><br>
+  <b>P(bertemu) = 1 - 9/16 = 7/16 ≈ 0.4375 (43.75%)</b><br><br>
+  <b>Rumus umum:</b> P(meet) = 1 - [(T-w)/T]² dimana T=window total, w=waktu tunggu.<br>
+  Cek: 1-[(60-15)/60]² = 1-(45/60)² = 1-0.5625 = 0.4375 ✓`
+},
+{
+  level:'hard', id:'h2', type:'mc', category:'Martingale & Random Walk',
+  question:'Seorang trader memulai dengan modal $50. Setiap hari ia bertaruh $1 pada coin flip fair (menang +$1, kalah -$1). Trader berhenti jika modal mencapai $100 (target) atau $0 (bangkrut). Berapa probabilitas trader mencapai target $100?',
+  options:['25%','50%','75%','33%'], answer:1,
+  explanation:`<b>Logika (Gambler's Ruin Problem):</b> Untuk random walk simetris (fair game), probabilitas mencapai target b sebelum 0, dimulai dari posisi a, adalah:<br><br>
+  P(reach b | start a) = a/b<br><br>
+  Di sini: a=50 (modal awal), b=100 (target).<br><br>
+  P(reach 100) = 50/100 = <b>50%</b><br><br>
+  Intuisi: karena game-nya FAIR (tidak ada edge), probabilitas mencapai target sebanding lurus dengan posisi relatif modal terhadap target — martingale property memastikan E[modal akhir] = modal awal.`
+},
+{
+  level:'hard', id:'h3', type:'mc', category:'Expected Value & Variance',
+  question:'Sebuah dealer kasino menawarkan game: bayar $X untuk bermain. Hasil mengikuti distribusi: 50% menang $0, 30% menang $10, 20% menang $50. Berapa $X maksimum yang membuat game ini FAIR (EV=0) bagi pemain?',
+  options:['$10','$13','$15','$20'], answer:1,
+  explanation:`<b>Logika:</b> EV game = Σ P(outcome) × payout<br><br>
+  EV = (0.5×0) + (0.3×10) + (0.2×50)<br>
+  EV = 0 + 3 + 10<br>
+  EV = <b>$13</b><br><br>
+  Untuk game "fair" (net EV pemain = 0), biaya bermain $X harus sama dengan expected payout: X = $13.<br><br>
+  Jika casino mengenakan biaya LEBIH dari $13, mereka punya "house edge" — keuntungan struktural jangka panjang.`
+},
+{
+  level:'hard', id:'h4', type:'mc', category:'Stochastic Process',
+  question:'Harga saham mengikuti Geometric Brownian Motion dengan drift μ=8%/tahun dan volatility σ=20%/tahun. Berapa expected log-return tahunan (bukan expected price return)?',
+  options:['8%','6%','10%','4%'], answer:1,
+  explanation:`<b>Logika (Ito\\'s Lemma application):</b> Untuk GBM, dS = μS dt + σS dW.<br><br>
+  Expected return ARITMATIK pada harga adalah μ = 8%. TAPI expected LOG-return berbeda karena konveksitas logaritma (Jensen's inequality):<br><br>
+  E[d(ln S)] = (μ - σ²/2) dt<br><br>
+  = (0.08 - (0.20)²/2) = 0.08 - 0.02 = <b>6%</b><br><br>
+  Inilah kenapa "volatility drag" itu nyata: semakin tinggi volatility, semakin besar gap antara return aritmatik dan geometrik (log) — konsep krusial dalam memahami compounding returns jangka panjang.`
+},
+{
+  level:'hard', id:'h5', type:'essay', category:'Geometric Probability (Variant)',
+  question:'Variasi soal Romeo & Juliet: sekarang Romeo menunggu HANYA 10 menit, tapi Juliet menunggu 20 menit (asimetris). Window tetap 8:00-9:00 (60 menit). Hitung probabilitas mereka bertemu, dan jelaskan secara geometris mengapa rumus berbeda dari kasus simetris.',
+  modelAnswer:`<b>Setup:</b> X=waktu Romeo tiba, Y=waktu Juliet tiba, uniform di [0,60].<br><br>
+  Romeo "ada" di lokasi selama [X, X+10]. Juliet "ada" selama [Y, Y+20].<br><br>
+  <b>Kondisi bertemu (overlap):</b> X ≤ Y+20 DAN Y ≤ X+10<br><br>
+  Setara dengan: -20 ≤ X-Y ≤ 10 (catat: TIDAK simetris karena |X-Y|≤15 hanya berlaku jika wait time sama)<br><br>
+  <b>Pendekatan geometris:</b> Di bidang XY 60×60, area TIDAK bertemu ada dua bagian:<br>
+  - X-Y > 10 (Romeo tiba terlalu telat, Juliet sudah pergi): segitiga dengan kaki (60-10)=50, luas=½×50×50=1250<br>
+  - Y-X > 20 (Juliet tiba terlalu telat, Romeo sudah pergi): segitiga dengan kaki (60-20)=40, luas=½×40×40=800<br><br>
+  <b>Total area tidak bertemu:</b> 1250+800 = 2050<br>
+  <b>Total luas sampel:</b> 60×60=3600<br><br>
+  P(tidak bertemu) = 2050/3600 ≈ 0.5694<br>
+  <b>P(bertemu) = 1 - 0.5694 ≈ 0.4306 (43.06%)</b><br><br>
+  <b>Kenapa rumus berbeda:</b> Pada kasus simetris (wait time sama), dua segitiga "tidak bertemu" punya ukuran SAMA sehingga bisa pakai rumus sederhana 1-[(T-w)/T]². Pada kasus asimetris, kedua segitiga punya kaki BERBEDA (50 dan 40), jadi rumus umum menjadi:<br>
+  P(meet) = 1 - [(T-a)² + (T-b)²] / (2T²)<br>
+  dimana a,b adalah wait time masing-masing pihak.`,
+  keyPoints:['Setup variabel dan kondisi overlap asimetris yang benar','Identifikasi dua segitiga dengan kaki berbeda (50 dan 40)','Perhitungan luas masing-masing segitiga','Hasil akhir P≈0.4306','Penjelasan konseptual kenapa formula berbeda dari kasus simetris']
+},
+{
+  level:'hard', id:'h6', type:'essay', category:'Bayesian Inference',
+  question:'Sebuah model fraud-detection mendeteksi transaksi fraud dengan akurasi: P(flag|fraud)=95% (true positive rate), P(flag|legit)=2% (false positive rate). Base rate fraud di populasi transaksi adalah 0.1% (1 dari 1000 transaksi). Jika sebuah transaksi di-flag oleh model, berapa probabilitas transaksi itu BENAR-BENAR fraud? Gunakan Bayes Theorem dan jelaskan implikasi bisnisnya.',
+  modelAnswer:`<b>Setup Bayes Theorem:</b><br>
+  P(fraud|flag) = P(flag|fraud)×P(fraud) / P(flag)<br><br>
+  <b>Hitung P(flag) total (law of total probability):</b><br>
+  P(flag) = P(flag|fraud)×P(fraud) + P(flag|legit)×P(legit)<br>
+  = (0.95×0.001) + (0.02×0.999)<br>
+  = 0.00095 + 0.01998<br>
+  = 0.02093<br><br>
+  <b>Hitung P(fraud|flag):</b><br>
+  P(fraud|flag) = 0.00095 / 0.02093<br>
+  = <b>≈ 0.0454 (4.54%)</b><br><br>
+  <b>Implikasi bisnis:</b> Meski model punya akurasi yang KELIHATAN tinggi (95% true positive, hanya 2% false positive), karena base rate fraud sangat rendah (0.1%), MAYORITAS transaksi yang di-flag (>95%) sebenarnya LEGIT, bukan fraud!<br><br>
+  Ini adalah base rate fallacy klasik — sering jadi jebakan di interview quant. Pelajaran praktis: tim risk/compliance harus mempertimbangkan biaya investigasi manual untuk false positive yang sangat banyak ini, dan mungkin perlu menaikkan threshold flagging atau menambah model layer kedua untuk mengurangi false positive rate.`,
+  keyPoints:['Rumus Bayes yang benar','Hitung P(flag) total dengan law of total probability','Substitusi angka dengan tepat','Hasil akhir ≈4.54%','Interpretasi base rate fallacy dan implikasi bisnis praktis']
+},
+{
+  level:'easy', id:'e7', type:'mc', category:'Expected Value',
+  question:'Berapa expected value dari satu lemparan dadu adil (6 sisi)?',
+  options:['3','3.5','4','3.33'], answer:1,
+  explanation:`<b>Logika:</b> E[X] = Σ x×P(x) = (1+2+3+4+5+6)/6 = 21/6 = <b>3.5</b><br><br>
+  Catatan menarik: expected value TIDAK harus berupa hasil yang mungkin terjadi (kamu tidak akan pernah benar-benar melempar dadu dan mendapat 3.5). EV adalah rata-rata jangka panjang, bukan prediksi single-event.`
+},
+{
+  level:'easy', id:'e8', type:'mc', category:'Probability',
+  question:'Sebuah portofolio terdiri dari 3 saham independen, masing-masing punya 70% probabilitas naik hari ini. Berapa probabilitas SEMUA 3 saham naik?',
+  options:['0.343','0.7','0.21','0.49'], answer:0,
+  explanation:`<b>Logika:</b> Karena independen, P(semua naik) = P(A)×P(B)×P(C) = 0.7×0.7×0.7 = <b>0.343 (34.3%)</b><br><br>
+  Asumsi independensi ini sering TIDAK realistis di pasar nyata — saham cenderung berkorelasi (terutama saat market crash), tapi soal ini melatih mekanika dasar probabilitas gabungan.`
+},
+{
+  level:'easy', id:'e9', type:'mc', category:'Statistics',
+  question:'Data return harian sebuah saham: 2%, -1%, 3%, 0%, 1%. Berapa rata-rata (mean) return-nya?',
+  options:['1%', '1.5%', '0.5%', '2%'], answer:0,
+  explanation:`<b>Logika:</b> Mean = (2+(-1)+3+0+1)/5 = 5/5 = <b>1%</b><br><br>
+  Konsep dasar statistik deskriptif — fondasi sebelum mempelajari variance, standard deviation, dan Sharpe ratio.`
+},
+{
+  level:'easy', id:'e10', type:'mc', category:'Combinatorics',
+  question:'Sebuah trading desk punya 4 trader. Berapa cara menyusun mereka dalam urutan shift (urutan penting)?',
+  options:['24','12','16','4'], answer:0,
+  explanation:`<b>Logika:</b> Ini permutasi, urutan penting. 4! = 4×3×2×1 = <b>24</b><br><br>
+  Beda dengan kombinasi: kalau soal bertanya "berapa cara MEMILIH 4 dari 4 tanpa urutan" jawabannya hanya 1 (C(4,4)=1), karena urutan tidak relevan.`
+},
+{
+  level:'easy', id:'e11', type:'essay', category:'Probability Basics',
+  question:'Sebuah dadu dilempar dua kali. Hitung probabilitas mendapatkan TOTAL minimal 10 (yaitu sum ≥ 10). Tunjukkan cara menghitungnya dengan mendaftar semua kombinasi yang valid.',
+  modelAnswer:`<b>Langkah 1 — Total kemungkinan:</b> 6×6 = 36 kombinasi.<br><br>
+  <b>Langkah 2 — Daftar kombinasi dengan sum≥10:</b><br>
+  Sum=10: (4,6),(5,5),(6,4) → 3 kombinasi<br>
+  Sum=11: (5,6),(6,5) → 2 kombinasi<br>
+  Sum=12: (6,6) → 1 kombinasi<br><br>
+  Total kombinasi valid = 3+2+1 = 6<br><br>
+  <b>Langkah 3 — Hitung probabilitas:</b><br>
+  P(sum≥10) = 6/36 = <b>1/6 ≈ 0.1667</b>`,
+  keyPoints:['Total sample space 36 dihitung dengan benar','Mendaftar SEMUA kombinasi sum=10,11,12 dengan lengkap','Tidak melewatkan kombinasi (misal lupa (4,6) DAN (6,4) sebagai dua kejadian berbeda)','Hasil akhir P=6/36=1/6']
+},
+{
+  level:'easy', id:'e12', type:'essay', category:'Expected Value',
+  question:'Sebuah lottery ticket berharga $5. Hadiah: 1% chance menang $300, 99% chance tidak menang apapun. Hitung Expected Value dari membeli tiket ini (net dari harga beli), dan jelaskan apakah ini keputusan yang "rasional" secara matematis murni.',
+  modelAnswer:`<b>Langkah 1 — Hitung expected payout:</b><br>
+  E[payout] = (0.01×300) + (0.99×0) = 3<br><br>
+  <b>Langkah 2 — Hitung net EV (payout dikurangi harga tiket):</b><br>
+  Net EV = 3 - 5 = <b>-$2</b><br><br>
+  <b>Kesimpulan:</b> EV negatif (-$2) berarti secara matematis murni, membeli tiket ini adalah keputusan yang merugikan jika diulang berkali-kali — rata-rata kamu akan kehilangan $2 per tiket.<br><br>
+  Namun, "rasionalitas" dalam keputusan finansial tidak HANYA soal EV — utility function seseorang bisa membuat keputusan ini "rasional" secara subjektif. Misalnya, jika seseorang mendapat "hiburan" atau "harapan" dari membeli tiket yang nilainya bagi mereka lebih dari $2, maka secara utility (bukan murni expected monetary value), keputusan itu bisa dibenarkan. Ini adalah perbedaan penting antara EV finansial murni dan expected utility dalam teori keputusan.`,
+  keyPoints:['Hitung expected payout dengan benar (=$3)','Hitung net EV dengan benar (=-$2)','Kesimpulan: EV negatif, merugikan secara matematis','Bonus: pembahasan tentang utility theory vs EV murni']
+},
+
+/* === MORE MEDIUM === */
+{
+  level:'medium', id:'m7', type:'mc', category:'Statistics',
+  question:'Sebuah strategi trading punya 100 observasi return harian dengan variance 25 (dalam basis poin kuadrat). Berapa STANDARD DEVIATION dari return harian tersebut?',
+  options:['5','25','12.5','50'], answer:0,
+  explanation:`<b>Logika:</b> Standard deviation adalah akar kuadrat dari variance.<br><br>
+  SD = √25 = <b>5</b> (basis poin)<br><br>
+  Standard deviation lebih sering dipakai untuk interpretasi karena satuannya sama dengan data asli (sedangkan variance dalam satuan kuadrat) — fondasi penting sebelum memahami Sharpe ratio dan volatility annualization.`
+},
+{
+  level:'medium', id:'m8', type:'mc', category:'Portfolio Theory',
+  question:'Dua aset punya variance return masing-masing 0.04. Jika dikombinasikan EQUAL WEIGHT (50/50) dan korelasi antara keduanya adalah NOL, berapa variance portofolio gabungan?',
+  options:['0.04','0.02','0.08','0.01'], answer:1,
+  explanation:`<b>Logika:</b> Var(portfolio) = w₁²σ₁² + w₂²σ₂² + 2w₁w₂σ₁σ₂ρ<br><br>
+  Dengan w₁=w₂=0.5, σ₁²=σ₂²=0.04, ρ=0:<br><br>
+  Var = (0.5)²(0.04) + (0.5)²(0.04) + 0<br>
+  = 0.01 + 0.01<br>
+  = <b>0.02</b><br><br>
+  Variance portofolio (0.02) LEBIH KECIL dari rata-rata variance individual (0.04) — inilah manfaat diversifikasi murni dari korelasi nol, tanpa perlu mengubah expected return sama sekali.`
+},
+{
+  level:'medium', id:'m9', type:'mc', category:'Sharpe Ratio',
+  question:'Sebuah strategi punya expected annual return 12%, risk-free rate 3%, dan annual volatility 18%. Berapa Sharpe Ratio-nya?',
+  options:['0.5','0.67','0.83','1.5'], answer:0,
+  explanation:`<b>Logika:</b> Sharpe Ratio = (E[R] - R_f) / σ<br><br>
+  Sharpe = (0.12 - 0.03) / 0.18 = 0.09/0.18 = <b>0.5</b><br><br>
+  Sharpe Ratio mengukur return per unit risiko. Sebagai rule of thumb industri: Sharpe>1 dianggap baik, >2 sangat baik, >3 luar biasa (jarang bertahan lama tanpa risiko tersembunyi).`
+},
+{
+  level:'medium', id:'m10', type:'mc', category:'Birthday Problem Variant',
+  question:'Dalam grup 3 trader, berapa probabilitas MINIMAL 2 dari mereka lahir di BULAN yang sama (asumsikan 12 bulan, distribusi uniform)?',
+  options:['0.236','0.25','0.5','0.083'], answer:0,
+  explanation:`<b>Logika (Complement Method):</b> Lebih mudah hitung P(TIDAK ADA yang sama bulan) lalu dikomplemenkan.<br><br>
+  P(semua bulan berbeda) = (12/12)×(11/12)×(10/12) = 1320/1728 ≈ 0.7639<br><br>
+  P(minimal 2 sama bulan) = 1 - 0.7639 = <b>≈ 0.236 (23.6%)</b><br><br>
+  Ini adalah versi sederhana dari "Birthday Problem" klasik — fenomena dimana probabilitas collision jauh lebih tinggi dari intuisi awal kebanyakan orang, bahkan dengan grup kecil.`
+},
+{
+  level:'medium', id:'m11', type:'essay', category:'Conditional Probability',
+  question:'Sebuah hedge fund punya dua strategi: Strategi A (40% dari capital, win rate 60%) dan Strategi B (60% dari capital, win rate 45%). Jika diketahui bahwa HARI INI fund mengalami PROFIT, berapa probabilitas bahwa profit tersebut berasal dari Strategi A? (Asumsikan: jika strategi "win", seluruh alokasi modalnya profit; jika "loss", seluruhnya rugi. Asumsikan kedua strategi independen dan tidak overlap profitnya dalam soal ini — sederhanakan sebagai "profit fund hari ini" = "strategi A win ATAU B win", lalu hitung P(A win | fund profit) dengan asumsi sederhana bahwa fund profit jika SALAH SATU strategi win).',
+  modelAnswer:`<b>Catatan:</b> Soal ini menyederhanakan skenario riil (di mana biasanya dilihat sebagai gabungan P&L), menjadi event-based untuk latihan Bayes.<br><br>
+  <b>Setup:</b> P(A win)=0.6, P(B win)=0.45. Asumsikan independen.<br><br>
+  <b>P(fund profit)</b> = P(A win ATAU B win) = 1 - P(keduanya gagal)<br>
+  = 1 - [(1-0.6)×(1-0.45)]<br>
+  = 1 - [0.4×0.55]<br>
+  = 1 - 0.22<br>
+  = 0.78<br><br>
+  <b>P(A win DAN fund profit)</b> = P(A win) = 0.6 (karena jika A win, fund otomatis profit, terlepas B win atau tidak)<br><br>
+  <b>P(A win | fund profit)</b> = P(A win) / P(fund profit) = 0.6/0.78 ≈ <b>0.769 (76.9%)</b><br><br>
+  <b>Interpretasi:</b> Meski strategi A hanya 40% dari modal, GIVEN bahwa fund profit hari itu, ada kemungkinan besar (76.9%) bahwa kontribusi itu datang (minimal sebagian) dari Strategi A — karena win rate A (60%) jauh lebih tinggi dari B (45%), sehingga "menyumbang" lebih besar ke total probabilitas profit gabungan.`,
+  keyPoints:['Hitung P(fund profit) dengan benar menggunakan complement','P(A win dan fund profit) = P(A win) karena logika OR','Aplikasi rumus conditional probability dasar P(A|B)=P(A∩B)/P(B)','Hasil akhir ≈0.769','Interpretasi yang masuk akal tentang kontribusi win rate tinggi']
+},
+{
+  level:'medium', id:'m12', type:'essay', category:'Random Walk',
+  question:'Sebuah random walk simetris dimulai dari 0. Setelah 2 langkah (masing-masing +1 atau -1 dengan probabilitas 0.5), tulis SELURUH distribusi probabilitas posisi akhir (tabel posisi dan probabilitasnya), lalu hitung variance dari posisi setelah 2 langkah.',
+  modelAnswer:`<b>Langkah 1 — Daftar semua kemungkinan jalur (2⁴=4 total):</b><br>
+  (+1,+1) → posisi akhir = 2<br>
+  (+1,-1) → posisi akhir = 0<br>
+  (-1,+1) → posisi akhir = 0<br>
+  (-1,-1) → posisi akhir = -2<br><br>
+  <b>Langkah 2 — Tabel distribusi probabilitas:</b><br>
+  P(posisi=2) = 1/4<br>
+  P(posisi=0) = 2/4 = 1/2<br>
+  P(posisi=-2) = 1/4<br><br>
+  <b>Langkah 3 — Hitung E[posisi]:</b><br>
+  E[X] = (2×0.25) + (0×0.5) + (-2×0.25) = 0.5 + 0 - 0.5 = 0 (sesuai ekspektasi, random walk simetris punya mean 0)<br><br>
+  <b>Langkah 4 — Hitung E[X²]:</b><br>
+  E[X²] = (4×0.25) + (0×0.5) + (4×0.25) = 1 + 0 + 1 = 2<br><br>
+  <b>Langkah 5 — Hitung Variance:</b><br>
+  Var(X) = E[X²] - (E[X])² = 2 - 0 = <b>2</b><br><br>
+  <b>Catatan penting:</b> Untuk random walk simetris dengan n langkah unit variance per langkah, Var(posisi setelah n langkah) = n. Di sini n=2, sehingga Var=2 — konsisten dengan hasil di atas. Inilah fondasi matematis kenapa volatility aset finansial di-scale dengan √t (karena standard deviation = √Variance = √n).`,
+  keyPoints:['Mendaftar semua 4 kemungkinan jalur dengan benar','Tabel distribusi probabilitas posisi akhir yang tepat (1/4, 1/2, 1/4)','Hitung E[X]=0 dengan benar','Hitung E[X²]=2 dengan benar','Variance=2, dan idealnya menyebutkan koneksi ke aturan Var=n untuk random walk']
+},
+/* ══════════════════ VERY HARD ══════════════════ */
+{
+  level:'very_hard', id:'vh1', type:'mc', category:'Random Walk / Hitting Time',
+  question:'Sebuah random walk simetris dimulai dari posisi 0. Berapa EXPECTED NUMBER OF STEPS sampai posisi mencapai +10 ATAU -10 (mana yang lebih dulu tercapai)?',
+  options:['10','50','100','200'], answer:2,
+  explanation:`<b>Logika (Expected Hitting Time untuk Symmetric Random Walk):</b><br><br>
+  Untuk random walk simetris yang dimulai di 0, dengan batas di +a dan -b, expected number of steps untuk mencapai salah satu batas adalah:<br><br>
+  E[N] = a × b<br><br>
+  Di soal ini, a=10 (batas atas) dan b=10 (batas bawah, dalam nilai absolut).<br><br>
+  E[N] = 10 × 10 = <b>100 langkah</b><br><br>
+  <b>Intuisi:</b> Ini adalah hasil klasik dari teori martingale (optional stopping theorem). Variance dari random walk tumbuh linear dengan jumlah langkah (Var = n), sehingga untuk mencapai jarak tertentu, dibutuhkan waktu kuadratik relatif terhadap jarak itu.`
+},
+{
+  level:'very_hard', id:'vh2', type:'mc', category:'Portfolio Theory',
+  question:'Dua aset: Aset A punya variance return 0.04, Aset B punya variance return 0.09, korelasi antara keduanya 0.5. Portofolio terdiri 60% aset A, 40% aset B. Berapa VARIANCE portofolio?',
+  options:['0.0312','0.0432','0.0612','0.0250'], answer:1,
+  explanation:`<b>Logika (Portfolio Variance Formula):</b><br><br>
+  Var(portfolio) = w₁²σ₁² + w₂²σ₂² + 2w₁w₂σ₁σ₂ρ<br><br>
+  Dengan w₁=0.6, w₂=0.4, σ₁²=0.04 (σ₁=0.2), σ₂²=0.09 (σ₂=0.3), ρ=0.5:<br><br>
+  Var = (0.6)²(0.04) + (0.4)²(0.09) + 2(0.6)(0.4)(0.2)(0.3)(0.5)<br>
+  = 0.0144 + 0.0144 + 0.0144<br>
+  = <b>0.0432</b><br><br>
+  Catatan: korelasi <1 antara kedua aset memberikan manfaat diversifikasi — variance portofolio gabungan LEBIH KECIL dibanding rata-rata tertimbang variance individual (yang akan jadi 0.6×0.04+0.4×0.09=0.06 jika korelasi=1).`
+},
+{
+  level:'very_hard', id:'vh3', type:'mc', category:'Ito Calculus',
+  question:'Harga saham S mengikuti GBM: dS = μS dt + σS dW, dengan μ=10%, σ=30%. Menggunakan Ito\'s Lemma, berapa drift dari d(ln S)?',
+  options:['10%','5.5%','15%','-5.5%'], answer:1,
+  explanation:`<b>Logika (Ito\\'s Lemma):</b> Untuk f(S)=ln(S), Ito\\'s Lemma memberikan:<br><br>
+  df = f\\'(S)dS + ½f\'\'(S)(dS)²<br><br>
+  Dengan f\\'(S)=1/S, f\\'\\'(S)=-1/S², dan (dS)²=σ²S²dt (aturan Ito: (dW)²=dt):<br><br>
+  d(ln S) = (1/S)(μS dt + σS dW) + ½(-1/S²)(σ²S² dt)<br>
+  = μdt + σdW - ½σ²dt<br>
+  = (μ - σ²/2)dt + σdW<br><br>
+  Drift = μ - σ²/2 = 0.10 - (0.30)²/2 = 0.10 - 0.045 = <b>5.5%</b><br><br>
+  Term "-σ²/2" ini disebut <b>Ito correction</b> atau "volatility drag" — konsekuensi langsung dari konveksitas fungsi logaritma (Jensen\'s Inequality).`
+},
+{
+  level:'very_hard', id:'vh4', type:'mc', category:'Options Greeks',
+  question:'Sebuah European call option memiliki Delta=0.6. Jika harga underlying naik $2, berapa estimasi perubahan harga option (linear approximation)?',
+  options:['$0.60','$1.20','$2.00','$3.33'], answer:1,
+  explanation:`<b>Logika:</b> Delta (Δ) mengukur sensitivitas harga option terhadap perubahan kecil harga underlying — turunan pertama harga option terhadap harga saham.<br><br>
+  ΔC ≈ Delta × ΔS<br>
+  ΔC ≈ 0.6 × $2 = <b>$1.20</b><br><br>
+  Ini adalah linear (first-order) approximation. Untuk perubahan besar pada underlying, perlu menambahkan term Gamma (second-order) untuk akurasi lebih baik: ΔC ≈ Delta×ΔS + ½×Gamma×(ΔS)².`
+},
+{
+  level:'very_hard', id:'vh5', type:'essay', category:'Risk-Neutral Pricing',
+  question:'Sebuah saham saat ini berharga $100. Dalam 1 tahun, harga akan menjadi $120 (up) dengan probabilitas riil 60%, atau $90 (down) dengan probabilitas riil 40%. Risk-free rate adalah 5% per tahun. Hitung harga FAIR dari European call option dengan strike $100 menggunakan metode RISK-NEUTRAL PRICING (binomial model satu periode). Jelaskan mengapa probabilitas riil (60%/40%) TIDAK dipakai langsung dalam pricing.',
+  modelAnswer:`<b>Langkah 1 — Cari risk-neutral probability (q):</b><br>
+  Di dunia risk-neutral, expected return aset harus sama dengan risk-free rate:<br>
+  S₀ × (1+r) = q×S_up + (1-q)×S_down<br>
+  100 × 1.05 = q×120 + (1-q)×90<br>
+  105 = 120q + 90 - 90q<br>
+  105 - 90 = 30q<br>
+  15 = 30q<br>
+  q = <b>0.5 (50%)</b><br><br>
+  <b>Langkah 2 — Hitung payoff option di setiap skenario:</b><br>
+  Payoff jika naik: max(120-100,0) = 20<br>
+  Payoff jika turun: max(90-100,0) = 0<br><br>
+  <b>Langkah 3 — Discount expected payoff (di bawah risk-neutral measure) ke present value:</b><br>
+  C₀ = [q×20 + (1-q)×0] / (1+r)<br>
+  C₀ = [0.5×20 + 0.5×0] / 1.05<br>
+  C₀ = 10 / 1.05<br>
+  C₀ = <b>$9.52</b><br><br>
+  <b>Mengapa probabilitas riil TIDAK dipakai:</b><br>
+  Prinsip dasar option pricing adalah <b>no-arbitrage</b> — harga option harus konsisten dengan harga aset lain yang bisa dipakai untuk meng-replikasi payoff-nya (melalui delta hedging dengan saham dan obligasi risk-free). Probabilitas riil (60/40) mencerminkan ekspektasi SUBJEKTIF investor tentang masa depan, tapi harga option yang FAIR ditentukan oleh portofolio replikasi yang TIDAK bergantung pada keyakinan subjektif siapapun — hanya bergantung pada harga aset yang bisa diobservasi dan kondisi no-arbitrage. Inilah inti dari risk-neutral valuation: kita "mengubah" probabilitas agar semua aset (termasuk saham itu sendiri) memberikan expected return sama dengan risk-free rate, lalu pricing semua derivative secara konsisten di bawah measure ini.`,
+  keyPoints:['Mencari risk-neutral probability q dengan benar (=0.5)','Menghitung payoff option di kedua skenario','Discount expected payoff dengan risk-free rate','Hasil akhir C₀≈$9.52','Penjelasan konseptual no-arbitrage dan kenapa probabilitas riil tidak relevan']
+},
+
+/* ══════════════════ PRO MAX ══════════════════ */
+{
+  level:'pro_max', id:'pm1', type:'mc', category:'Kelly Criterion (Multi-period)',
+  question:'Seorang trader punya edge: win rate 55%, payout ratio 1:1 (b=1). Dia menjalankan strategi dengan fraksi Kelly PENUH selama ribuan trade. Dibanding trader lain yang pakai fraksi setengah dari Kelly (half-Kelly), apa yang akan terjadi pada LONG-RUN GROWTH RATE modal masing-masing?',
+  options:['Full Kelly akan selalu menghasilkan growth rate lebih tinggi','Half-Kelly akan selalu menghasilkan growth rate lebih tinggi','Full Kelly memaksimalkan EXPECTED log-growth, tapi punya variance/drawdown jauh lebih besar dari half-Kelly','Keduanya menghasilkan growth rate yang identik secara teori'], answer:2,
+  explanation:`<b>Logika (Kelly Criterion Properties):</b><br><br>
+  Kelly Criterion secara definisi memaksimalkan EXPECTED logarithmic growth rate jangka panjang — f* = (bp-q)/b = (1×0.55-0.45)/1 = 0.10 (10% dari modal per trade).<br><br>
+  Namun, full Kelly punya <b>variance pertumbuhan yang sangat besar</b> — drawdown sementara bisa mencapai 50%+ meski strategi tetap positive EV jangka panjang. Ini fenomena yang dikenal sebagai "Kelly is volatile."<br><br>
+  Half-Kelly mengurangi growth rate EXPECTED sedikit, tapi mengurangi variance secara drastis (kira-kira mengurangi variance menjadi ~25% dari full Kelly, sementara growth rate hanya turun ~25% dari maksimumnya) — trade-off yang jauh lebih baik secara risk-adjusted.<br><br>
+  Inilah alasan kenapa di praktik, hampir semua quant fund profesional memakai fraksi Kelly yang JAUH lebih kecil dari rekomendasi penuh — sering 1/4 atau 1/2 Kelly — karena ketidakpastian estimasi parameter (p dan b) dalam dunia nyata membuat full Kelly sangat berisiko jika estimasi sedikit salah.`
+},
+{
+  level:'pro_max', id:'pm2', type:'mc', category:'Stochastic Calculus / Quadratic Variation',
+  question:'Untuk Brownian motion standar W(t), berapa nilai dari QUADRATIC VARIATION [W,W](T) pada interval [0,T]? (Ini adalah konsep dasar yang membuat dW² = dt valid dalam kalkulus Ito)',
+  options:['0','T','√T','T²'], answer:1,
+  explanation:`<b>Logika (Quadratic Variation):</b><br><br>
+  Quadratic variation dari Brownian motion didefinisikan sebagai limit dari sum kuadrat increment, saat partisi waktu semakin halus:<br><br>
+  [W,W](T) = lim Σ (W(tᵢ₊₁)-W(tᵢ))²<br><br>
+  Untuk Brownian motion standar, hasil fundamentalnya adalah:<br><br>
+  [W,W](T) = <b>T</b><br><br>
+  Ini BERBEDA dari kalkulus biasa, dimana untuk fungsi smooth f(t), quadratic variation-nya = 0! Brownian motion punya "kekasaran" (roughness) tak terhingga sehingga quadratic variation-nya nonzero — inilah fondasi matematis dari aturan informal "dW² = dt" yang dipakai di Ito's Lemma. Tanpa properti ini, seluruh derivasi Black-Scholes tidak akan valid.`
+},
+{
+  level:'pro_max', id:'pm3', type:'essay', category:'Derivatives Pricing — Put-Call Parity',
+  question:'Sebuah saham (tidak membayar dividen) diperdagangkan di $50. European call dengan strike $50 dan expiry 1 tahun diperdagangkan di $6. Risk-free rate adalah 4% per tahun (continuous compounding). Menggunakan PUT-CALL PARITY, hitung harga fair European put dengan strike dan expiry yang sama. Jika put benar-benar diperdagangkan di $3.50 di pasar, jelaskan strategi ARBITRASE yang bisa dilakukan dan hitung profit risiko-bebasnya.',
+  modelAnswer:`<b>Langkah 1 — Rumus Put-Call Parity:</b><br>
+  C - P = S - K×e^(-rT)<br><br>
+  Dengan C=6, S=50, K=50, r=0.04, T=1:<br><br>
+  K×e^(-rT) = 50×e^(-0.04) = 50×0.9608 = 48.04<br><br>
+  6 - P = 50 - 48.04<br>
+  6 - P = 1.96<br>
+  P = 6 - 1.96<br>
+  P = <b>$4.04</b> (harga FAIR put menurut parity)<br><br>
+  <b>Langkah 2 — Bandingkan dengan harga pasar:</b><br>
+  Harga fair = $4.04, tapi harga pasar put = $3.50. Put UNDERPRICED di pasar (lebih murah dari yang seharusnya).<br><br>
+  <b>Langkah 3 — Strategi Arbitrase:</b><br>
+  Karena put underpriced, kita harus: BELI put (murah), dan ambil posisi BERLAWANAN pada sisi lain dari parity — yaitu SELL call, BUY stock, BORROW PV(K) (replikasi sintetis dari sisi kanan parity yang "terlalu mahal" relatif terhadap put yang murah).<br><br>
+  Spesifik: <br>
+  • Beli put di pasar: bayar $3.50<br>
+  • Jual call di pasar: terima $6.00<br>
+  • Beli saham: bayar $50.00<br>
+  • Pinjam PV(K) = $48.04 dengan bunga 4% (akan dilunasi $50 saat expiry)<br><br>
+  <b>Cash flow saat ini (t=0):</b><br>
+  -3.50 + 6.00 - 50.00 + 48.04 = <b>+$0.54</b> (profit instan, risiko-bebas)<br><br>
+  <b>Cek di t=T (expiry), untuk SEMUA skenario harga saham S_T:</b><br>
+  Posisi gabungan (long put + short call + long stock) selalu menghasilkan payoff = K = $50 (ini adalah identitas put-call parity), yang TEPAT cukup untuk melunasi pinjaman $50.<br><br>
+  <b>Kesimpulan:</b> Profit arbitrase risiko-bebas = <b>$0.54 per kontrak</b>, didapat instan di t=0 tanpa risiko net di masa depan — selama mispricing ini bertahan sebelum pasar mengkoreksinya.`,
+  keyPoints:['Rumus put-call parity yang benar: C-P=S-Ke^(-rT)','Hitung Ke^(-rT) dengan continuous compounding','Hasil fair put price = $4.04','Identifikasi mispricing dan arah arbitrase yang benar (put underpriced)','Strategi 4 kaki yang benar: buy put, sell call, buy stock, borrow PV(K)','Hitung profit arbitrase = $0.54','Verifikasi payoff di t=T selalu = K untuk semua skenario harga']
+},
+{
+  level:'pro_max', id:'pm4', type:'essay', category:'Stochastic Volatility & Variance Swaps',
+  question:'Jelaskan secara matematis MENGAPA "volatility smile" muncul di pasar options, padahal model Black-Scholes mengasumsikan volatility (σ) KONSTAN untuk semua strike price. Sebutkan minimal DUA model alternatif yang dipakai industri untuk mengatasi keterbatasan ini, dan jelaskan intuisi masing-masing.',
+  modelAnswer:`<b>Mengapa Volatility Smile Muncul:</b><br><br>
+  Black-Scholes mengasumsikan harga underlying mengikuti GBM dengan σ konstan — artinya distribusi log-return-nya adalah NORMAL (Gaussian) sempurna. Namun, data empiris menunjukkan return aset finansial memiliki:<br>
+  1. <b>Fat tails</b> (excess kurtosis) — kejadian ekstrem lebih sering dari prediksi normal<br>
+  2. <b>Skewness</b> — terutama di equity index, crash risk membuat distribusi miring ke kiri (downside lebih ekstrem dari upside)<br><br>
+  Ketika trader "memaksa" memasukkan harga option pasar (yang sudah mencerminkan fat tails dan skew nyata) ke dalam formula Black-Scholes untuk mencari IMPLIED volatility (σ yang membuat BS price = harga pasar), maka σ yang dihasilkan akan BERBEDA untuk setiap strike — lebih tinggi untuk deep OTM/ITM options dibanding ATM. Inilah "smile" (atau "skew" untuk equity).<br><br>
+  Secara matematis: σ_implied(K) bukan konstan, tapi fungsi dari K — kontradiksi langsung dengan asumsi dasar BS.<br><br>
+  <b>Model Alternatif 1 — Local Volatility Model (Dupire):</b><br>
+  Mengasumsikan σ adalah fungsi DETERMINISTIK dari harga underlying dan waktu: σ(S,t), bukan konstan. Model ini bisa "fit" persis ke seluruh volatility surface pasar saat ini, tapi punya kelemahan: dynamics volatility masa depan yang dihasilkan model ini sering tidak realistis (forward smile terlalu flat dibanding pasar nyata).<br><br>
+  <b>Model Alternatif 2 — Stochastic Volatility Model (Heston):</b><br>
+  Memodelkan volatility itu sendiri sebagai proses stochastic terpisah yang ber-korelasi dengan harga underlying:<br>
+  dS = μS dt + √v·S dW₁<br>
+  dv = κ(θ-v)dt + ξ√v dW₂, dengan corr(dW₁,dW₂)=ρ<br><br>
+  Parameter ρ (biasanya negatif untuk equity — "leverage effect": volatility naik saat harga turun) secara natural menghasilkan skew. Model ini lebih realistis untuk dynamics volatility, tapi kalibrasinya lebih kompleks (5 parameter: v₀, κ, θ, ξ, ρ).<br><br>
+  <b>Model Alternatif 3 (bonus) — Jump-Diffusion Model (Merton):</b><br>
+  Menambahkan komponen jump (lompatan harga tiba-tiba, model Poisson process) ke GBM standar — menangkap fat tails dari crash risk secara lebih eksplisit dibanding model diffusion murni.`,
+  keyPoints:['Penjelasan matematis kenapa BS gagal menangkap fat tails dan skew','Definisi implied volatility dan kenapa ia bervariasi per strike','Local volatility model (Dupire) dengan penjelasan kelebihan/kekurangan','Stochastic volatility model (Heston) dengan persamaan dan peran korelasi ρ','Bonus: jump-diffusion model sebagai alternatif tambahan']
+},
+{
+  level:'hard', id:'h7', type:'mc', category:'Value at Risk (VaR)',
+  question:'Sebuah portofolio punya expected daily return 0.1% dan daily volatility 2%. Asumsikan return berdistribusi normal. Berapa 1-DAY 99% VaR (dinyatakan sebagai persentase kerugian POSITIF)?',
+  options:['≈3.55%','≈4.55%','≈2%','≈5.55%'], answer:1,
+  explanation:`<b>Logika (Parametric VaR):</b><br><br>
+  VaR pada confidence level c = -(μ + z_α × σ), dengan z_α adalah quantile distribusi normal pada α=1-c.<br><br>
+  Untuk 99% confidence, α=0.01, z_0.01 ≈ -2.326 (one-tailed)<br><br>
+  VaR = -(0.001 + (-2.326)×0.02) = -(0.001 - 0.04652) = -(-0.04552) = <b>≈4.55%</b><br><br>
+  Interpretasi: dengan confidence 99%, kerugian maksimum dalam 1 hari TIDAK akan melebihi 4.55% dari nilai portofolio (dalam model normal ini). Catatan: VaR punya kelemahan terkenal — tidak menangkap "tail risk" di luar threshold (lihat Expected Shortfall/CVaR sebagai alternatif yang lebih robust).`
+},
+{
+  level:'hard', id:'h8', type:'mc', category:'Pairs Trading / Cointegration',
+  question:'Dalam strategi pairs trading, dua saham A dan B yang historisnya BERGERAK BERSAMA (cointegrated) tiba-tiba spread harganya melebar jauh dari rata-rata historisnya (mean). Apa STRATEGI standar yang dilakukan trader statistical arbitrage?',
+  options:['Beli kedua saham sekaligus','Jual kedua saham sekaligus','Beli saham yang relatif UNDERPERFORM, jual short saham yang relatif OUTPERFORM (bertaruh pada mean reversion spread)','Tunggu sampai salah satu saham delisting'], answer:2,
+  explanation:`<b>Logika (Mean Reversion Strategy):</b><br><br>
+  Pairs trading mengeksploitasi asumsi bahwa spread antara dua aset yang cointegrated akan kembali ke rata-rata historisnya (mean reversion) — meski masing-masing saham individual bisa berperilaku seperti random walk.<br><br>
+  Jika spread melebar (A jauh lebih outperform dari B dibanding biasanya), strategi standarnya:<br>
+  • SHORT saham A (yang relatif "terlalu mahal")<br>
+  • LONG saham B (yang relatif "terlalu murah")<br><br>
+  Posisi ini MARKET-NEUTRAL — keuntungan datang dari KONVERGENSI spread, bukan dari arah pasar secara umum. Risiko utamanya: cointegration relationship bisa "rusak" secara struktural (misal karena merger, perubahan fundamental bisnis), menyebabkan spread tidak pernah kembali ke mean historisnya — dikenal sebagai "divergence risk."`
+},
+{
+  level:'hard', id:'h9', type:'mc', category:'Conditional Expectation',
+  question:'X dan Y adalah dua variabel random independen, masing-masing uniform di [0,1]. Berapa E[X | X>Y]?',
+  options:['1/2','1/3','2/3','3/4'], answer:2,
+  explanation:`<b>Logika:</b> Dengan simetri, P(X>Y)=1/2. Kita butuh distribusi kondisional dari X given X>Y.<br><br>
+  Secara intuitif: jika kita tahu X "menang" melawan Y (X>Y), maka X cenderung berada di nilai yang LEBIH TINGGI dari rata-rata unconditional (yang adalah 1/2).<br><br>
+  Secara formal: f(x|X>Y) = f(x)×P(Y<x)/P(X>Y) = 1×x / (1/2) = 2x, untuk x∈[0,1]<br><br>
+  E[X|X>Y] = ∫₀¹ x×2x dx = 2∫₀¹x²dx = 2×(1/3) = <b>2/3</b><br><br>
+  Hasil ini make sense: dengan kondisi "X menang", expected value X naik dari 1/2 (unconditional) ke 2/3.`
+},
+{
+  level:'very_hard', id:'vh6', type:'mc', category:'Sharpe Ratio Annualization',
+  question:'Sebuah strategi memiliki DAILY Sharpe Ratio 0.05. Dengan asumsi 252 hari trading per tahun dan returns IID, berapa ANNUALIZED Sharpe Ratio-nya?',
+  options:['0.05','0.79','12.6','1.0'], answer:1,
+  explanation:`<b>Logika (Sharpe Ratio Scaling):</b><br><br>
+  Berbeda dengan return (yang scale linear dengan waktu), Sharpe Ratio scale dengan AKAR KUADRAT dari waktu — karena return scale linear dengan n, tapi volatility (std dev) scale dengan √n.<br><br>
+  Annualized Sharpe = Daily Sharpe × √(jumlah periode per tahun)<br>
+  = 0.05 × √252<br>
+  = 0.05 × 15.87<br>
+  = <b>≈ 0.794</b><br><br>
+  Ini adalah konsep krusial yang SERING jadi jebakan: banyak yang salah scale dengan 252 (linear) padahal seharusnya √252. Kesalahan ini bisa membuat strategi terlihat 15x lebih bagus dari sebenarnya!`
+},
+{
+  level:'very_hard', id:'vh7', type:'mc', category:'CAPM / Beta',
+  question:'Covariance antara return saham X dengan return market adalah 0.0015. Variance return market adalah 0.0009. Berapa BETA saham X (menurut CAPM)?',
+  options:['0.6','1.0','1.67','0.9'], answer:2,
+  explanation:`<b>Logika (CAPM Beta):</b><br><br>
+  β = Cov(R_x, R_market) / Var(R_market)<br><br>
+  β = 0.0015 / 0.0009 = <b>1.67</b><br><br>
+  Interpretasi: saham X bergerak ~1.67x lebih volatile dari market secara sistematis. Jika market naik 1%, expected return saham X (komponen sistematisnya) naik ~1.67%. Beta>1 mengindikasikan saham ini lebih "agresif" dari market — biasanya growth stock atau sektor cyclical.`
+},
+{
+  level:'very_hard', id:'vh8', type:'essay', category:'Optimal Stopping',
+  question:'Seorang trader melihat harga saham setiap hari dan harus memutuskan SEKARANG untuk menjual atau menunggu sehari lagi (tidak bisa kembali ke keputusan sebelumnya). Trader tahu bahwa setelah hari ke-10, ia HARUS menjual (deadline absolut). Jelaskan secara konseptual mengapa masalah ini berhubungan dengan "Optimal Stopping Theory", dan jelaskan intuisi dari strategi "threshold" yang biasa muncul dalam solusi masalah semacam ini (seperti dalam Secretary Problem).',
+  modelAnswer:`<b>Koneksi ke Optimal Stopping Theory:</b><br><br>
+  Masalah ini adalah instance dari "optimal stopping problem" — kelas masalah dimana keputusan harus dibuat secara SEKUENSIAL berdasarkan informasi yang terungkap satu per satu, dengan trade-off antara "mengambil opsi sekarang" vs "menunggu informasi lebih lanjut", dan ada BIAYA atau RISIKO terkait menunggu (di sini: harga bisa turun, atau waktu habis di hari ke-10).<br><br>
+  <b>Struktur Threshold Solution:</b><br>
+  Solusi optimal untuk banyak masalah optimal stopping (termasuk yang serupa Secretary Problem) sering berbentuk "threshold rule": JUAL jika harga saat ini melebihi suatu nilai ambang (threshold) yang BERGANTUNG pada berapa hari yang TERSISA sampai deadline.<br><br>
+  Intuisinya:<br>
+  • Di hari-hari AWAL (banyak waktu tersisa), threshold tinggi — trader hanya akan menjual jika harga SANGAT bagus, karena ada banyak kesempatan untuk menunggu harga lebih baik lagi.<br>
+  • Mendekati DEADLINE (hari ke-9, ke-10), threshold menurun drastis — trader akan menerima harga yang lebih rendah karena opportunity cost menunggu semakin kecil (tidak banyak waktu tersisa untuk perbaikan).<br>
+  • Di hari TERAKHIR (hari ke-10), trader harus menjual APAPUN harganya (threshold = -∞, semua harga diterima karena tidak ada pilihan lain).<br><br>
+  <b>Aplikasi Quant Riil:</b> Ini secara konseptual berhubungan dengan teori "American Option" pricing (kapan optimal exercise sebuah opsi sebelum expiry), dan juga "optimal liquidation" dalam execution algorithms — keduanya menggunakan dynamic programming / backward induction untuk menentukan threshold optimal di setiap titik waktu.`,
+  keyPoints:['Identifikasi bahwa ini adalah optimal stopping problem','Penjelasan trade-off sekuensial (ambil sekarang vs tunggu)','Konsep threshold rule yang dependen waktu','Intuisi threshold tinggi di awal, rendah mendekati deadline','Bonus: koneksi ke American option pricing atau optimal execution']
+},
+
+/* === PRO MAX ADDITIONAL === */
+{
+  level:'pro_max', id:'pm5', type:'mc', category:'Expected Shortfall (CVaR)',
+  question:'Untuk distribusi return normal standar (μ=0, σ=1), berapa EXPECTED SHORTFALL (CVaR) pada confidence level 95%? (Gunakan rumus ES = φ(z_α)/α, dengan φ = PDF normal standar, z_α = quantile pada α=0.05)',
+  options:['1.64','2.06','1.96','2.33'], answer:1,
+  explanation:`<b>Logika (Expected Shortfall Formula untuk Normal Distribution):</b><br><br>
+  Expected Shortfall (juga disebut CVaR) mengukur EXPECTED LOSS, GIVEN bahwa loss sudah melebihi VaR threshold — menangkap informasi "tail risk" yang TIDAK ditangkap VaR biasa.<br><br>
+  Untuk distribusi normal standar:<br>
+  ES(α) = φ(z_α) / α<br><br>
+  Dengan α=0.05, z_0.05 ≈ -1.645 (quantile), φ(z) = PDF normal di titik itu ≈ 0.1031<br><br>
+  ES = 0.1031 / 0.05 ≈ <b>2.06</b><br><br>
+  Bandingkan dengan VaR(95%) yang hanya 1.645 — Expected Shortfall SELALU lebih besar dari VaR pada confidence level yang sama, karena ES memperhitungkan SEBERAPA BURUK kerugian di luar threshold, bukan cuma "ambang batasnya". Inilah alasan regulator (Basel III/IV) bergeser dari VaR ke Expected Shortfall sebagai metrik risiko standar untuk capital requirement bank.`
+},
+{
+  level:'pro_max', id:'pm6', type:'mc', category:'Hedging / Minimum Variance Hedge Ratio',
+  question:'Sebuah perusahaan ingin hedge exposure komoditas menggunakan futures. Covariance antara perubahan harga spot dan futures adalah 0.0008. Variance perubahan harga futures adalah 0.0012. Berapa OPTIMAL HEDGE RATIO (minimum variance hedge ratio)?',
+  options:['1.5','0.67','0.5','1.0'], answer:1,
+  explanation:`<b>Logika (Minimum Variance Hedge Ratio):</b><br><br>
+  h* = Cov(ΔS, ΔF) / Var(ΔF)<br><br>
+  h* = 0.0008 / 0.0012 = <b>0.67</b><br><br>
+  Interpretasi: untuk setiap 1 unit exposure di posisi spot, perusahaan harus hedge dengan 0.67 unit kontrak futures (BUKAN 1:1 hedge naive) untuk MEMINIMALKAN variance dari portofolio hedge gabungan.<br><br>
+  Formula ini diturunkan dari minimisasi Var(ΔS - h×ΔF) terhadap h — turunan pertama terhadap h disetel ke nol, menghasilkan rumus di atas. Hedge ratio <1 di sini mengindikasikan futures sedikit "lebih volatile" dibanding pergerakan spot yang ingin di-hedge (basis risk yang tidak sempurna 1:1).`
+},
+{
+  level:'pro_max', id:'pm7', type:'essay', category:'Numerical Methods — Finite Difference',
+  question:'Jelaskan secara konseptual bagaimana metode FINITE DIFFERENCE (khususnya skema Crank-Nicolson) dipakai untuk menyelesaikan Black-Scholes PDE secara numerik, dan jelaskan KEUNTUNGAN metode ini dibanding Monte Carlo simulation untuk pricing American options.',
+  modelAnswer:`<b>Black-Scholes PDE:</b><br>
+  ∂V/∂t + ½σ²S²(∂²V/∂S²) + rS(∂V/∂S) - rV = 0<br><br>
+  <b>Konsep Finite Difference:</b><br>
+  Alih-alih menyelesaikan PDE secara analitik (yang hanya mungkin untuk kasus sederhana seperti European vanilla option), kita DISKRITISASI domain (S,t) menjadi grid — sumbu harga saham S dibagi jadi N interval, sumbu waktu t dibagi jadi M interval. Turunan parsial (∂V/∂S, ∂²V/∂S²) diaproksimasi menggunakan DIFFERENCE QUOTIENTS (selisih nilai V di titik grid yang berdekatan), mengubah PDE menjadi sistem persamaan ALJABAR LINEAR yang bisa diselesaikan secara iteratif, mundur dari waktu expiry (t=T, dimana payoff sudah diketahui) ke waktu sekarang (t=0).<br><br>
+  <b>Skema Crank-Nicolson:</b> Mengombinasikan skema EXPLICIT (forward difference di waktu) dan IMPLICIT (backward difference di waktu) dengan rata-rata — memberikan akurasi ORDE KEDUA dalam waktu (lebih akurat dari pure explicit/implicit) DAN stabilitas numerik yang baik (tidak seperti pure explicit yang bisa unstable untuk step size besar).<br><br>
+  <b>Keuntungan dibanding Monte Carlo untuk American Options:</b><br>
+  1. <b>Early exercise boundary:</b> Finite difference secara NATURAL menangani fitur "early exercise" American option — di setiap titik grid waktu mundur, kita bandingkan continuation value (dari menyelesaikan PDE) dengan immediate exercise value, dan ambil yang maksimum (ini disebut "free boundary problem"). Monte Carlo standar TIDAK bisa menangani ini secara langsung karena MC berjalan FORWARD dalam waktu, sementara keputusan optimal exercise butuh informasi MASA DEPAN (continuation value) — perlu teknik tambahan seperti Longstaff-Schwartz (regression-based) untuk MC menangani American option, yang lebih kompleks dan computationally expensive.<br>
+  2. <b>Greeks lebih mudah:</b> Karena finite difference menghasilkan seluruh "permukaan" V(S,t) di grid, menghitung Greeks (Delta, Gamma, Theta) tinggal mengambil selisih numerik dari grid yang sudah ada — sementara di Monte Carlo, menghitung Greeks akurat butuh teknik tambahan (bumping, likelihood ratio method) yang menambah noise dan computational cost.<br>
+  3. <b>Efisiensi untuk Low-Dimensional Problems:</b> Untuk 1-2 underlying assets, finite difference jauh lebih cepat dan akurat dibanding MC. (Catatan: MC justru lebih unggul untuk masalah HIGH-DIMENSIONAL — banyak underlying assets — karena finite difference grid tumbuh secara eksponensial dengan dimensi, "curse of dimensionality").`,
+  keyPoints:['Penjelasan diskritisasi PDE Black-Scholes menjadi grid','Penjelasan skema Crank-Nicolson dan akurasi orde-2','Penjelasan bagaimana early exercise ditangani secara natural (free boundary)','Perbandingan dengan kesulitan MC untuk American option (perlu Longstaff-Schwartz)','Bonus: trade-off dimensionalitas antara FD dan MC']
+}
+];
+
+
+/* ════════════════════════════════════════════════════════
+   STATE
+════════════════════════════════════════════════════════ */
+const LEVELS = ['easy','medium','hard','very_hard','pro_max'];
+const LEVEL_LABEL = {easy:'Easy', medium:'Medium', hard:'Hard', very_hard:'Very Hard', pro_max:'Pro Max'};
+
+let selectedLevels = new Set(['easy']);
+let selectedType = 'all';
+let session = null; // { questions:[], idx:0, answers:{}, score:0 }
+
+/* persistent stats across sessions */
+let stats = JSON.parse(localStorage.getItem('qd_stats') || '{"totalDone":0,"totalCorrect":0,"answered":{}}');
+
+function saveStats(){ localStorage.setItem('qd_stats', JSON.stringify(stats)); }
+
+function updateNavStats(){
+  document.getElementById('navTotalDone').textContent = stats.totalDone;
+  const acc = stats.totalDone > 0 ? Math.round((stats.totalCorrect/stats.totalDone)*100) : null;
+  document.getElementById('navAccuracy').textContent = acc===null ? '—' : acc+'%';
+}
+
+/* ════════════════════════════════════════════════════════
+   HOME PAGE: LEVEL CARDS
+════════════════════════════════════════════════════════ */
+function countByLevel(level){
+  return QUESTIONS.filter(q=>q.level===level).length;
+}
+
+function renderLevelGrid(){
+  const grid = document.getElementById('levelGrid');
+  grid.innerHTML = LEVELS.map(lv=>{
+    const count = countByLevel(lv);
+    const isSelected = selectedLevels.has(lv);
+    return `<button class="level-card lc-${lv} ${isSelected?'is-selected':''}" data-level="${lv}" id="levelcard-${lv}" style="${isSelected?'background:var(--glass2);border-width:2px':''}">
+      <div class="lc-name">${LEVEL_LABEL[lv]}</div>
+      <div class="lc-count">${count} soal tersedia</div>
+      <div class="lc-bar"><div class="lc-fill" style="width:${isSelected?100:0}%"></div></div>
+    </button>`;
+  }).join('');
+
+  LEVELS.forEach(lv=>{
+    document.getElementById('levelcard-'+lv).addEventListener('click',()=>{
+      if(selectedLevels.has(lv)) selectedLevels.delete(lv);
+      else selectedLevels.add(lv);
+      renderLevelGrid();
+      updateStartButton();
+    });
+  });
+}
+
+function updateStartButton(){
+  const btn = document.getElementById('startBtn');
+  const sub = document.getElementById('startSub');
+  const available = getFilteredQuestions().length;
+  if(selectedLevels.size===0){
+    btn.disabled = true;
+    sub.textContent = 'Pilih minimal 1 level untuk mulai';
+  } else if(available===0){
+    btn.disabled = true;
+    sub.textContent = 'Tidak ada soal untuk kombinasi filter ini';
+  } else {
+    btn.disabled = false;
+    sub.textContent = available+' soal siap dikerjakan';
+  }
+}
+
+function getFilteredQuestions(){
+  return QUESTIONS.filter(q=>{
+    const levelMatch = selectedLevels.has(q.level);
+    const typeMatch = selectedType==='all' || q.type===selectedType;
+    return levelMatch && typeMatch;
+  });
+}
+
+/* type filter buttons */
+function initTypeFilter(){
+  document.querySelectorAll('#typeFilterRow .filter-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      document.querySelectorAll('#typeFilterRow .filter-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      selectedType = btn.dataset.type;
+      updateStartButton();
+    });
+  });
+}
+
+/* ════════════════════════════════════════════════════════
+   SESSION START
+════════════════════════════════════════════════════════ */
+function shuffleArray(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+
+function startSession(){
+  const qs = shuffleArray(getFilteredQuestions());
+  session = {
+    questions: qs,
+    idx: 0,
+    answers: {}, // qid -> {answered:bool, correct:bool, selectedIdx (mc) or text (essay), revealed:bool}
+    score: 0
+  };
+  goToPage('quiz');
+  renderQuestion();
+}
+
+/* ════════════════════════════════════════════════════════
+   PAGE NAV
+════════════════════════════════════════════════════════ */
+function goToPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  window.scrollTo({top:0,behavior:'instant'});
+}
+
+/* ════════════════════════════════════════════════════════
+   RENDER QUESTION
+════════════════════════════════════════════════════════ */
+function levelColorVar(level){
+  return {easy:'easy',medium:'medium',hard:'hard',very_hard:'veryhard',pro_max:'promax'}[level];
+}
+
+function renderQuestion(){
+  const q = session.questions[session.idx];
+  const card = document.getElementById('qcard');
+  const colorVar = levelColorVar(q.level);
+
+  document.getElementById('qtBadge').textContent = LEVEL_LABEL[q.level].toUpperCase();
+  document.getElementById('qtBadge').style.background = `var(--${colorVar}-dim)`;
+  document.getElementById('qtBadge').style.color = `var(--${colorVar})`;
+  document.getElementById('qtProgress').textContent = (session.idx+1)+' / '+session.questions.length;
+  document.getElementById('qtScore').textContent = session.score+' benar';
+
+  const existingAnswer = session.answers[q.id];
+
+  let bodyHtml = '';
+  if(q.type==='mc'){
+    bodyHtml = `<div class="mc-opts" id="mcOpts">
+      ${q.options.map((opt,oi)=>{
+        let cls = '';
+        if(existingAnswer && existingAnswer.answered){
+          if(oi===existingAnswer.selectedIdx) cls = existingAnswer.correct?'sel ok':'sel bad';
+          else if(oi===q.answer && !existingAnswer.correct) cls='ok';
+        }
+        return `<button class="mc-opt ${cls}" data-oi="${oi}"><span class="mc-opt-letter">${String.fromCharCode(65+oi)}</span>${opt}</button>`;
+      }).join('')}
+    </div>`;
+  } else if(q.type==='essay'){
+    const savedText = existingAnswer ? (existingAnswer.text||'') : '';
+    const disabled = existingAnswer && existingAnswer.answered ? 'disabled' : '';
+    bodyHtml = `<div class="essay-box">
+      <textarea class="essay-input" id="essayInput" placeholder="Tulis jawabanmu di sini — sertakan langkah-langkah perhitungan jika ada..." ${disabled}>${savedText}</textarea>
+      <div class="essay-actions">
+        <button class="btn pri" id="submitEssayBtn" ${existingAnswer&&existingAnswer.answered?'style="display:none"':''}>Submit & Lihat Model Answer</button>
+      </div>
+    </div>`;
+  }
+
+  card.innerHTML = `
+    <div class="qcat">${q.category}</div>
+    <div class="qtext">${q.question.replace('★ SOAL KLASIK J.P. MORGAN ★','<span class="star">★ SOAL KLASIK J.P. MORGAN ★</span>')}</div>
+    ${bodyHtml}
+    <div class="feedback-box" id="feedbackBox"></div>
+    <div class="explain-box" id="explainBox"></div>
+  `;
+
+  if(q.type==='mc'){
+    document.querySelectorAll('#mcOpts .mc-opt').forEach(btn=>{
+      btn.addEventListener('click',()=>handleMcAnswer(q, parseInt(btn.dataset.oi)));
+    });
+  } else {
+    const submitBtn = document.getElementById('submitEssayBtn');
+    if(submitBtn){
+      submitBtn.addEventListener('click',()=>handleEssaySubmit(q));
+    }
+  }
+
+  // restore feedback/explanation if already answered
+  if(existingAnswer && existingAnswer.answered){
+    showFeedbackAndExplanation(q, existingAnswer.correct, true);
+  }
+
+  document.getElementById('prevBtn').disabled = session.idx===0;
+  document.getElementById('nextBtn').textContent = session.idx===session.questions.length-1 ? 'Lihat Hasil →' : 'Selanjutnya →';
+}
+
+/* ════════════════════════════════════════════════════════
+   MC ANSWER HANDLING
+════════════════════════════════════════════════════════ */
+function handleMcAnswer(q, selectedIdx){
+  if(session.answers[q.id] && session.answers[q.id].answered) return; // already answered
+
+  const correct = selectedIdx === q.answer;
+  session.answers[q.id] = {answered:true, correct, selectedIdx};
+  if(correct) session.score++;
+
+  // update global stats
+  if(!stats.answered[q.id]){
+    stats.answered[q.id] = true;
+    stats.totalDone++;
+    if(correct) stats.totalCorrect++;
+    saveStats();
+    updateNavStats();
+  }
+
+  document.querySelectorAll('#mcOpts .mc-opt').forEach(btn=>{
+    const oi = parseInt(btn.dataset.oi);
+    btn.classList.remove('sel','ok','bad');
+    if(oi===selectedIdx) btn.classList.add('sel', correct?'ok':'bad');
+    else if(oi===q.answer && !correct) btn.classList.add('ok');
+  });
+
+  document.getElementById('qtScore').textContent = session.score+' benar';
+  showFeedbackAndExplanation(q, correct, false);
+}
+
+/* ════════════════════════════════════════════════════════
+   ESSAY ANSWER HANDLING
+════════════════════════════════════════════════════════ */
+function handleEssaySubmit(q){
+  const textarea = document.getElementById('essayInput');
+  const text = textarea.value.trim();
+
+  session.answers[q.id] = {answered:true, correct:null, text};
+
+  if(!stats.answered[q.id]){
+    stats.answered[q.id] = true;
+    stats.totalDone++;
+    saveStats();
+    updateNavStats();
+  }
+
+  textarea.disabled = true;
+  document.getElementById('submitEssayBtn').style.display = 'none';
+  showFeedbackAndExplanation(q, null, false);
+}
+
+/* self-grade essay: user marks themselves correct/incorrect after seeing model answer */
+function handleSelfGrade(q, gradedCorrect){
+  const ans = session.answers[q.id];
+  if(ans.correct !== null) return; // already self-graded
+  ans.correct = gradedCorrect;
+  if(gradedCorrect){
+    session.score++;
+    if(!stats.totalCorrect) stats.totalCorrect = 0;
+    stats.totalCorrect++;
+    saveStats();
+    updateNavStats();
+  }
+  document.getElementById('qtScore').textContent = session.score+' benar';
+  renderQuestion(); // re-render to lock in the self-grade UI
+}
+window.handleSelfGrade = handleSelfGrade;
+
+/* ════════════════════════════════════════════════════════
+   FEEDBACK + EXPLANATION DISPLAY
+════════════════════════════════════════════════════════ */
+function showFeedbackAndExplanation(q, correct, isRestore){
+  const fb = document.getElementById('feedbackBox');
+  const ex = document.getElementById('explainBox');
+
+  if(q.type==='mc'){
+    fb.className = 'feedback-box show '+(correct?'ok':'bad');
+    fb.innerHTML = `<div class="fb-title ${correct?'ok':'bad'}">${correct?'✓ Benar!':'✕ Belum tepat'}</div>`;
+    ex.className = 'explain-box show';
+    ex.innerHTML = `<div class="explain-title">Logika Penyelesaian</div>${q.explanation}`;
+  } else if(q.type==='essay'){
+    const ans = session.answers[q.id];
+    fb.className = 'feedback-box show ok';
+
+    if(ans.correct===null){
+      // show self-grade prompt
+      fb.innerHTML = `<div class="fb-title ok">Jawabanmu sudah disubmit</div>
+        <div style="font-size:13px;color:var(--muted2);margin-top:6px">Bandingkan dengan model answer di bawah, lalu nilai sendiri apakah jawabanmu sudah mencakup poin-poin kunci.</div>`;
+    } else {
+      fb.className = 'feedback-box show '+(ans.correct?'ok':'bad');
+      fb.innerHTML = `<div class="fb-title ${ans.correct?'ok':'bad'}">${ans.correct?'✓ Ditandai sebagai jawaban baik':'○ Ditandai perlu belajar lagi'}</div>`;
+    }
+
+    let keyPointsHtml = '';
+    if(q.keyPoints && q.keyPoints.length){
+      keyPointsHtml = `<div class="keypoints-box">
+        <div class="keypoints-title">Poin Kunci yang Harus Ada</div>
+        <ul>${q.keyPoints.map(kp=>`<li>${kp}</li>`).join('')}</ul>
+      </div>`;
+    }
+
+    ex.className = 'explain-box show';
+    ex.innerHTML = `<div class="explain-title">Model Answer</div>${q.modelAnswer}${keyPointsHtml}
+      ${ans.correct===null ? `<div style="margin-top:18px;display:flex;gap:10px">
+        <button class="btn pri" onclick="handleSelfGrade(QUESTIONS.find(x=>x.id==='${q.id}'), true)">✓ Jawaban saya sudah baik</button>
+        <button class="btn" onclick="handleSelfGrade(QUESTIONS.find(x=>x.id==='${q.id}'), false)">○ Saya masih perlu belajar ini</button>
+      </div>` : ''}`;
+  }
+}
+
+/* ════════════════════════════════════════════════════════
+   NAVIGATION WITHIN QUIZ
+════════════════════════════════════════════════════════ */
+function nextQuestion(){
+  if(session.idx < session.questions.length-1){
+    session.idx++;
+    renderQuestion();
+  } else {
+    showResults();
+  }
+}
+function prevQuestion(){
+  if(session.idx>0){
+    session.idx--;
+    renderQuestion();
+  }
+}
+
+/* ════════════════════════════════════════════════════════
+   RESULTS PAGE
+════════════════════════════════════════════════════════ */
+function showResults(){
+  const total = session.questions.length;
+  const answeredCount = Object.keys(session.answers).length;
+  const mcQuestions = session.questions.filter(q=>q.type==='mc');
+  const essayQuestions = session.questions.filter(q=>q.type==='essay');
+
+  const mcCorrect = mcQuestions.filter(q=>session.answers[q.id] && session.answers[q.id].correct).length;
+  const essayGraded = essayQuestions.filter(q=>session.answers[q.id] && session.answers[q.id].correct!==null);
+  const essayGood = essayGraded.filter(q=>session.answers[q.id].correct).length;
+
+  const pct = total>0 ? Math.round((session.score/total)*100) : 0;
+
+  document.getElementById('resultsScore').textContent = pct+'%';
+  document.getElementById('resultsScore').style.color = pct>=70?'var(--green)':pct>=40?'var(--hard)':'var(--red)';
+  document.getElementById('resultsSub').textContent = `Kamu menjawab benar ${session.score} dari ${total} soal`;
+
+  let breakdownHtml = '';
+  LEVELS.forEach(lv=>{
+    const lvQs = session.questions.filter(q=>q.level===lv);
+    if(lvQs.length===0) return;
+    const lvCorrect = lvQs.filter(q=>session.answers[q.id] && session.answers[q.id].correct).length;
+    breakdownHtml += `<div class="rb-card">
+      <div class="rb-num" style="color:var(--${levelColorVar(lv)})">${lvCorrect}/${lvQs.length}</div>
+      <div class="rb-label">${LEVEL_LABEL[lv]}</div>
+    </div>`;
+  });
+  document.getElementById('resultsBreakdown').innerHTML = breakdownHtml;
+
+  goToPage('results');
+}
+
+/* ════════════════════════════════════════════════════════
+   EXIT / RESET
+════════════════════════════════════════════════════════ */
+function exitSession(){
+  if(confirm('Keluar dari latihan ini? Progress sesi ini akan hilang (tapi statistik global tetap tersimpan).')){
+    session = null;
+    goToPage('home');
+  }
+}
+
+function resetAllProgress(){
+  if(confirm('Reset SEMUA statistik dan progress? Tindakan ini tidak bisa dibatalkan.')){
+    stats = {totalDone:0, totalCorrect:0, answered:{}};
+    saveStats();
+    updateNavStats();
+  }
+}
+
+/* ════════════════════════════════════════════════════════
+   INIT
+════════════════════════════════════════════════════════ */
+function initApp(){
+  renderLevelGrid();
+  initTypeFilter();
+  updateStartButton();
+  updateNavStats();
+
+  document.getElementById('startBtn').addEventListener('click', startSession);
+  document.getElementById('nextBtn').addEventListener('click', nextQuestion);
+  document.getElementById('prevBtn').addEventListener('click', prevQuestion);
+  document.getElementById('qtExit').addEventListener('click', exitSession);
+  document.getElementById('retryBtn').addEventListener('click', ()=>goToPage('home'));
+  document.getElementById('navResetBtn').addEventListener('click', resetAllProgress);
+}
+
+document.addEventListener('DOMContentLoaded', initApp);
+
+</script>
+</body>
+</html>
