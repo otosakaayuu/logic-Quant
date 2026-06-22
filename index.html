@@ -4,161 +4,236 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Quant Drill — Latihan Soal Interview Quant</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --ink:#08090d;--ink2:#0e1015;--surface:#161922;--surface2:#1c2030;
-  --glass:rgba(255,255,255,0.03);--glass2:rgba(255,255,255,0.07);
-  --border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.14);
-  --text:#eef0f6;--muted:#6e7283;--muted2:#9da1b3;
-  --easy:#4ade80;--easy-dim:rgba(74,222,128,0.12);
-  --medium:#60a5fa;--medium-dim:rgba(96,165,250,0.12);
-  --hard:#f59e0b;--hard-dim:rgba(245,158,11,0.12);
-  --veryhard:#fb7185;--veryhard-dim:rgba(251,113,133,0.12);
-  --promax:#c084fc;--promax-dim:rgba(192,132,252,0.13);
-  --red:#ef4444;--red-dim:rgba(239,68,68,0.13);
-  --green:#22c55e;--green-dim:rgba(34,197,94,0.13);
+  --ink:#07080c;--ink2:#0c0e14;--surface:#13151e;--surface2:#191c28;--surface3:#1f2230;
+  --glass:rgba(255,255,255,0.035);--glass2:rgba(255,255,255,0.075);--glass3:rgba(255,255,255,0.12);
+  --border:rgba(255,255,255,0.09);--border2:rgba(255,255,255,0.16);
+  --text:#f1f2f8;--muted:#6f7387;--muted2:#a0a4b8;
+  --easy:#4ade80;--easy-dim:rgba(74,222,128,0.13);--easy-glow:rgba(74,222,128,0.35);
+  --medium:#60a5fa;--medium-dim:rgba(96,165,250,0.13);--medium-glow:rgba(96,165,250,0.35);
+  --hard:#f59e0b;--hard-dim:rgba(245,158,11,0.13);--hard-glow:rgba(245,158,11,0.35);
+  --veryhard:#fb7185;--veryhard-dim:rgba(251,113,133,0.13);--veryhard-glow:rgba(251,113,133,0.35);
+  --promax:#c084fc;--promax-dim:rgba(192,132,252,0.15);--promax-glow:rgba(192,132,252,0.4);
+  --red:#ef4444;--red-dim:rgba(239,68,68,0.14);
+  --green:#22c55e;--green-dim:rgba(34,197,94,0.14);
+  --ease:cubic-bezier(.16,1,.3,1);
+  --ease-out:cubic-bezier(.22,1,.36,1);
 }
 html{scroll-behavior:smooth}
-body{font-family:Arial,Helvetica,sans-serif;background:var(--ink);color:var(--text);line-height:1.6;min-height:100vh}
+body{font-family:'Inter',Arial,sans-serif;background:var(--ink);color:var(--text);line-height:1.6;min-height:100vh;overflow-x:hidden}
+h1,h2,h3,.font-display{font-family:'Sora',sans-serif}
 
-nav{position:fixed;top:0;left:0;right:0;z-index:300;background:rgba(8,9,13,0.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
-.nav-row{max-width:1100px;margin:0 auto;padding:0 20px;display:flex;align-items:center;justify-content:space-between;height:58px;gap:16px}
-.logo{font-weight:800;font-size:16px;color:var(--text);white-space:nowrap}
+/* ═══ AMBIENT BACKGROUND ═══ */
+#bgcanvas{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.5}
+.bg-glow{position:fixed;border-radius:50%;filter:blur(80px);pointer-events:none;z-index:0;opacity:.15;transition:background 1.2s var(--ease)}
+.bg-glow-1{width:500px;height:500px;top:-150px;left:-100px;background:var(--medium)}
+.bg-glow-2{width:600px;height:600px;bottom:-200px;right:-150px;background:var(--promax);opacity:.1}
+
+/* ═══ NAV ═══ */
+nav{position:fixed;top:0;left:0;right:0;z-index:300;background:rgba(7,8,12,0.85);backdrop-filter:blur(20px) saturate(140%);-webkit-backdrop-filter:blur(20px) saturate(140%);border-bottom:1px solid var(--border);transition:border-color .3s}
+.nav-row{max-width:1140px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:60px;gap:16px}
+.logo{font-weight:800;font-size:16px;color:var(--text);white-space:nowrap;display:flex;align-items:center;gap:8px;letter-spacing:-.01em}
+.logo-dot{width:7px;height:7px;border-radius:50%;background:var(--medium);box-shadow:0 0 12px var(--medium-glow);animation:dotPulse 2.4s ease-in-out infinite}
 .logo span{color:var(--medium)}
-.nav-stats{display:flex;gap:18px;align-items:center;font-size:12px;color:var(--muted2)}
-.nav-stat b{color:var(--text);font-weight:700}
-.nav-reset{font-size:11px;color:var(--muted);background:none;border:1px solid var(--border2);padding:6px 12px;border-radius:99px;cursor:pointer}
-.nav-reset:hover{color:var(--text);background:var(--glass2)}
+.nav-stats{display:flex;gap:22px;align-items:center;font-size:12.5px;color:var(--muted2)}
+.nav-stat{display:flex;align-items:center;gap:6px}
+.nav-stat b{color:var(--text);font-weight:700;font-family:'JetBrains Mono',monospace}
+.nav-reset{font-size:11.5px;color:var(--muted);background:none;border:1px solid var(--border2);padding:7px 14px;border-radius:99px;cursor:pointer;transition:all .2s var(--ease)}
+.nav-reset:hover{color:var(--text);background:var(--glass2);border-color:var(--border2);transform:translateY(-1px)}
 
-.page{display:none;padding:90px 20px 80px;max-width:1100px;margin:0 auto;animation:fadeIn .3s}
-.page.active{display:block}
-@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes dotPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.3)}}
 
-/* HOME */
-.home-hero{text-align:center;padding:50px 0 40px}
-.home-tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.14em;color:var(--medium);border:1px solid rgba(96,165,250,.3);background:var(--medium-dim);padding:6px 16px;border-radius:99px;margin-bottom:24px}
-.home-h1{font-size:clamp(34px,7vw,56px);font-weight:800;letter-spacing:-.03em;margin-bottom:16px}
-.home-deck{font-size:15px;color:var(--muted2);max-width:560px;margin:0 auto 12px;line-height:1.7}
-.home-deck b{color:var(--text)}
-.home-credit{font-size:12px;color:var(--muted);margin-bottom:30px}
+/* ═══ PAGE TRANSITIONS ═══ */
+.page{display:none;padding:96px 24px 90px;max-width:1140px;margin:0 auto}
+.page.active{display:block;animation:pageIn .5s var(--ease) both}
+@keyframes pageIn{from{opacity:0;transform:translateY(14px) scale(.99)}to{opacity:1;transform:none}}
 
-.level-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin:40px 0}
-.level-card{padding:24px 20px;border-radius:16px;background:var(--glass);border:1px solid var(--border);cursor:pointer;transition:all .2s;text-align:left}
-.level-card:hover{background:var(--glass2);transform:translateY(-2px)}
-.level-card .lc-name{font-weight:800;font-size:17px;margin-bottom:4px}
-.level-card .lc-count{font-size:12px;color:var(--muted)}
-.level-card .lc-bar{height:4px;border-radius:2px;background:var(--surface2);margin-top:14px;overflow:hidden}
-.level-card .lc-fill{height:100%;border-radius:2px;width:0%;transition:width .4s}
-.lc-easy{border-color:rgba(74,222,128,.25)} .lc-easy .lc-fill{background:var(--easy)} .lc-easy .lc-name{color:var(--easy)}
-.lc-medium{border-color:rgba(96,165,250,.25)} .lc-medium .lc-fill{background:var(--medium)} .lc-medium .lc-name{color:var(--medium)}
-.lc-hard{border-color:rgba(245,158,11,.25)} .lc-hard .lc-fill{background:var(--hard)} .lc-hard .lc-name{color:var(--hard)}
-.lc-very_hard{border-color:rgba(251,113,133,.25)} .lc-very_hard .lc-fill{background:var(--veryhard)} .lc-very_hard .lc-name{color:var(--veryhard)}
-.lc-pro_max{border-color:rgba(192,132,252,.3)} .lc-pro_max .lc-fill{background:var(--promax)} .lc-pro_max .lc-name{color:var(--promax)}
+/* ═══ HOME ═══ */
+.home-hero{text-align:center;padding:56px 0 44px}
+.home-tag{display:inline-flex;align-items:center;gap:8px;font-size:11.5px;font-weight:700;letter-spacing:.13em;color:var(--medium);border:1px solid rgba(96,165,250,.3);background:var(--medium-dim);padding:7px 18px;border-radius:99px;margin-bottom:28px;opacity:0;animation:fadeUp .6s .05s var(--ease) forwards}
+.home-tag .pulse-icon{width:6px;height:6px;border-radius:50%;background:var(--medium);animation:dotPulse 2s infinite}
+.home-h1{font-size:clamp(38px,7.5vw,62px);font-weight:800;letter-spacing:-.035em;margin-bottom:18px;opacity:0;animation:fadeUp .65s .12s var(--ease) forwards}
+.home-h1 .grad{background:linear-gradient(120deg,var(--medium) 10%,var(--promax) 90%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.home-deck{font-size:15.5px;color:var(--muted2);max-width:580px;margin:0 auto 14px;line-height:1.75;opacity:0;animation:fadeUp .65s .2s var(--ease) forwards}
+.home-deck b{color:var(--text);font-weight:600}
+.home-credit{font-size:12.5px;color:var(--muted);margin-bottom:8px;opacity:0;animation:fadeUp .6s .28s var(--ease) forwards}
+.home-bankcount{font-size:12px;color:var(--muted);font-family:'JetBrains Mono',monospace;opacity:0;animation:fadeUp .6s .34s var(--ease) forwards}
+.home-bankcount b{color:var(--medium)}
 
-.filter-row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:30px 0}
-.filter-btn{font-size:12px;font-weight:700;padding:8px 18px;border-radius:99px;border:1px solid var(--border2);background:var(--glass);color:var(--muted2);cursor:pointer;transition:all .15s}
-.filter-btn:hover{color:var(--text)}
-.filter-btn.active{background:var(--text);color:#000;border-color:var(--text)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
 
-.start-bar{text-align:center;margin-top:20px}
-.start-btn{padding:15px 40px;border-radius:99px;font-size:15px;font-weight:800;background:var(--medium);color:#000;border:none;cursor:pointer;transition:transform .15s}
-.start-btn:hover{transform:translateY(-2px)}
-.start-btn:disabled{opacity:.4;cursor:not-allowed}
-.start-sub{font-size:12px;color:var(--muted);margin-top:10px}
+.section-label{font-size:11.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-align:center;margin:46px 0 18px;display:flex;align-items:center;gap:14px;justify-content:center}
+.section-label::before,.section-label::after{content:'';width:50px;height:1px;background:var(--border)}
 
-/* QUIZ PAGE */
-.quiz-topbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px;padding-bottom:18px;border-bottom:1px solid var(--border)}
-.qt-left{display:flex;align-items:center;gap:12px}
-.qt-badge{font-size:11px;font-weight:800;letter-spacing:.08em;padding:5px 12px;border-radius:99px}
-.qt-progress{font-size:13px;color:var(--muted2);font-weight:600}
-.qt-score{font-size:13px;font-weight:700;padding:5px 14px;border-radius:99px;background:var(--surface2);color:var(--muted2)}
-.qt-exit{font-size:12px;color:var(--muted);background:none;border:1px solid var(--border2);padding:7px 16px;border-radius:99px;cursor:pointer}
-.qt-exit:hover{color:var(--text)}
+.level-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:13px;margin:0 0 8px}
+.level-card{position:relative;padding:26px 22px;border-radius:18px;background:var(--glass);border:1px solid var(--border);cursor:pointer;transition:all .35s var(--ease);text-align:left;overflow:hidden;opacity:0;transform:translateY(18px);animation:fadeUp .55s var(--ease) forwards}
+.level-card:nth-child(1){animation-delay:.38s}
+.level-card:nth-child(2){animation-delay:.43s}
+.level-card:nth-child(3){animation-delay:.48s}
+.level-card:nth-child(4){animation-delay:.53s}
+.level-card:nth-child(5){animation-delay:.58s}
+.level-card:hover{transform:translateY(-3px);background:var(--glass2)}
+.level-card:active{transform:translateY(-1px) scale(.99)}
+.level-card .lc-check{position:absolute;top:16px;right:16px;width:22px;height:22px;border-radius:50%;border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;transition:all .3s var(--ease);font-size:11px;opacity:0;transform:scale(.5)}
+.level-card.is-selected .lc-check{opacity:1;transform:scale(1)}
+.level-card .lc-name{font-weight:800;font-size:18px;margin-bottom:5px;font-family:'Sora',sans-serif}
+.level-card .lc-count{font-size:12px;color:var(--muted);font-family:'JetBrains Mono',monospace}
+.level-card .lc-bar{height:4px;border-radius:2px;background:var(--surface2);margin-top:16px;overflow:hidden}
+.level-card .lc-fill{height:100%;border-radius:2px;width:0%;transition:width .45s var(--ease)}
+.lc-easy{border-color:rgba(74,222,128,.18)} .lc-easy .lc-fill{background:var(--easy)} .lc-easy .lc-name{color:var(--easy)} .lc-easy.is-selected{border-color:rgba(74,222,128,.5);box-shadow:0 0 0 1px rgba(74,222,128,.15),0 12px 30px -10px var(--easy-glow)} .lc-easy .lc-check{color:var(--easy);border-color:var(--easy)}
+.lc-medium{border-color:rgba(96,165,250,.18)} .lc-medium .lc-fill{background:var(--medium)} .lc-medium .lc-name{color:var(--medium)} .lc-medium.is-selected{border-color:rgba(96,165,250,.5);box-shadow:0 0 0 1px rgba(96,165,250,.15),0 12px 30px -10px var(--medium-glow)} .lc-medium .lc-check{color:var(--medium);border-color:var(--medium)}
+.lc-hard{border-color:rgba(245,158,11,.18)} .lc-hard .lc-fill{background:var(--hard)} .lc-hard .lc-name{color:var(--hard)} .lc-hard.is-selected{border-color:rgba(245,158,11,.5);box-shadow:0 0 0 1px rgba(245,158,11,.15),0 12px 30px -10px var(--hard-glow)} .lc-hard .lc-check{color:var(--hard);border-color:var(--hard)}
+.lc-very_hard{border-color:rgba(251,113,133,.18)} .lc-very_hard .lc-fill{background:var(--veryhard)} .lc-very_hard .lc-name{color:var(--veryhard)} .lc-very_hard.is-selected{border-color:rgba(251,113,133,.5);box-shadow:0 0 0 1px rgba(251,113,133,.15),0 12px 30px -10px var(--veryhard-glow)} .lc-very_hard .lc-check{color:var(--veryhard);border-color:var(--veryhard)}
+.lc-pro_max{border-color:rgba(192,132,252,.22)} .lc-pro_max .lc-fill{background:var(--promax)} .lc-pro_max .lc-name{color:var(--promax)} .lc-pro_max.is-selected{border-color:rgba(192,132,252,.55);box-shadow:0 0 0 1px rgba(192,132,252,.18),0 12px 30px -10px var(--promax-glow)} .lc-pro_max .lc-check{color:var(--promax);border-color:var(--promax)}
 
-.qcard{background:var(--glass);border:1px solid var(--border);border-radius:18px;padding:32px}
-.qcat{font-size:11px;font-weight:700;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;margin-bottom:14px}
-.qtext{font-size:17px;font-weight:600;line-height:1.65;margin-bottom:26px}
-.qtext .star{color:var(--hard)}
+.filter-row{display:flex;gap:9px;flex-wrap:wrap;justify-content:center;margin:32px 0;opacity:0;animation:fadeUp .55s .62s var(--ease) forwards}
+.filter-btn{font-size:12.5px;font-weight:700;padding:9px 20px;border-radius:99px;border:1px solid var(--border2);background:var(--glass);color:var(--muted2);cursor:pointer;transition:all .25s var(--ease)}
+.filter-btn:hover{color:var(--text);transform:translateY(-1px)}
+.filter-btn.active{background:var(--text);color:#0a0a0d;border-color:var(--text)}
 
-.mc-opts{display:flex;flex-direction:column;gap:10px;margin-bottom:10px}
-.mc-opt{text-align:left;padding:15px 18px;border-radius:11px;border:1px solid var(--border2);background:var(--surface);color:var(--muted2);font-size:14px;cursor:pointer;transition:all .15s}
-.mc-opt:hover{background:var(--surface2);color:var(--text)}
-.mc-opt.sel{border-width:2px}
-.mc-opt.ok{background:var(--green-dim);color:var(--green);border-color:rgba(34,197,94,.4)}
-.mc-opt.bad{background:var(--red-dim);color:var(--red);border-color:rgba(239,68,68,.4)}
-.mc-opt-letter{display:inline-block;width:22px;height:22px;border-radius:50%;background:var(--surface2);text-align:center;line-height:22px;font-size:11px;font-weight:800;margin-right:10px}
+.start-bar{text-align:center;margin-top:26px;opacity:0;animation:fadeUp .55s .68s var(--ease) forwards}
+.start-btn{position:relative;padding:16px 44px;border-radius:99px;font-size:15.5px;font-weight:800;background:var(--medium);color:#06080d;border:none;cursor:pointer;transition:all .3s var(--ease);font-family:'Sora',sans-serif;box-shadow:0 8px 30px -8px var(--medium-glow);overflow:hidden}
+.start-btn:hover:not(:disabled){transform:translateY(-2px) scale(1.02);box-shadow:0 14px 40px -8px var(--medium-glow)}
+.start-btn:active:not(:disabled){transform:translateY(0) scale(.98)}
+.start-btn:disabled{opacity:.35;cursor:not-allowed;box-shadow:none}
+.start-sub{font-size:12.5px;color:var(--muted);margin-top:12px;font-family:'JetBrains Mono',monospace;transition:color .3s}
+
+/* ═══ QUIZ PAGE ═══ */
+.quiz-topbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;margin-bottom:28px;padding-bottom:20px;border-bottom:1px solid var(--border)}
+.qt-left{display:flex;align-items:center;gap:14px}
+.qt-badge{font-size:11px;font-weight:800;letter-spacing:.09em;padding:6px 14px;border-radius:99px;transition:all .3s var(--ease)}
+.qt-progress-wrap{display:flex;align-items:center;gap:10px}
+.qt-progress-track{width:90px;height:5px;border-radius:99px;background:var(--surface2);overflow:hidden}
+.qt-progress-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--medium),var(--promax));transition:width .5s var(--ease)}
+.qt-progress{font-size:12.5px;color:var(--muted2);font-weight:600;font-family:'JetBrains Mono',monospace}
+.qt-score{font-size:12.5px;font-weight:700;padding:6px 16px;border-radius:99px;background:var(--surface2);color:var(--muted2);font-family:'JetBrains Mono',monospace;transition:all .3s var(--ease)}
+.qt-score.flash{animation:scoreFlash .5s var(--ease)}
+@keyframes scoreFlash{0%{transform:scale(1)}40%{transform:scale(1.15);background:var(--green-dim);color:var(--green)}100%{transform:scale(1)}}
+.qt-exit{font-size:12px;color:var(--muted);background:none;border:1px solid var(--border2);padding:7px 16px;border-radius:99px;cursor:pointer;transition:all .2s var(--ease)}
+.qt-exit:hover{color:var(--text);background:var(--glass2)}
+
+.qcard-wrap{position:relative;min-height:200px}
+.qcard{background:var(--glass);border:1px solid var(--border);border-radius:22px;padding:36px;position:relative}
+.qcard.anim-in{animation:qcardIn .42s var(--ease) both}
+.qcard.anim-out{animation:qcardOut .25s var(--ease-out) both}
+@keyframes qcardIn{from{opacity:0;transform:translateX(28px)}to{opacity:1;transform:none}}
+@keyframes qcardOut{from{opacity:1;transform:none}to{opacity:0;transform:translateX(-28px)}}
+
+.qcat{font-size:11px;font-weight:700;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.qcat-icon{width:6px;height:6px;border-radius:50%}
+.qtext{font-size:17.5px;font-weight:600;line-height:1.7;margin-bottom:28px;letter-spacing:-.005em}
+.qtext .star{color:var(--hard);font-weight:800}
+
+.mc-opts{display:flex;flex-direction:column;gap:11px;margin-bottom:10px}
+.mc-opt{text-align:left;padding:16px 19px;border-radius:13px;border:1px solid var(--border2);background:var(--surface);color:var(--muted2);font-size:14.5px;cursor:pointer;transition:all .22s var(--ease);position:relative;overflow:hidden}
+.mc-opt::before{content:'';position:absolute;inset:0;background:linear-gradient(120deg,transparent,var(--glass2),transparent);transform:translateX(-100%);transition:transform .5s}
+.mc-opt:hover:not(:disabled)::before{transform:translateX(100%)}
+.mc-opt:hover:not(:disabled){background:var(--surface2);color:var(--text);transform:translateX(3px);border-color:var(--border2)}
+.mc-opt:disabled{cursor:default}
+.mc-opt.sel{border-width:2px;animation:optSelect .3s var(--ease)}
+.mc-opt.ok{background:var(--green-dim);color:var(--green);border-color:rgba(34,197,94,.45)}
+.mc-opt.bad{background:var(--red-dim);color:var(--red);border-color:rgba(239,68,68,.45);animation:shake .4s var(--ease)}
+@keyframes optSelect{0%{transform:scale(1)}50%{transform:scale(1.015)}100%{transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.mc-opt-letter{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:var(--surface2);font-size:11px;font-weight:800;margin-right:12px;flex-shrink:0;transition:all .25s var(--ease)}
+.mc-opt.ok .mc-opt-letter{background:var(--green);color:#06140a}
+.mc-opt.bad .mc-opt-letter{background:var(--red);color:#1a0707}
 
 .essay-box{margin-bottom:14px}
-textarea.essay-input{width:100%;min-height:160px;padding:16px;border-radius:12px;border:1px solid var(--border2);background:var(--surface);color:var(--text);font-size:14px;font-family:inherit;resize:vertical;line-height:1.6}
-textarea.essay-input:focus{outline:none;border-color:var(--medium)}
-.essay-actions{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
+textarea.essay-input{width:100%;min-height:170px;padding:18px;border-radius:14px;border:1px solid var(--border2);background:var(--surface);color:var(--text);font-size:14.5px;font-family:'Inter',inherit;resize:vertical;line-height:1.7;transition:border-color .25s var(--ease)}
+textarea.essay-input:focus{outline:none;border-color:var(--medium);box-shadow:0 0 0 3px var(--medium-dim)}
+textarea.essay-input:disabled{opacity:.7;background:var(--surface2)}
+.essay-actions{display:flex;gap:11px;margin-top:14px;flex-wrap:wrap}
+.essay-charcount{font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;margin-top:6px;text-align:right}
 
-.btn{padding:11px 22px;border-radius:99px;font-size:13px;font-weight:700;cursor:pointer;border:1px solid var(--border2);background:var(--glass);color:var(--muted2);transition:all .15s}
-.btn:hover{background:var(--surface2);color:var(--text)}
-.btn.pri{background:var(--medium);color:#000;border:none}
-.btn.pri:hover{opacity:.9}
-.btn:disabled{opacity:.35;cursor:not-allowed;pointer-events:none}
+.btn{padding:12px 24px;border-radius:99px;font-size:13.5px;font-weight:700;cursor:pointer;border:1px solid var(--border2);background:var(--glass);color:var(--muted2);transition:all .25s var(--ease);font-family:'Inter',inherit}
+.btn:hover:not(:disabled){background:var(--surface2);color:var(--text);transform:translateY(-1px)}
+.btn:active:not(:disabled){transform:translateY(0)}
+.btn.pri{background:var(--medium);color:#06080d;border:none;box-shadow:0 6px 20px -6px var(--medium-glow)}
+.btn.pri:hover:not(:disabled){opacity:.92;box-shadow:0 10px 26px -6px var(--medium-glow)}
+.btn:disabled{opacity:.3;cursor:not-allowed;pointer-events:none;transform:none}
 
-.feedback-box{margin-top:20px;padding:20px 22px;border-radius:14px;display:none}
-.feedback-box.show{display:block}
+.feedback-box{margin-top:22px;padding:18px 22px;border-radius:15px;max-height:0;opacity:0;overflow:hidden;transition:max-height .4s var(--ease),opacity .35s var(--ease),margin .4s var(--ease),padding .4s var(--ease)}
+.feedback-box.show{max-height:200px;opacity:1;margin-top:22px}
 .feedback-box.ok{background:var(--green-dim);border:1px solid rgba(34,197,94,.3)}
 .feedback-box.bad{background:var(--red-dim);border:1px solid rgba(239,68,68,.3)}
-.fb-title{font-weight:800;font-size:14px;margin-bottom:6px}
+.fb-title{font-weight:800;font-size:14.5px;margin-bottom:6px;display:flex;align-items:center;gap:8px}
 .fb-title.ok{color:var(--green)}
 .fb-title.bad{color:var(--red)}
+.fb-icon{display:inline-flex;width:20px;height:20px;border-radius:50%;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;animation:popIn .35s var(--ease)}
+.fb-icon.ok{background:var(--green);color:#06140a}
+.fb-icon.bad{background:var(--red);color:#1a0707}
+@keyframes popIn{0%{transform:scale(0)}60%{transform:scale(1.25)}100%{transform:scale(1)}}
 
-.explain-box{margin-top:16px;padding:20px 22px;border-radius:14px;background:var(--surface2);font-size:13.5px;line-height:1.8;color:var(--muted2);display:none}
-.explain-box.show{display:block}
+.explain-box{margin-top:18px;padding:0 24px;border-radius:16px;background:var(--surface2);font-size:13.8px;line-height:1.85;color:var(--muted2);max-height:0;opacity:0;overflow:hidden;transition:max-height .5s var(--ease),opacity .4s var(--ease),padding .5s var(--ease)}
+.explain-box.show{max-height:3000px;opacity:1;padding:22px 24px}
 .explain-box b{color:var(--text)}
-.explain-title{font-weight:800;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--medium);margin-bottom:10px}
+.explain-title{font-weight:800;font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--medium);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.explain-title::before{content:'';width:14px;height:1.5px;background:var(--medium)}
 
-.keypoints-box{margin-top:14px;padding:16px 20px;border-radius:12px;background:var(--surface);font-size:13px;color:var(--muted2)}
-.keypoints-box ul{margin-left:18px;margin-top:6px}
-.keypoints-title{font-weight:800;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.keypoints-box{margin-top:16px;padding:18px 20px;border-radius:13px;background:var(--surface);font-size:13px;color:var(--muted2)}
+.keypoints-box ul{margin-left:20px;margin-top:8px;display:flex;flex-direction:column;gap:5px}
+.keypoints-title{font-weight:800;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
 
-.nav-quiz-bottom{display:flex;justify-content:space-between;margin-top:28px;gap:10px}
+.selfgrade-row{margin-top:20px;display:flex;gap:10px;flex-wrap:wrap}
 
-/* RESULTS PAGE */
-.results-hero{text-align:center;padding:40px 0}
-.results-score{font-size:64px;font-weight:800;margin-bottom:8px}
-.results-sub{font-size:15px;color:var(--muted2);margin-bottom:30px}
-.results-breakdown{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin:30px 0}
-.rb-card{padding:18px;border-radius:12px;background:var(--glass);border:1px solid var(--border);text-align:center}
-.rb-num{font-size:22px;font-weight:800}
-.rb-label{font-size:11px;color:var(--muted);margin-top:4px}
+.nav-quiz-bottom{display:flex;justify-content:space-between;margin-top:30px;gap:10px}
 
-footer{text-align:center;padding:40px 20px;border-top:1px solid var(--border);font-size:11px;color:var(--muted);max-width:1100px;margin:0 auto}
+/* ═══ RESULTS PAGE ═══ */
+.results-hero{text-align:center;padding:50px 0}
+.results-ring-wrap{position:relative;width:200px;height:200px;margin:0 auto 24px}
+.results-score{font-size:52px;font-weight:800;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Sora',sans-serif}
+.results-sub{font-size:15px;color:var(--muted2);margin-bottom:8px}
+.results-msg{font-size:13.5px;color:var(--muted);margin-bottom:34px;font-style:italic}
+.results-breakdown{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:11px;margin:32px 0;max-width:760px;margin-left:auto;margin-right:auto}
+.rb-card{padding:20px;border-radius:15px;background:var(--glass);border:1px solid var(--border);text-align:center;opacity:0;transform:translateY(14px);animation:fadeUp .5s var(--ease) forwards}
+.rb-num{font-size:24px;font-weight:800;font-family:'Sora',sans-serif}
+.rb-label{font-size:11px;color:var(--muted);margin-top:5px;letter-spacing:.04em}
 
-@media(max-width:600px){
-  .page{padding:80px 14px 60px}
-  .qcard{padding:22px}
+footer{text-align:center;padding:44px 24px;border-top:1px solid var(--border);font-size:11.5px;color:var(--muted);max-width:1140px;margin:0 auto;font-family:'JetBrains Mono',monospace}
+
+@media(max-width:680px){
+  .page{padding:84px 16px 70px}
+  .qcard{padding:24px}
   .nav-stats{display:none}
+  .home-h1{font-size:38px}
+  .results-ring-wrap{width:160px;height:160px}
+  .results-score{font-size:40px}
 }
 </style>
 </head>
 <body>
 
+<div class="bg-glow bg-glow-1" id="bgGlow1"></div>
+<div class="bg-glow bg-glow-2"></div>
+<canvas id="bgcanvas"></canvas>
+
 <nav>
   <div class="nav-row">
-    <div class="logo">Quant<span>Drill</span></div>
+    <div class="logo"><span class="logo-dot"></span>Quant<span>Drill</span></div>
     <div class="nav-stats">
-      <div class="nav-stat">Total dikerjakan: <b id="navTotalDone">0</b></div>
-      <div class="nav-stat">Akurasi: <b id="navAccuracy">—</b></div>
+      <div class="nav-stat">Dikerjakan <b id="navTotalDone">0</b></div>
+      <div class="nav-stat">Akurasi <b id="navAccuracy">—</b></div>
     </div>
     <button class="nav-reset" id="navResetBtn">Reset progress</button>
   </div>
 </nav>
 
-<!-- HOME / SETUP PAGE -->
+<!-- HOME -->
 <div class="page active" id="page-home">
   <div class="home-hero">
-    <div class="home-tag">QUANT INTERVIEW PRACTICE</div>
-    <h1 class="home-h1">Quant Drill</h1>
-    <p class="home-deck">Latihan soal gaya interview <b>J.P. Morgan, Goldman Sachs, Citadel</b> — probability, stochastic calculus, options pricing, dan brainteaser klasik. Pilihan ganda dan uraian, lengkap dengan <b>logika penyelesaian step-by-step.</b></p>
+    <div class="home-tag"><span class="pulse-icon"></span>QUANT INTERVIEW PRACTICE</div>
+    <h1 class="home-h1">Quant<span class="grad"> Drill</span></h1>
+    <p class="home-deck">Latihan soal gaya interview <b>J.P. Morgan, Goldman Sachs, Citadel</b> — probability, stochastic calculus, options pricing, dan brainteaser klasik. Lengkap dengan <b>logika penyelesaian step-by-step.</b></p>
     <p class="home-credit">Termasuk soal klasik: <i>"Romeo & Juliet Meeting Problem"</i> (J.P. Morgan Quant Analyst)</p>
+    <p class="home-bankcount"><b id="totalBankCount">0</b> soal tersedia di seluruh level</p>
   </div>
 
+  <div class="section-label">Pilih Level Kesulitan</div>
   <div class="level-grid" id="levelGrid"></div>
 
   <div class="filter-row" id="typeFilterRow">
@@ -173,30 +248,40 @@ footer{text-align:center;padding:40px 20px;border-top:1px solid var(--border);fo
   </div>
 </div>
 
-<!-- QUIZ PAGE -->
+<!-- QUIZ -->
 <div class="page" id="page-quiz">
   <div class="quiz-topbar">
     <div class="qt-left">
       <span class="qt-badge" id="qtBadge">EASY</span>
-      <span class="qt-progress" id="qtProgress">1 / 10</span>
+      <div class="qt-progress-wrap">
+        <div class="qt-progress-track"><div class="qt-progress-fill" id="qtProgressFill"></div></div>
+        <span class="qt-progress" id="qtProgress">1/10</span>
+      </div>
     </div>
     <div class="qt-left">
       <span class="qt-score" id="qtScore">0 benar</span>
       <button class="qt-exit" id="qtExit">Keluar</button>
     </div>
   </div>
-  <div class="qcard" id="qcard"></div>
+  <div class="qcard-wrap"><div class="qcard anim-in" id="qcard"></div></div>
   <div class="nav-quiz-bottom">
     <button class="btn" id="prevBtn">← Sebelumnya</button>
     <button class="btn pri" id="nextBtn">Selanjutnya →</button>
   </div>
 </div>
 
-<!-- RESULTS PAGE -->
+<!-- RESULTS -->
 <div class="page" id="page-results">
   <div class="results-hero">
-    <div class="results-score" id="resultsScore">0%</div>
+    <div class="results-ring-wrap">
+      <svg width="200" height="200" viewBox="0 0 200 200" id="resultsRingSvg">
+        <circle cx="100" cy="100" r="88" fill="none" stroke="var(--surface2)" stroke-width="12"/>
+        <circle cx="100" cy="100" r="88" fill="none" stroke="var(--medium)" stroke-width="12" stroke-linecap="round" id="resultsRingProgress" stroke-dasharray="553" stroke-dashoffset="553" transform="rotate(-90 100 100)"/>
+      </svg>
+      <div class="results-score" id="resultsScore">0%</div>
+    </div>
     <div class="results-sub" id="resultsSub">Kamu menjawab benar 0 dari 0 soal</div>
+    <div class="results-msg" id="resultsMsg"></div>
     <div class="results-breakdown" id="resultsBreakdown"></div>
     <div class="start-bar">
       <button class="start-btn" id="retryBtn">Latihan Lagi →</button>
@@ -786,6 +871,478 @@ const QUESTIONS = [
   2. <b>Greeks lebih mudah:</b> Karena finite difference menghasilkan seluruh "permukaan" V(S,t) di grid, menghitung Greeks (Delta, Gamma, Theta) tinggal mengambil selisih numerik dari grid yang sudah ada — sementara di Monte Carlo, menghitung Greeks akurat butuh teknik tambahan (bumping, likelihood ratio method) yang menambah noise dan computational cost.<br>
   3. <b>Efisiensi untuk Low-Dimensional Problems:</b> Untuk 1-2 underlying assets, finite difference jauh lebih cepat dan akurat dibanding MC. (Catatan: MC justru lebih unggul untuk masalah HIGH-DIMENSIONAL — banyak underlying assets — karena finite difference grid tumbuh secara eksponensial dengan dimensi, "curse of dimensionality").`,
   keyPoints:['Penjelasan diskritisasi PDE Black-Scholes menjadi grid','Penjelasan skema Crank-Nicolson dan akurasi orde-2','Penjelasan bagaimana early exercise ditangani secara natural (free boundary)','Perbandingan dengan kesulitan MC untuk American option (perlu Longstaff-Schwartz)','Bonus: trade-off dimensionalitas antara FD dan MC']
+},
+{
+  level:'easy', id:'e13', type:'mc', category:'Probability',
+  question:'Sebuah kotak berisi 5 bola merah dan 3 bola biru. Diambil 2 bola SEKALIGUS tanpa pengembalian. Berapa probabilitas KEDUANYA merah?',
+  options:['5/14','25/64','5/8','3/8'], answer:0,
+  explanation:`<b>Logika:</b> Tanpa pengembalian, probabilitas berubah setelah pengambilan pertama.<br><br>
+  P(merah pertama) = 5/8<br>
+  P(merah kedua | merah pertama) = 4/7<br><br>
+  P(keduanya merah) = (5/8)×(4/7) = 20/56 = <b>5/14 ≈ 0.357</b><br><br>
+  Perhatikan: kalau soal bilang "DENGAN pengembalian", jawabannya akan jadi (5/8)²=25/64 — beda hasil karena probabilitas tidak berubah antar pengambilan.`
+},
+{
+  level:'easy', id:'e14', type:'mc', category:'Binomial Distribution',
+  question:'5 koin adil dilempar bersamaan. Berapa probabilitas TEPAT 3 dari 5 koin menunjukkan kepala (heads)?',
+  options:['5/16','5/32','3/8','15/32'], answer:1,
+  explanation:`<b>Logika (Binomial Distribution):</b> P(X=k) = C(n,k)×pᵏ×(1-p)ⁿ⁻ᵏ<br><br>
+  C(5,3) = 10 (cara memilih 3 posisi kepala dari 5 lemparan)<br>
+  P(X=3) = 10 × (0.5)³ × (0.5)² = 10 × (0.5)⁵ = 10/32 = <b>5/16 = 0.3125</b><br><br>
+  Pola umum binomial: total semua P(X=k) untuk k=0..5 harus berjumlah 1. Distribusi binomial dengan p=0.5 selalu simetris terhadap titik tengahnya (di sini, k=2.5).`
+},
+{
+  level:'easy', id:'e15', type:'mc', category:'Combinatorics',
+  question:'Berapa cara menyusun 5 trader dalam baris untuk foto tim JIKA urutan posisi penting (permutasi)?',
+  options:['25','60','120','20'], answer:2,
+  explanation:`<b>Logika:</b> Permutasi penuh dari 5 elemen = 5!<br><br>
+  5! = 5×4×3×2×1 = <b>120</b><br><br>
+  Beda dengan kombinasi (urutan tidak penting) yang hanya akan menghasilkan C(5,5)=1 cara (karena memilih semua dari semua, tanpa urutan, hanya ada 1 cara).`
+},
+{
+  level:'easy', id:'e16', type:'mc', category:'Probability',
+  question:'Sebuah koin adil dilempar 4 kali. Berapa probabilitas MINIMAL 1 kali keluar kepala (heads)?',
+  options:['1/16','15/16','1/4','3/4'], answer:1,
+  explanation:`<b>Logika (Complement Rule):</b> Lebih mudah hitung P(TIDAK ADA kepala sama sekali) lalu komplemenkan.<br><br>
+  P(semua ekor) = (1/2)⁴ = 1/16<br><br>
+  P(minimal 1 kepala) = 1 - 1/16 = <b>15/16</b><br><br>
+  Pola "complement rule" ini SANGAT sering dipakai di soal probability quant — kapanpun ada kata "minimal 1" atau "at least one", coba pertimbangkan menghitung komplemennya dulu.`
+},
+{
+  level:'easy', id:'e17', type:'mc', category:'Descriptive Statistics',
+  question:'Return harian sebuah aset selama 6 hari: 2%, 4%, 4%, 6%, 8%, 10%. Berapa MEDIAN dari data ini?',
+  options:['4%','5%','6%','5.5%'], answer:1,
+  explanation:`<b>Logika:</b> Data sudah terurut: 2,4,4,6,8,10 (6 data, genap).<br><br>
+  Median = rata-rata dari 2 nilai tengah = (4+6)/2 = <b>5%</b><br><br>
+  Catatan: untuk data GENAP jumlahnya, median adalah rata-rata 2 nilai tengah. Untuk data GANJIL, median adalah nilai tengah tunggal.`
+},
+{
+  level:'easy', id:'e18', type:'mc', category:'Variance',
+  question:'Data: 2, 4, 6, 8, 10. Berapa POPULATION VARIANCE dari data ini? (gunakan pembagi n, bukan n-1)',
+  options:['4','6','8','10'], answer:2,
+  explanation:`<b>Logika:</b> Mean = (2+4+6+8+10)/5 = 6<br><br>
+  Variance = Σ(x-mean)²/n<br>
+  = [(2-6)²+(4-6)²+(6-6)²+(8-6)²+(10-6)²]/5<br>
+  = [16+4+0+4+16]/5<br>
+  = 40/5 = <b>8</b><br><br>
+  Catatan penting: ini POPULATION variance (pembagi n). Untuk SAMPLE variance (estimasi dari sampel), pembaginya n-1 (Bessel's correction), yang akan menghasilkan 40/4=10.`
+},
+{
+  level:'easy', id:'e19', type:'mc', category:'Combinatorics',
+  question:'Sebuah komite investasi terdiri dari 8 anggota. Berapa cara memilih SUBKOMITE 3 orang (urutan tidak penting)?',
+  options:['24','56','336','512'], answer:1,
+  explanation:`<b>Logika:</b> Kombinasi C(8,3) = 8!/(3!×5!) = (8×7×6)/(3×2×1) = 336/6 = <b>56</b><br><br>
+  Perhatikan: kalau soal minta urutan PENTING (misal: chairman, vice-chairman, secretary), maka jawabannya adalah PERMUTASI P(8,3)=8×7×6=336, bukan 56.`
+},
+{
+  level:'easy', id:'e20', type:'mc', category:'Probability OR Rule',
+  question:'P(saham A naik)=0.5, P(saham B naik)=0.4, P(keduanya naik bersamaan)=0.2. Berapa probabilitas A ATAU B naik (minimal satu)?',
+  options:['0.9','0.7','0.3','0.6'], answer:1,
+  explanation:`<b>Logika (Inclusion-Exclusion):</b> P(A∪B) = P(A)+P(B)-P(A∩B)<br><br>
+  P(A atau B) = 0.5+0.4-0.2 = <b>0.7</b><br><br>
+  Term -P(A∩B) WAJIB dikurangkan untuk menghindari double-counting kejadian yang masuk di kedua himpunan. Kalau A dan B saling eksklusif (P(A∩B)=0), maka tinggal dijumlahkan langsung.`
+},
+{
+  level:'easy', id:'e21', type:'mc', category:'Expected Value',
+  question:'Sebuah taruhan punya 3 outcome: 50% profit $10, 30% loss $5, 20% profit $20. Berapa Expected Value-nya?',
+  options:['$5.50','$7.50','$10.00','$6.00'], answer:1,
+  explanation:`<b>Logika:</b> EV = Σ P(outcome)×Nilai<br><br>
+  EV = (0.5×10)+(0.3×-5)+(0.2×20)<br>
+  = 5 - 1.5 + 4<br>
+  = <b>$7.50</b><br><br>
+  Latihan dasar menggabungkan lebih dari 2 outcome dalam perhitungan EV — pastikan total semua probabilitas = 1 (0.5+0.3+0.2=1 ✓) sebelum menghitung.`
+},
+{
+  level:'easy', id:'e22', type:'mc', category:'Probability Z-score',
+  question:'Return suatu saham berdistribusi normal dengan mean 8% dan standard deviation 3%. Berapa Z-SCORE untuk return sebesar 14%?',
+  options:['1','2','3','6'], answer:1,
+  explanation:`<b>Logika:</b> Z = (X-μ)/σ<br><br>
+  Z = (14-8)/3 = 6/3 = <b>2</b><br><br>
+  Interpretasi: return 14% berada 2 standard deviation DI ATAS mean. Untuk distribusi normal, ini adalah kejadian yang cukup jarang (sekitar 2.3% dari waktu, P(Z>2)≈0.0228).`
+},
+{
+  level:'easy', id:'e23', type:'mc', category:'Probability OR Rule',
+  question:'Dari 52 kartu, berapa probabilitas mengambil kartu HATI (hearts) ATAU kartu BERNILAI As?',
+  options:['4/13','17/52','13/52','1/13'], answer:0,
+  explanation:`<b>Logika (Inclusion-Exclusion):</b> P(hati)=13/52. P(As)=4/52. P(hati DAN As)=1/52 (hanya ada 1 kartu As-Hati).<br><br>
+  P(hati atau As) = P(hati)+P(As)-P(hati∩As)<br>
+  = 13/52 + 4/52 - 1/52<br>
+  = 16/52<br>
+  = <b>4/13 ≈ 0.3077</b><br><br>
+  Term -1/52 WAJIB dikurangkan karena As-Hati sudah terhitung di kedua kelompok (hati dan As) — tanpa pengurangan ini kita akan menghitung ganda (double-counting) kartu tersebut.`
+},
+{
+  level:'easy', id:'e24', type:'essay', category:'Probability Combinatorics',
+  question:'Sebuah trading team terdiri dari 4 quant researcher dan 3 trader (total 7 orang). Tim akan memilih 2 orang untuk mempresentasikan strategi baru ke manajemen. Hitung probabilitas bahwa KEDUA orang yang terpilih adalah quant researcher (bukan trader). Tunjukkan dua cara berbeda untuk menghitungnya: (1) menggunakan kombinasi, dan (2) menggunakan probabilitas berurutan tanpa pengembalian.',
+  modelAnswer:`<b>Cara 1 — Menggunakan Kombinasi:</b><br>
+  Total cara memilih 2 dari 7 orang = C(7,2) = 21<br>
+  Cara memilih 2 quant researcher dari 4 yang tersedia = C(4,2) = 6<br><br>
+  P(keduanya quant) = C(4,2)/C(7,2) = 6/21 = <b>2/7 ≈ 0.2857</b><br><br>
+  <b>Cara 2 — Probabilitas Berurutan (tanpa pengembalian):</b><br>
+  P(orang pertama quant) = 4/7<br>
+  P(orang kedua quant | orang pertama quant) = 3/6 = 1/2<br><br>
+  P(keduanya quant) = (4/7)×(1/2) = 4/14 = <b>2/7 ≈ 0.2857</b><br><br>
+  <b>Kesimpulan:</b> Kedua metode menghasilkan jawaban yang SAMA (2/7), karena keduanya secara matematis ekuivalen — kombinasi C(n,k) pada dasarnya adalah cara "ringkas" menghitung total skenario tanpa memperhatikan urutan, sementara metode berurutan menghitung probabilitas langkah-demi-langkah. Memahami KEDUA pendekatan ini penting karena di interview, kadang satu metode lebih mudah diaplikasikan dibanding yang lain tergantung struktur soal.`,
+  keyPoints:['Metode kombinasi: C(4,2)/C(7,2)','Metode sekuensial: (4/7)×(3/6)','Kedua metode menghasilkan jawaban sama: 2/7','Penjelasan konseptual mengapa keduanya ekuivalen']
+},
+{
+  level:'easy', id:'e25', type:'essay', category:'Expected Value & Variance',
+  question:'Sebuah dadu adil dilempar sekali. Definisikan X = hasil lemparan (nilai 1-6). Hitung E[X] dan Var(X). Tunjukkan seluruh langkah perhitungan, termasuk menghitung E[X²] terlebih dahulu sebelum mencari variance.',
+  modelAnswer:`<b>Langkah 1 — Hitung E[X]:</b><br>
+  E[X] = (1+2+3+4+5+6)/6 = 21/6 = <b>3.5</b><br><br>
+  <b>Langkah 2 — Hitung E[X²]:</b><br>
+  E[X²] = (1²+2²+3²+4²+5²+6²)/6 = (1+4+9+16+25+36)/6 = 91/6 ≈ <b>15.1667</b><br><br>
+  <b>Langkah 3 — Hitung Variance menggunakan rumus Var(X)=E[X²]-(E[X])²:</b><br>
+  Var(X) = 91/6 - (3.5)²<br>
+  = 15.1667 - 12.25<br>
+  = <b>2.9167 (≈35/12)</b><br><br>
+  <b>Catatan:</b> Rumus Var(X)=E[X²]-(E[X])² adalah salah satu rumus PALING SERING dipakai di seluruh probability theory — jauh lebih efisien secara komputasi dibanding rumus Var(X)=E[(X-μ)²] secara langsung, terutama untuk distribusi kompleks. Hasil variance dadu = 35/12 ini akan dipakai lagi nanti saat menghitung variance SUM of multiple dice (yang scale linear dengan jumlah dadu, karena dadu-dadu tersebut independen).`,
+  keyPoints:['Hitung E[X]=3.5 dengan benar','Hitung E[X²]=91/6 dengan benar','Aplikasi rumus Var(X)=E[X²]-(E[X])²','Hasil akhir Var(X)=35/12≈2.917']
+},
+{
+  level:'medium', id:'m13', type:'mc', category:'Poisson Distribution',
+  question:'Sebuah algo trading desk mengalami rata-rata 3 "flash crash event" per tahun (mengikuti distribusi Poisson). Berapa probabilitas terjadi TEPAT 2 event tahun ini?',
+  options:['0.224','0.149','0.180','0.301'], answer:0,
+  explanation:`<b>Logika (Poisson Distribution):</b> P(X=k) = (λᵏ × e⁻λ) / k!<br><br>
+  Dengan λ=3 (rata-rata), k=2:<br><br>
+  P(X=2) = (3² × e⁻³) / 2! = (9 × 0.0498) / 2 = 0.4480/2 = <b>≈0.224</b><br><br>
+  Distribusi Poisson sangat umum dipakai untuk memodelkan "jumlah kejadian rare event dalam interval waktu tetap" — cocok untuk flash crash, default events, atau jumlah trade besar (block trades) per hari.`
+},
+{
+  level:'medium', id:'m14', type:'mc', category:'Conditional Probability',
+  question:'Dari data historis: P(sinyal momentum aktif DAN harga naik) = 0.15. P(sinyal momentum aktif) = 0.3. Berapa P(harga naik | sinyal momentum aktif)?',
+  options:['0.45','0.50','0.15','0.20'], answer:1,
+  explanation:`<b>Logika:</b> P(A|B) = P(A∩B)/P(B)<br><br>
+  P(naik | sinyal aktif) = 0.15/0.3 = <b>0.50 (50%)</b><br><br>
+  Konsep dasar conditional probability — sering jadi building block untuk soal Bayes Theorem yang lebih kompleks. Pastikan selalu identifikasi dulu mana yang "given" (B, di penyebut) dan mana yang ditanyakan (A, di pembilang bersama intersection).`
+},
+{
+  level:'medium', id:'m15', type:'mc', category:'Portfolio Expected Return',
+  question:'Portofolio terdiri dari 3 aset dengan bobot 30%, 50%, 20%, dan expected return masing-masing 8%, 12%, 5%. Berapa expected return portofolio?',
+  options:['8.0%','9.4%','10.2%','8.4%'], answer:1,
+  explanation:`<b>Logika:</b> Expected return portofolio = weighted average dari expected return individual.<br><br>
+  E[R_p] = (0.3×8%)+(0.5×12%)+(0.2×5%)<br>
+  = 2.4% + 6% + 1%<br>
+  = <b>9.4%</b><br><br>
+  Berbeda dengan VARIANCE portofolio yang TIDAK bisa dihitung dengan rata-rata tertimbang sederhana (perlu memperhitungkan korelasi/covariance antar aset), EXPECTED RETURN portofolio SELALU bisa dihitung sebagai weighted average linear — properti linear dari operator expectation.`
+},
+{
+  level:'medium', id:'m16', type:'mc', category:'Standard Error',
+  question:'Sebuah sampel return harian punya standard deviation 10% dan ukuran sampel n=25. Berapa STANDARD ERROR dari mean sampel ini?',
+  options:['10%','2%','0.4%','5%'], answer:1,
+  explanation:`<b>Logika:</b> Standard Error (SE) = σ/√n<br><br>
+  SE = 10%/√25 = 10%/5 = <b>2%</b><br><br>
+  Standard Error mengukur seberapa "presisi" estimasi mean sampel terhadap mean populasi sebenarnya. Semakin besar n, semakin kecil SE — inilah alasan kenapa lebih banyak data historis (asalkan tetap relevan/stasioner) membuat estimasi parameter model lebih reliable.`
+},
+{
+  level:'medium', id:'m17', type:'mc', category:'Linear Regression',
+  question:'Covariance antara return saham X dan return market adalah 12, variance return market adalah 4. Berapa SLOPE (beta koefisien) dari regresi linear return X terhadap return market?',
+  options:['2','3','4','0.33'], answer:1,
+  explanation:`<b>Logika (OLS Regression Slope):</b> β = Cov(X,Y) / Var(Y)<br><br>
+  β = 12/4 = <b>3</b><br><br>
+  Ini adalah rumus yang SAMA dengan menghitung Beta di CAPM — regresi linear return saham terhadap return market, dengan slope yang dihasilkan adalah "systematic risk" (beta) dari saham tersebut.`
+},
+{
+  level:'medium', id:'m18', type:'mc', category:'Binomial Variance',
+  question:'Sebuah strategi trading dijalankan 20 kali, win rate tiap trade 30% (independen). Berapa VARIANCE dari jumlah trade yang menang?',
+  options:['6','4.2','14','0.21'], answer:1,
+  explanation:`<b>Logika (Binomial Variance):</b> Var(X) = n×p×(1-p)<br><br>
+  Var(X) = 20×0.3×0.7 = <b>4.2</b><br><br>
+  Standard deviation-nya = √4.2 ≈ 2.05 trade. Ini membantu trader memperkirakan range realistis: dengan n=20 dan win rate 30%, expected wins = 6, tapi variasi normalnya ±2 trade (1 SD) di sekitar angka itu.`
+},
+{
+  level:'medium', id:'m19', type:'mc', category:'Geometric Distribution',
+  question:'Sebuah model trading punya 25% chance menghasilkan sinyal "STRONG BUY" setiap hari (independen antar hari). Berapa VARIANCE dari jumlah hari sampai sinyal pertama muncul?',
+  options:['4','12','16','3'], answer:1,
+  explanation:`<b>Logika (Geometric Distribution Variance):</b> Var(X) = (1-p)/p²<br><br>
+  Var(X) = (1-0.25)/(0.25)² = 0.75/0.0625 = <b>12</b><br><br>
+  Bandingkan dengan E[X]=1/p=4 hari (expected waktu tunggu). Variance yang besar (12, SD≈3.46) menunjukkan bahwa meski rata-rata 4 hari, ada kemungkinan signifikan menunggu jauh lebih lama dari itu — distribusi geometric punya "ekor kanan" yang panjang.`
+},
+{
+  level:'medium', id:'m20', type:'mc', category:'Sharpe Ratio (Negative)',
+  question:'Sebuah strategi punya expected return 2% per tahun, risk-free rate 3%, volatility 10%. Berapa Sharpe Ratio-nya, dan apa interpretasinya?',
+  options:['+0.1, strategi bagus','-0.1, strategi underperform risk-free asset secara risk-adjusted','+1.0, strategi sangat baik','-1.0, strategi sangat buruk'], answer:1,
+  explanation:`<b>Logika:</b> Sharpe = (E[R]-R_f)/σ<br><br>
+  Sharpe = (0.02-0.03)/0.10 = -0.01/0.10 = <b>-0.1</b><br><br>
+  Sharpe Ratio NEGATIF berarti strategi ini secara risk-adjusted PERFORM LEBIH BURUK dibanding hanya menyimpan uang di risk-free asset (misal T-bills)! Meski expected return-nya positif (2%), itu masih lebih rendah dari risk-free rate (3%) — investor mengambil risiko TANPA kompensasi yang memadai.`
+},
+{
+  level:'medium', id:'m21', type:'mc', category:'Joint Probability',
+  question:'Dua sinyal trading independen: Sinyal A benar 70% dari waktu, Sinyal B benar 60% dari waktu. Berapa probabilitas KEDUA sinyal SALAH bersamaan?',
+  options:['0.42','0.12','0.30','0.58'], answer:1,
+  explanation:`<b>Logika:</b> P(A salah)=1-0.7=0.3. P(B salah)=1-0.6=0.4. Karena independen:<br><br>
+  P(keduanya salah) = 0.3×0.4 = <b>0.12 (12%)</b><br><br>
+  Soal jebakan umum: pastikan dulu menghitung probabilitas "salah" dari masing-masing sinyal SEBELUM mengalikan — jangan langsung kalikan probabilitas "benar" (0.7×0.6=0.42, yang adalah jawaban SALAH untuk pertanyaan ini, karena itu adalah P(keduanya BENAR), bukan P(keduanya SALAH)).`
+},
+{
+  level:'medium', id:'m22', type:'mc', category:'Dice Sum Distribution',
+  question:'Dua dadu adil dilempar. Berapa probabilitas SUM yang dihasilkan adalah ANGKA GENAP?',
+  options:['1/2','5/9','7/12','1/3'], answer:0,
+  explanation:`<b>Logika:</b> Sum genap terjadi jika kedua dadu SAMA paritasnya (keduanya ganjil ATAU keduanya genap).<br><br>
+  P(keduanya ganjil) = (3/6)×(3/6) = 9/36<br>
+  P(keduanya genap) = (3/6)×(3/6) = 9/36<br><br>
+  P(sum genap) = 9/36+9/36 = 18/36 = <b>1/2</b><br><br>
+  Insight elegan: secara simetri, sum genap dan sum ganjil punya probabilitas yang SAMA (masing-masing 1/2) — kamu bisa langsung menjawab ini tanpa menghitung detail jika menyadari simetri tersebut.`
+},
+{
+  level:'medium', id:'m23', type:'essay', category:'Bayesian Updating',
+  question:'Sebuah quant fund punya dua model trading: Model X (dipakai 60% dari waktu, profitable 65% dari hari yang dipakai) dan Model Y (dipakai 40% dari waktu, profitable 45% dari hari yang dipakai). Diberikan informasi bahwa HARI INI fund profitable, hitung probabilitas bahwa Model X yang sedang dipakai hari ini (asumsikan tepat satu model dipakai tiap hari, dipilih sesuai proporsi di atas).',
+  modelAnswer:`<b>Setup (Bayes Theorem):</b><br>
+  P(X dipakai) = 0.6, P(profit|X) = 0.65<br>
+  P(Y dipakai) = 0.4, P(profit|Y) = 0.45<br><br>
+  <b>Langkah 1 — Hitung P(profit) total (Law of Total Probability):</b><br>
+  P(profit) = P(profit|X)×P(X) + P(profit|Y)×P(Y)<br>
+  = (0.65×0.6) + (0.45×0.4)<br>
+  = 0.39 + 0.18<br>
+  = 0.57<br><br>
+  <b>Langkah 2 — Hitung P(X|profit) menggunakan Bayes Theorem:</b><br>
+  P(X|profit) = P(profit|X)×P(X) / P(profit)<br>
+  = 0.39 / 0.57<br>
+  = <b>≈0.684 (68.4%)</b><br><br>
+  <b>Interpretasi:</b> Prior probability Model X dipakai adalah 60%, tapi setelah mengetahui hari ini profitable, probabilitas ter-update (posterior) naik menjadi 68.4% — karena Model X punya win rate lebih tinggi (65% vs 45%), profit hari ini memberikan evidence yang "mendukung" hipotesis bahwa Model X sedang aktif.`,
+  keyPoints:['Setup P(X), P(Y), P(profit|X), P(profit|Y) dengan benar','Hitung P(profit) total via law of total probability = 0.57','Aplikasi Bayes theorem dengan benar','Hasil akhir P(X|profit)≈0.684','Interpretasi: posterior naik dari prior karena evidence mendukung X']
+},
+{
+  level:'medium', id:'m24', type:'essay', category:'Variance & Diversification',
+  question:'Dua strategi trading independen: Strategi A punya expected daily return 0.1% dengan variance 0.0004. Strategi B punya expected daily return 0.08% dengan variance 0.0001. Jika dikombinasikan dengan bobot 50/50, hitung expected return dan variance dari portofolio gabungan. Bandingkan Sharpe-like ratio (return/std dev, tanpa risk-free rate) dari masing-masing strategi individual vs portofolio gabungan, dan jelaskan mengapa diversifikasi bisa meningkatkan rasio ini meski tidak ada strategi yang "lebih baik" secara individual.',
+  modelAnswer:`<b>Langkah 1 — Expected return portofolio:</b><br>
+  E[R_p] = 0.5×0.1% + 0.5×0.08% = 0.05%+0.04% = <b>0.09%</b><br><br>
+  <b>Langkah 2 — Variance portofolio (asumsi independen, korelasi=0):</b><br>
+  Var(R_p) = w_A²×Var(A) + w_B²×Var(B) + 2×w_A×w_B×Cov(A,B)<br>
+  Karena independen, Cov(A,B)=0:<br>
+  Var(R_p) = (0.5)²×0.0004 + (0.5)²×0.0001<br>
+  = 0.25×0.0004 + 0.25×0.0001<br>
+  = 0.0001 + 0.000025<br>
+  = <b>0.000125</b><br>
+  Std dev portofolio = √0.000125 ≈ <b>0.01118 (1.118%)</b><br><br>
+  <b>Langkah 3 — Bandingkan rasio return/risk:</b><br>
+  Strategi A sendiri: SD_A=√0.0004=2%. Rasio = 0.1%/2% = 0.05<br>
+  Strategi B sendiri: SD_B=√0.0001=1%. Rasio = 0.08%/1% = 0.08<br>
+  Portofolio gabungan: Rasio = 0.09%/1.118% ≈ <b>0.0805</b><br><br>
+  <b>Interpretasi:</b> Portofolio gabungan (rasio≈0.0805) HAMPIR SAMA dengan Strategi B sendiri (0.08) — yang sudah merupakan PENINGKATAN signifikan dibanding Strategi A sendiri (0.05). Ini terjadi karena Strategi B punya volatility jauh lebih rendah, sehingga mendominasi karakteristik risk-adjusted dari kombinasi, SAMBIL tetap mendapat sedikit boost return dari Strategi A.<br><br>
+  <b>Kunci konseptual diversifikasi:</b> Karena korelasi=0 (independen), variance gabungan TUMBUH LEBIH LAMBAT daripada rata-rata tertimbang variance individual (yang akan jadi 0.5×0.0004+0.5×0.0001=0.00025, JAUH lebih besar dari hasil aktual 0.000125). Inilah "the only free lunch in finance" — mengurangi risiko TANPA mengurangi return secara proporsional, semata dari korelasi yang tidak sempurna antar strategi/aset.`,
+  keyPoints:['Hitung expected return portofolio dengan benar = 0.09%','Hitung variance portofolio dengan benar = 0.000125 (penting: faktor korelasi 0)','Hitung std dev = 1.118%','Hitung dan bandingkan rasio return/risk masing-masing dan gabungan','Penjelasan konseptual tentang manfaat diversifikasi dari korelasi rendah/nol']
+},
+{
+  level:'hard', id:'h10', type:'mc', category:'Geometric Probability (Variant)',
+  question:'Variasi Romeo & Juliet: window pertemuan diperpanjang menjadi 90 menit (bukan 60), wait time tetap 15 menit. Berapa probabilitas mereka bertemu?',
+  options:['7/16','≈0.3025','≈0.4375','≈0.25'], answer:1,
+  explanation:`<b>Logika:</b> Gunakan rumus umum: P(meet) = 1 - [(T-w)/T]²<br><br>
+  Dengan T=90, w=15:<br><br>
+  P(meet) = 1 - [(90-15)/90]² = 1 - [75/90]² = 1 - (0.8333)² = 1 - 0.6944 = <b>≈0.3056 ≈ 0.3025 (closest)</b><br><br>
+  Perhatikan pola penting: ketika window (T) diperbesar TAPI wait time (w) tetap sama, probabilitas bertemu MENURUN — karena proporsi waktu tunggu relatif terhadap window total menjadi lebih kecil. Ini intuitif: window lebih lebar = lebih banyak cara untuk "melewatkan" satu sama lain.`
+},
+{
+  level:'hard', id:'h11', type:'mc', category:'Order Statistics',
+  question:'X dan Y adalah dua variabel random independen, uniform di [0,1]. Berapa E[min(X,Y)]?',
+  options:['1/2','1/3','2/3','1/4'], answer:1,
+  explanation:`<b>Logika (Order Statistics):</b><br><br>
+  Untuk n=2 variabel uniform(0,1) independen, distribusi dari MINIMUM mengikuti Beta(1,2), dengan E[min] = 1/(n+1) = 1/3.<br><br>
+  <b>Derivasi alternatif:</b> P(min(X,Y)>t) = P(X>t)×P(Y>t) = (1-t)²<br>
+  E[min] = ∫₀¹ P(min>t) dt = ∫₀¹ (1-t)² dt = [-(1-t)³/3]₀¹ = 1/3<br><br>
+  E[min(X,Y)] = <b>1/3</b><br><br>
+  Bandingkan dengan E[max(X,Y)]=2/3 (dari soal sebelumnya di Linear Algebra lesson) — keduanya simetris terhadap titik tengah 1/2, dan E[min]+E[max]=1 (=E[X]+E[Y], properti linearitas expectation).`
+},
+{
+  level:'hard', id:'h12', type:'mc', category:'Conditional Probability',
+  question:'Dua dadu dilempar, diketahui SUM = 8. Berapa probabilitas SALAH SATU dadu menunjukkan angka 2?',
+  options:['1/5','2/5','1/3','0 (tidak mungkin)'], answer:1,
+  explanation:`<b>Logika:</b> Kombinasi yang menghasilkan sum=8: (2,6),(3,5),(4,4),(5,3),(6,2) — total 5 kombinasi.<br><br>
+  Dari 5 kombinasi tersebut, yang mengandung angka 2: (2,6) dan (6,2) — 2 kombinasi.<br><br>
+  P(salah satu dadu=2 | sum=8) = 2/5 = <b>0.4</b><br><br>
+  Soal ini melatih conditional probability dengan SAMPLE SPACE yang sudah dipersempit (hanya kombinasi dengan sum=8), bukan dari 36 kombinasi total — konsep krusial sebelum mempelajari Bayes Theorem secara formal.`
+},
+{
+  level:'hard', id:'h13', type:'mc', category:'Portfolio Theory / Correlation',
+  question:'Dua aset punya variance return yang SAMA (0.04 masing-masing). Berapa korelasi yang dibutuhkan agar VARIANCE PORTOFOLIO (equal weight 50/50) menjadi TEPAT NOL?',
+  options:['0','0.5','-0.5','-1'], answer:3,
+  explanation:`<b>Logika:</b> Var(portfolio) = w₁²σ₁²+w₂²σ₂²+2w₁w₂σ₁σ₂ρ<br><br>
+  Dengan w₁=w₂=0.5, σ₁²=σ₂²=0.04 (σ=0.2):<br><br>
+  0 = (0.25×0.04)+(0.25×0.04)+2(0.25)(0.2)(0.2)ρ<br>
+  0 = 0.01+0.01+0.02ρ<br>
+  0 = 0.02+0.02ρ<br>
+  ρ = -1<br><br>
+  <b>Korelasi = -1 (perfect negative correlation)</b><br><br>
+  Ini adalah kasus EKSTREM dari hedging sempurna: jika dua aset bergerak BERLAWANAN secara sempurna dengan magnitude yang sama, kombinasi keduanya menghilangkan SEMUA risiko (variance=0) — meski masing-masing aset individual tetap volatile. Inilah prinsip dasar di balik strategi hedging dan pairs trading.`
+},
+{
+  level:'hard', id:'h14', type:'mc', category:'Linearity of Expectation',
+  question:'Dua dadu adil dilempar. Berapa E[sum of two dice]?',
+  options:['6','7','3.5','12'], answer:1,
+  explanation:`<b>Logika (Linearity of Expectation):</b> E[X+Y] = E[X]+E[Y], BERLAKU SELALU, bahkan jika X dan Y TIDAK independen!<br><br>
+  E[dadu 1] = 3.5, E[dadu 2] = 3.5<br><br>
+  E[sum] = 3.5+3.5 = <b>7</b><br><br>
+  Linearity of expectation adalah salah satu tools PALING POWERFUL di probability theory — memungkinkan kita menghitung expected value dari SUM variabel random TANPA perlu tahu joint distribution-nya sama sekali, bahkan untuk variabel yang berkorelasi/dependent.`
+},
+{
+  level:'hard', id:'h15', type:'mc', category:'Three-Asset Hedging',
+  question:'Sebuah trader long $100 di Aset A (beta=1.5 terhadap market) dan ingin hedge EXPOSURE MARKET-nya secara penuh menggunakan futures index dengan beta=1.0. Berapa NILAI NOTIONAL short futures yang dibutuhkan?',
+  options:['$100','$150','$67','$200'], answer:1,
+  explanation:`<b>Logika (Beta Hedging):</b> Untuk menghilangkan exposure pasar (market-neutral), notional hedge harus disesuaikan dengan rasio beta:<br><br>
+  Notional Hedge = Notional Posisi × (β_posisi / β_hedge_instrument)<br><br>
+  = $100 × (1.5/1.0) = <b>$150</b><br><br>
+  Karena Aset A punya beta 1.5 (lebih volatile dari market), untuk menghilangkan exposure pasarnya secara penuh, butuh SHORT futures index senilai $150 (lebih besar dari posisi long aslinya) — bukan hanya $100. Ini adalah konsep dasar yang dipakai di "beta-neutral" atau "market-neutral" portfolio construction.`
+},
+{
+  level:'hard', id:'h16', type:'essay', category:'Conditional Expectation & Variance',
+  question:'Sebuah algorithmic trading strategy menghasilkan return harian yang mengikuti DUA REGIME berbeda: Regime "Calm" (terjadi 70% hari, return ~ N(0.1%, 0.5%²)) dan Regime "Volatile" (terjadi 30% hari, return ~ N(-0.2%, 3%²)). Hitung UNCONDITIONAL expected return dan UNCONDITIONAL variance dari strategi ini (gabungan kedua regime), menggunakan Law of Total Expectation dan Law of Total Variance.',
+  modelAnswer:`<b>Setup:</b><br>
+  P(Calm)=0.7, E[R|Calm]=0.1%, Var(R|Calm)=0.5%²=0.000025<br>
+  P(Volatile)=0.3, E[R|Volatile]=-0.2%, Var(R|Volatile)=3%²=0.0009<br><br>
+  <b>Langkah 1 — Law of Total Expectation:</b><br>
+  E[R] = E[R|Calm]×P(Calm) + E[R|Volatile]×P(Volatile)<br>
+  = (0.1%×0.7) + (-0.2%×0.3)<br>
+  = 0.07% - 0.06%<br>
+  = <b>0.01%</b><br><br>
+  <b>Langkah 2 — Law of Total Variance:</b><br>
+  Var(R) = E[Var(R|regime)] + Var(E[R|regime])<br><br>
+  <b>Bagian 1 — E[Var(R|regime)]</b> (rata-rata tertimbang dari variance dalam tiap regime):<br>
+  = (0.7×0.000025) + (0.3×0.0009)<br>
+  = 0.0000175 + 0.00027<br>
+  = 0.0002875<br><br>
+  <b>Bagian 2 — Var(E[R|regime])</b> (variance dari MEAN antar regime, yaitu variance "between-group"):<br>
+  Mean keseluruhan = 0.01% (dari langkah 1)<br>
+  = 0.7×(0.1%-0.01%)² + 0.3×(-0.2%-0.01%)²<br>
+  = 0.7×(0.0009%)²... mari hitung dalam desimal (%→/100):<br>
+  = 0.7×(0.0009)² + 0.3×(-0.0021)²<br>
+  = 0.7×0.00000081 + 0.3×0.00000441<br>
+  = 0.000000567 + 0.000001323<br>
+  = 0.00000189<br><br>
+  <b>Total Variance:</b><br>
+  Var(R) = 0.0002875 + 0.00000189 ≈ <b>0.0002894</b><br>
+  Std dev ≈ √0.0002894 ≈ <b>1.70%</b><br><br>
+  <b>Insight kunci:</b> Komponen "within-regime" variance (0.0002875) JAUH LEBIH BESAR dari komponen "between-regime" variance (0.00000189) — artinya MAYORITAS risiko strategi ini datang dari volatility DALAM masing-masing regime (terutama Volatile regime yang variance-nya besar), BUKAN dari perbedaan mean antar regime. Ini insight penting untuk risk management: fokus mitigasi risiko harus ke pengurangan exposure saat regime volatile terdeteksi, bukan ke "rata-ratakan" return antar regime.`,
+  keyPoints:['Aplikasi Law of Total Expectation dengan benar, hasil E[R]=0.01%','Pemahaman struktur Law of Total Variance (2 komponen)','Hitung komponen within-regime variance dengan benar','Hitung komponen between-regime variance dengan benar','Total variance ≈0.0002894, std dev≈1.70%','Insight: within-regime variance dominan dibanding between-regime']
+},
+{
+  level:'very_hard', id:'vh9', type:'mc', category:'Multi-Asset Portfolio Variance',
+  question:'Portofolio 3 aset dengan bobot (0.4, 0.35, 0.25). Variance masing-masing: 0.04, 0.09, 0.01. Covariance: Cov(1,2)=0.012, Cov(1,3)=0.004, Cov(2,3)=0.006. Berapa VARIANCE portofolio total?',
+  options:['0.0187','0.0233','0.0312','0.0156'], answer:1,
+  explanation:`<b>Logika (Matrix Form Portfolio Variance):</b> Var(P) = ΣΣ wᵢwⱼCov(i,j) untuk semua pasangan i,j (termasuk i=j, dimana Cov(i,i)=Var(i))<br><br>
+  Var(P) = w₁²Var(1) + w₂²Var(2) + w₃²Var(3) + 2w₁w₂Cov(1,2) + 2w₁w₃Cov(1,3) + 2w₂w₃Cov(2,3)<br><br>
+  = (0.4)²(0.04) + (0.35)²(0.09) + (0.25)²(0.01) + 2(0.4)(0.35)(0.012) + 2(0.4)(0.25)(0.004) + 2(0.35)(0.25)(0.006)<br><br>
+  = 0.0064 + 0.011025 + 0.000625 + 0.00336 + 0.0008 + 0.00105<br><br>
+  = <b>0.02326 ≈ 0.0233</b><br><br>
+  Untuk portofolio dengan n aset, jumlah term covariance yang harus diperhitungkan adalah n(n-1)/2 — tumbuh secara kuadratik. Inilah kenapa software portfolio risk management menggunakan REPRESENTASI MATRIKS (covariance matrix Σ, dengan Var(P)=w'Σw) untuk menangani banyak aset secara efisien, bukan menjabarkan term satu-satu seperti di atas.`
+},
+{
+  level:'very_hard', id:'vh10', type:'mc', category:'Markov Chains',
+  question:'Sebuah model regime-switching market punya 2 state: "Bull" dan "Bear". P(tetap Bull | Bull)=0.7, P(tetap Bear | Bear)=0.6. Berapa STEADY-STATE PROBABILITY market berada di kondisi Bull dalam jangka panjang?',
+  options:['0.50','0.571','0.700','0.429'], answer:1,
+  explanation:`<b>Logika (Markov Chain Steady State):</b> Transisi: P(Bull→Bull)=0.7, P(Bull→Bear)=0.3, P(Bear→Bull)=0.4, P(Bear→Bear)=0.6.<br><br>
+  Di steady state, π_Bull harus memenuhi persamaan balance: π_Bull = π_Bull×0.7 + π_Bear×0.4, dengan π_Bull+π_Bear=1.<br><br>
+  <b>Cara cepat (detailed balance):</b> Pada rantai Markov 2-state, rasio steady-state berbanding lurus dengan rasio transisi MASUK:<br>
+  π_Bull / π_Bear = P(Bear→Bull) / P(Bull→Bear) = 0.4/0.3 = 4/3<br><br>
+  Dengan π_Bull+π_Bear=1, dan π_Bull/π_Bear=4/3, maka π_Bull=4/7, π_Bear=3/7.<br><br>
+  <b>π_Bull = 4/7 ≈ 0.571</b><br><br>
+  Steady state distribution TIDAK bergantung pada state awal — setelah cukup banyak transisi, probabilitas berada di Bull/Bear akan konvergen ke nilai ini berapa pun starting state-nya (asalkan chain-nya ergodic).`
+},
+{
+  level:'very_hard', id:'vh11', type:'mc', category:'Ito\'s Lemma Application',
+  question:'Harga saham S mengikuti GBM dengan μ=8%, σ=25%. Menggunakan Ito\'s Lemma untuk f(S)=S², berapa DRIFT COEFFICIENT dari d(S²)/S² (yaitu, koefisien dt setelah dibagi S²)?',
+  options:['16%','22.25%','8%','20.25%'], answer:1,
+  explanation:`<b>Logika (Ito\\'s Lemma untuk f(S)=S²):</b> df = f\\'(S)dS + ½f\'\'(S)(dS)²<br><br>
+  f\\'(S)=2S, f\\'\\'(S)=2<br><br>
+  d(S²) = 2S(μS dt+σS dW) + ½(2)(σ²S²dt)<br>
+  = 2μS²dt + 2σS²dW + σ²S²dt<br>
+  = (2μ+σ²)S²dt + 2σS²dW<br><br>
+  Drift coefficient (setelah dibagi S²) = 2μ+σ² = 2(0.08)+(0.25)² = 0.16+0.0625 = <b>0.2225 = 22.25%</b><br><br>
+  Catatan penting: drift dari d(S²) BUKAN sekadar 2×drift dari dS (yang akan memberi 16%) — ada tambahan term σ² dari Ito correction (turunan kedua), karena f(S)=S² adalah fungsi KONVEKS. Ini contoh konkret lain dari prinsip Jensen\\'s Inequality yang muncul di Ito\\'s Lemma.`
+},
+{
+  level:'very_hard', id:'vh12', type:'mc', category:'Optimal Portfolio Weights',
+  question:'Dua aset risky dengan variance 0.04 dan 0.09, covariance antar keduanya 0.02. Berapa BOBOT OPTIMAL aset pertama (w₁*) untuk MEMINIMALKAN variance portofolio (minimum variance portfolio, tanpa constraint expected return)?',
+  options:['0.5','0.778','0.222','0.636'], answer:1,
+  explanation:`<b>Logika (Minimum Variance Portfolio, 2 aset):</b> Minimalkan Var(P)=w²σ₁²+(1-w)²σ₂²+2w(1-w)Cov, turunkan terhadap w, set=0:<br><br>
+  w* = (σ₂²-Cov) / (σ₁²+σ₂²-2Cov)<br><br>
+  w* = (0.09-0.02) / (0.04+0.09-2×0.02)<br>
+  = 0.07 / (0.13-0.04)<br>
+  = 0.07/0.09<br>
+  = <b>≈0.778</b><br><br>
+  Menariknya, w* TIDAK bergantung pada expected return masing-masing aset — ini adalah portofolio yang meminimalkan RISIKO MURNI, terlepas dari return yang diharapkan. Untuk portofolio yang juga mempertimbangkan trade-off return (efficient frontier), perlu optimasi tambahan dengan target return tertentu (Markowitz mean-variance optimization penuh).`
+},
+{
+  level:'very_hard', id:'vh13', type:'essay', category:'Stochastic Calculus — Ornstein-Uhlenbeck',
+  question:'Proses Ornstein-Uhlenbeck (OU) sering dipakai untuk memodelkan mean-reverting series seperti spread pairs trading: dX = θ(μ-X)dt + σdW. Jelaskan secara konseptual MENGAPA proses ini "mean-reverting" (berbeda dengan Geometric Brownian Motion yang tidak mean-reverting), dan jelaskan peran masing-masing parameter (θ, μ, σ) dalam konteks strategi pairs trading.',
+  modelAnswer:`<b>Mengapa OU Process Mean-Reverting:</b><br><br>
+  Perhatikan komponen drift: θ(μ-X)dt. Term ini BERGANTUNG pada posisi X relatif terhadap μ:<br>
+  • Jika X > μ (di atas mean): (μ-X) NEGATIF, sehingga drift NEGATIF — mendorong X turun kembali ke arah μ.<br>
+  • Jika X < μ (di bawah mean): (μ-X) POSITIF, sehingga drift POSITIF — mendorong X naik kembali ke arah μ.<br><br>
+  Inilah mekanisme "restoring force" yang membuat proses ini secara struktural cenderung kembali ke μ — TIDAK SEPERTI Geometric Brownian Motion (dS=μSdt+σSdW) dimana drift TIDAK bergantung pada deviasi dari nilai tertentu, sehingga GBM bisa "mengembara" jauh tanpa batas (tidak ada gaya pemulih).<br><br>
+  <b>Peran Masing-masing Parameter dalam Pairs Trading:</b><br><br>
+  <b>μ (long-run mean):</b> Nilai equilibrium dari spread antara dua aset yang cointegrated. Dalam pairs trading, ini adalah "fair value" spread historis — trader akan LONG spread jika X<μ (spread undervalued) dan SHORT spread jika X>μ (spread overvalued), bertaruh pada konvergensi kembali ke μ.<br><br>
+  <b>θ (speed of mean reversion):</b> Mengukur SEBERAPA CEPAT spread kembali ke μ setelah deviasi. θ besar = reversion cepat (cocok untuk strategi jangka pendek, holding period singkat). θ kecil = reversion lambat (trader harus bersiap holding position lebih lama, risiko deviasi semakin lebar sebelum kembali). Half-life dari mean reversion = ln(2)/θ — metrik praktis yang sering dihitung trader untuk estimasi holding period optimal.<br><br>
+  <b>σ (volatility):</b> Mengukur besarnya noise/fluktuasi acak di sekitar proses mean-reverting. σ besar berarti spread bisa berfluktuasi jauh dari μ sebelum akhirnya kembali — meningkatkan risiko (potential drawdown sebelum profit), tapi juga memperbesar magnitude potential profit jika trader bisa "menangkap" deviasi besar dengan benar.<br><br>
+  <b>Implikasi Praktis:</b> Estimasi parameter (θ,μ,σ) dari data historis (biasanya via regresi linear AR(1) atau Maximum Likelihood) memungkinkan trader menentukan: kapan deviasi cukup signifikan untuk entry (misal, >2 standard deviation dari μ), berapa expected holding period (dari 1/θ), dan berapa stop-loss yang wajar (berdasarkan σ) jika asumsi mean-reversion ternyata gagal (structural break).`,
+  keyPoints:['Penjelasan matematis kenapa drift term menciptakan restoring force ke μ','Perbandingan dengan GBM yang tidak punya mean-reverting force','Penjelasan peran μ sebagai fair value/equilibrium dalam pairs trading','Penjelasan peran θ sebagai speed of reversion, idealnya menyebut half-life=ln(2)/θ','Penjelasan peran σ sebagai magnitude noise/risk','Bonus: implikasi praktis untuk entry/exit/stop-loss strategy']
+},
+{
+  level:'pro_max', id:'pm8', type:'mc', category:'Minimum Variance Portfolio',
+  question:'Dua aset risky: variance 0.04 dan 0.09, covariance 0.02. Berapa VARIANCE MINIMUM yang bisa dicapai dari kombinasi kedua aset ini (di bobot optimal)?',
+  options:['0.0356','0.0244','0.0156','0.0400'], answer:0,
+  explanation:`<b>Logika:</b> Bobot optimal minimum-variance: w₁* = (σ₂²-Cov)/(σ₁²+σ₂²-2Cov) = (0.09-0.02)/(0.04+0.09-0.04) = 0.07/0.09 ≈ 0.778<br><br>
+  Var(min) = w₁*²σ₁² + (1-w₁*)²σ₂² + 2w₁*(1-w₁*)Cov<br><br>
+  = (0.778)²(0.04) + (0.222)²(0.09) + 2(0.778)(0.222)(0.02)<br>
+  = 0.0242 + 0.00444 + 0.0069<br>
+  = <b>≈0.0356</b><br><br>
+  Bandingkan dengan variance aset 1 sendiri (0.04) — variance minimum portofolio gabungan (0.0356) masih SEDIKIT lebih rendah, menunjukkan manfaat diversifikasi meski korelasi antar aset di sini POSITIF (Cov=0.02, bukan negatif). Manfaat diversifikasi akan jauh LEBIH BESAR jika korelasi antar aset rendah atau negatif (lihat soal h13 untuk kasus korelasi=-1, yang menghasilkan variance=0 sepenuhnya).`
+},
+{
+  level:'pro_max', id:'pm9', type:'mc', category:'Black-Scholes Greeks (Gamma)',
+  question:'Sebuah ATM (at-the-money) European call: S=K=$100, r=5%, σ=20%, T=1 tahun. Hitung GAMMA dari option ini (gunakan formula Gamma=φ(d1)/(Sσ√T), dengan φ adalah PDF normal standar).',
+  options:['0.0094','0.0188','0.0376','0.1500'], answer:1,
+  explanation:`<b>Logika (Black-Scholes Gamma):</b><br><br>
+  d1 = [ln(S/K)+(r+σ²/2)T] / (σ√T)<br>
+  Karena S=K, ln(S/K)=0:<br>
+  d1 = (0.05+0.02)×1 / (0.2×1) = 0.07/0.2 = 0.35<br><br>
+  φ(0.35) ≈ 0.3752 (PDF normal standar di titik 0.35)<br><br>
+  Gamma = φ(d1)/(Sσ√T) = 0.3752/(100×0.2×1) = 0.3752/20 = <b>≈0.0188</b><br><br>
+  Gamma mengukur "kecepatan perubahan Delta" — krusial untuk risk management options portfolio. Gamma SELALU positif untuk long option (call maupun put), dan MAKSIMUM untuk option yang ATM dengan waktu mendekati expiry — inilah kenapa "gamma risk" paling berbahaya untuk option ATM yang akan segera expired.`
+},
+{
+  level:'pro_max', id:'pm10', type:'mc', category:'Sharpe Ratio Optimization',
+  question:'Dua strategi independen: Strategi A (Sharpe=0.8), Strategi B (Sharpe=0.6). Jika dikombinasikan dengan bobot OPTIMAL untuk MEMAKSIMALKAN Sharpe Ratio gabungan (asumsikan independen/korelasi=0), berapa SHARPE RATIO MAKSIMUM yang bisa dicapai? (Gunakan rumus: Sharpe_combined² = Sharpe_A² + Sharpe_B², untuk aset independen di bobot optimal)',
+  options:['0.7','1.0','1.4','0.48'], answer:1,
+  explanation:`<b>Logika (Sharpe Ratio Combination untuk Independent Strategies):</b><br><br>
+  Untuk strategi INDEPENDEN yang dikombinasikan di bobot OPTIMAL (memaksimalkan Sharpe gabungan), berlaku:<br><br>
+  Sharpe_combined² = Sharpe_A² + Sharpe_B²<br><br>
+  = (0.8)² + (0.6)²<br>
+  = 0.64 + 0.36<br>
+  = 1.0<br><br>
+  Sharpe_combined = √1.0 = <b>1.0</b><br><br>
+  Hasil elegan ini (mengingatkan teorema Pythagoras!) menunjukkan KEKUATAN diversifikasi: mengombinasikan dua strategi independen — bahkan yang masing-masing "biasa saja" — bisa menghasilkan Sharpe Ratio gabungan yang LEBIH TINGGI dari strategi terbaik manapun secara individual. Inilah alasan mengapa quant fund besar selalu berusaha membangun BANYAK strategi yang TIDAK BERKORELASI, bukan hanya mencari "satu strategi terbaik".`
+},
+{
+  level:'pro_max', id:'pm11', type:'essay', category:'Risk Parity & Leverage',
+  question:'Sebuah "Risk Parity" portfolio mengalokasikan modal sehingga SETIAP aset memberikan KONTRIBUSI RISIKO YANG SAMA terhadap total portfolio risk (bukan alokasi modal yang sama / equal weight). Jelaskan secara konseptual MENGAPA strategi ini sering memerlukan LEVERAGE pada aset berisiko rendah (seperti bonds), dan jelaskan TRADE-OFF utama dari pendekatan ini dibanding portfolio 60/40 (60% equity, 40% bonds) tradisional.',
+  modelAnswer:`<b>Mengapa Risk Parity Memerlukan Leverage:</b><br><br>
+  Misalkan equity punya volatility tahunan ~15-20%, sementara bonds punya volatility tahunan jauh lebih rendah ~5-7%. Jika kita ingin SETIAP aset memberikan kontribusi RISIKO yang sama (bukan alokasi modal sama), maka secara matematis kita perlu mengalokasikan JAUH LEBIH BANYAK modal ke bonds dibanding equity — karena bonds "kurang berisiko" per dollar yang diinvestasikan.<br><br>
+  Namun, jika hanya mengalokasikan (misalnya) 80% modal ke bonds dan 20% ke equity tanpa leverage, EXPECTED RETURN keseluruhan portfolio akan SANGAT RENDAH (karena bonds secara historis memberikan return jauh lebih rendah dari equity). Untuk mengembalikan expected return ke level yang kompetitif (sebanding dengan portfolio 60/40 tradisional atau lebih baik), strategi risk parity biasanya menggunakan LEVERAGE pada porsi bonds (atau pada portfolio secara keseluruhan) — meminjam modal tambahan untuk memperbesar eksposur ke aset berisiko rendah, sambil tetap menjaga target risk contribution yang seimbang.<br><br>
+  <b>Trade-off Utama vs Portfolio 60/40 Tradisional:</b><br><br>
+  <b>Keuntungan Risk Parity:</b><br>
+  • Diversifikasi risiko LEBIH BAIK — pada portfolio 60/40 tradisional, EQUITY (meski hanya 60% modal) sering menyumbang 90%+ dari TOTAL RISIKO portfolio (karena volatilitynya jauh lebih tinggi dari bonds), sehingga sebenarnya portfolio "60/40" jauh dari benar-benar terdiversifikasi secara RISIKO.<br>
+  • Performa historis lebih stabil across berbagai market regime (termasuk saat equity crash, di mana bonds-leveraged sering memberikan diversifikasi yang lebih baik).<br><br>
+  <b>Risiko/Kekurangan Risk Parity:</b><br>
+  • LEVERAGE itu sendiri adalah risiko tambahan — leverage memperbesar KERUGIAN saat terjadi "tail event" yang mempengaruhi SEMUA aset sekaligus (termasuk bonds), seperti krisis likuiditas sistemik atau rezim kenaikan suku bunga tajam (yang menyebabkan bonds DAN equity turun bersamaan, seperti yang terjadi di 2022) — fenomena "leverage doom loop" jika margin call terjadi serentak.<br>
+  • Bergantung pada estimasi VOLATILITY dan CORRELATION yang akurat — jika korelasi antar aset berubah drastis (regime change) atau volatility ter-estimasi salah, alokasi risk parity bisa jauh dari optimal.<br>
+  • Biaya leverage (bunga pinjaman) mengurangi net return, terutama di lingkungan suku bunga tinggi.<br><br>
+  <b>Kesimpulan:</b> Risk Parity menawarkan diversifikasi risiko yang secara teori lebih solid, tapi memperkenalkan risiko BARU (leverage risk, model risk pada estimasi volatility/korelasi) yang tidak ada di portfolio tradisional tanpa leverage.`,
+  keyPoints:['Penjelasan kenapa equal risk contribution membutuhkan alokasi modal tidak sama (lebih besar di bonds)','Penjelasan kenapa leverage dibutuhkan untuk mengembalikan expected return','Identifikasi bahwa portfolio 60/40 tradisional sebenarnya equity-risk-dominated','Trade-off: leverage risk terutama saat semua aset terkorelasi bersamaan (2022-style)','Bonus: ketergantungan pada estimasi volatility/korelasi yang akurat']
+},
+{
+  level:'pro_max', id:'pm12', type:'essay', category:'Statistical Arbitrage — Cointegration Testing',
+  question:'Sebelum membangun strategi pairs trading antara dua saham, seorang quant researcher HARUS menguji apakah kedua harga saham tersebut benar-benar COINTEGRATED (bukan hanya berkorelasi). Jelaskan PERBEDAAN konseptual antara "korelasi tinggi" dan "cointegration", jelaskan mengapa korelasi tinggi SAJA tidak cukup untuk strategi pairs trading, dan sebutkan SATU metode statistik standar untuk menguji cointegration.',
+  modelAnswer:`<b>Perbedaan Korelasi vs Cointegration:</b><br><br>
+  <b>Korelasi</b> mengukur hubungan linear antara PERUBAHAN (returns) dua series dalam jangka pendek — dua aset bisa punya korelasi tinggi (misalnya kedua-duanya naik 70% dari waktu yang sama) TANPA punya hubungan jangka panjang yang stabil pada level HARGA absolutnya. Korelasi return bisa tinggi sesaat tapi BERUBAH drastis dari waktu ke waktu (tidak stasioner).<br><br>
+  <b>Cointegration</b> adalah konsep yang lebih kuat: dua (atau lebih) series TIDAK STASIONER (misalnya harga saham, yang mengikuti random walk) dikatakan cointegrated jika ada KOMBINASI LINEAR dari keduanya yang MENJADI STASIONER. Secara praktis: spread = P_A - β×P_B harus berfluktuasi di sekitar mean konstan JANGKA PANJANG (mean-reverting), bukan mengembara tanpa batas seperti random walk individual masing-masing saham.<br><br>
+  <b>Mengapa Korelasi Tinggi SAJA Tidak Cukup:</b><br><br>
+  Dua saham bisa punya korelasi return harian yang tinggi (misalnya karena keduanya di sektor sama, terpengaruh faktor makro yang sama) TANPA spread harga mereka mean-reverting secara jangka panjang. Contoh konkret: jika saham A historisnya tumbuh 15%/tahun dan saham B hanya 5%/tahun, KEDUANYA bisa naik-turun bersamaan harian (korelasi tinggi), tapi SPREAD antara mereka akan terus MELEBAR dari waktu ke waktu (divergent, bukan mean-reverting) — karena ada perbedaan struktural growth rate. Trading pairs ini berdasarkan korelasi semata akan menjadi "catching a falling knife" — terus menambah posisi short A / long B sambil spread terus melebar tanpa pernah konvergen, mengakibatkan kerugian besar.<br><br>
+  <b>Metode Standar Menguji Cointegration:</b><br><br>
+  <b>Augmented Dickey-Fuller (ADF) Test pada Residual:</b><br>
+  1. Regresikan P_A terhadap P_B (P_A = α + β×P_B + ε) untuk mendapatkan estimasi β (hedge ratio) dan residual ε (spread).<br>
+  2. Uji STASIONARITAS dari residual ε menggunakan ADF test — null hypothesis adalah "residual mengikuti unit root process" (non-stationary, TIDAK cointegrated). Jika ADF test menolak null hypothesis (p-value cukup kecil), kita punya evidence bahwa residual STASIONER, mengindikasikan kedua series TERSEBUT cointegrated.<br><br>
+  <b>Metode Alternatif (bonus):</b> Johansen Test — lebih robust untuk menguji cointegration di antara LEBIH DARI 2 series sekaligus (multivariate), dan tidak memerlukan pemilihan "variabel dependen" secara arbitrer seperti pendekatan Engle-Granger (regresi + ADF) di atas.`,
+  keyPoints:['Definisi korelasi vs cointegration yang jelas dan berbeda','Penjelasan konsep stasioneritas dan mean-reversion sebagai kunci cointegration','Contoh konkret kenapa korelasi tinggi tanpa cointegration berbahaya untuk pairs trading','Metode ADF test pada residual regresi (Engle-Granger approach)','Bonus: menyebutkan Johansen test sebagai alternatif multivariate']
 }
 ];
 
@@ -795,12 +1352,12 @@ const QUESTIONS = [
 ════════════════════════════════════════════════════════ */
 const LEVELS = ['easy','medium','hard','very_hard','pro_max'];
 const LEVEL_LABEL = {easy:'Easy', medium:'Medium', hard:'Hard', very_hard:'Very Hard', pro_max:'Pro Max'};
+const LEVEL_GLOW = {easy:'#4ade80', medium:'#60a5fa', hard:'#f59e0b', very_hard:'#fb7185', pro_max:'#c084fc'};
 
 let selectedLevels = new Set(['easy']);
 let selectedType = 'all';
-let session = null; // { questions:[], idx:0, answers:{}, score:0 }
+let session = null;
 
-/* persistent stats across sessions */
 let stats = JSON.parse(localStorage.getItem('qd_stats') || '{"totalDone":0,"totalCorrect":0,"answered":{}}');
 
 function saveStats(){ localStorage.setItem('qd_stats', JSON.stringify(stats)); }
@@ -812,18 +1369,17 @@ function updateNavStats(){
 }
 
 /* ════════════════════════════════════════════════════════
-   HOME PAGE: LEVEL CARDS
+   HOME PAGE
 ════════════════════════════════════════════════════════ */
-function countByLevel(level){
-  return QUESTIONS.filter(q=>q.level===level).length;
-}
+function countByLevel(level){ return QUESTIONS.filter(q=>q.level===level).length; }
 
 function renderLevelGrid(){
   const grid = document.getElementById('levelGrid');
   grid.innerHTML = LEVELS.map(lv=>{
     const count = countByLevel(lv);
     const isSelected = selectedLevels.has(lv);
-    return `<button class="level-card lc-${lv} ${isSelected?'is-selected':''}" data-level="${lv}" id="levelcard-${lv}" style="${isSelected?'background:var(--glass2);border-width:2px':''}">
+    return `<button class="level-card lc-${lv} ${isSelected?'is-selected':''}" data-level="${lv}" id="levelcard-${lv}">
+      <div class="lc-check">✓</div>
       <div class="lc-name">${LEVEL_LABEL[lv]}</div>
       <div class="lc-count">${count} soal tersedia</div>
       <div class="lc-bar"><div class="lc-fill" style="width:${isSelected?100:0}%"></div></div>
@@ -836,8 +1392,21 @@ function renderLevelGrid(){
       else selectedLevels.add(lv);
       renderLevelGrid();
       updateStartButton();
+      updateBgGlow();
     });
   });
+
+  document.getElementById('totalBankCount').textContent = QUESTIONS.length;
+}
+
+function updateBgGlow(){
+  const glow = document.getElementById('bgGlow1');
+  if(selectedLevels.size===1){
+    const lv = [...selectedLevels][0];
+    glow.style.background = LEVEL_GLOW[lv];
+  } else {
+    glow.style.background = '#60a5fa';
+  }
 }
 
 function updateStartButton(){
@@ -864,7 +1433,6 @@ function getFilteredQuestions(){
   });
 }
 
-/* type filter buttons */
 function initTypeFilter(){
   document.querySelectorAll('#typeFilterRow .filter-btn').forEach(btn=>{
     btn.addEventListener('click',()=>{
@@ -890,14 +1458,9 @@ function shuffleArray(arr){
 
 function startSession(){
   const qs = shuffleArray(getFilteredQuestions());
-  session = {
-    questions: qs,
-    idx: 0,
-    answers: {}, // qid -> {answered:bool, correct:bool, selectedIdx (mc) or text (essay), revealed:bool}
-    score: 0
-  };
+  session = { questions: qs, idx: 0, answers: {}, score: 0 };
   goToPage('quiz');
-  renderQuestion();
+  renderQuestion(false);
 }
 
 /* ════════════════════════════════════════════════════════
@@ -906,25 +1469,44 @@ function startSession(){
 function goToPage(id){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.getElementById('page-'+id).classList.add('active');
-  window.scrollTo({top:0,behavior:'instant'});
+  window.scrollTo({top:0,behavior:'smooth'});
 }
 
 /* ════════════════════════════════════════════════════════
-   RENDER QUESTION
+   RENDER QUESTION (with slide transition)
 ════════════════════════════════════════════════════════ */
 function levelColorVar(level){
   return {easy:'easy',medium:'medium',hard:'hard',very_hard:'veryhard',pro_max:'promax'}[level];
 }
 
-function renderQuestion(){
+function renderQuestion(animate){
+  const card = document.getElementById('qcard');
+
+  if(animate){
+    card.classList.remove('anim-in');
+    card.classList.add('anim-out');
+    setTimeout(()=>{
+      buildQuestionDOM();
+      card.classList.remove('anim-out');
+      card.classList.add('anim-in');
+    }, 200);
+  } else {
+    buildQuestionDOM();
+  }
+}
+
+function buildQuestionDOM(){
   const q = session.questions[session.idx];
   const card = document.getElementById('qcard');
   const colorVar = levelColorVar(q.level);
 
-  document.getElementById('qtBadge').textContent = LEVEL_LABEL[q.level].toUpperCase();
-  document.getElementById('qtBadge').style.background = `var(--${colorVar}-dim)`;
-  document.getElementById('qtBadge').style.color = `var(--${colorVar})`;
-  document.getElementById('qtProgress').textContent = (session.idx+1)+' / '+session.questions.length;
+  const badge = document.getElementById('qtBadge');
+  badge.textContent = LEVEL_LABEL[q.level].toUpperCase();
+  badge.style.background = `var(--${colorVar}-dim)`;
+  badge.style.color = `var(--${colorVar})`;
+
+  document.getElementById('qtProgress').textContent = (session.idx+1)+'/'+session.questions.length;
+  document.getElementById('qtProgressFill').style.width = ((session.idx+1)/session.questions.length*100)+'%';
   document.getElementById('qtScore').textContent = session.score+' benar';
 
   const existingAnswer = session.answers[q.id];
@@ -934,11 +1516,13 @@ function renderQuestion(){
     bodyHtml = `<div class="mc-opts" id="mcOpts">
       ${q.options.map((opt,oi)=>{
         let cls = '';
+        let disabledAttr = '';
         if(existingAnswer && existingAnswer.answered){
+          disabledAttr = 'disabled';
           if(oi===existingAnswer.selectedIdx) cls = existingAnswer.correct?'sel ok':'sel bad';
           else if(oi===q.answer && !existingAnswer.correct) cls='ok';
         }
-        return `<button class="mc-opt ${cls}" data-oi="${oi}"><span class="mc-opt-letter">${String.fromCharCode(65+oi)}</span>${opt}</button>`;
+        return `<button class="mc-opt ${cls}" data-oi="${oi}" ${disabledAttr}><span class="mc-opt-letter">${String.fromCharCode(65+oi)}</span>${opt}</button>`;
       }).join('')}
     </div>`;
   } else if(q.type==='essay'){
@@ -946,6 +1530,7 @@ function renderQuestion(){
     const disabled = existingAnswer && existingAnswer.answered ? 'disabled' : '';
     bodyHtml = `<div class="essay-box">
       <textarea class="essay-input" id="essayInput" placeholder="Tulis jawabanmu di sini — sertakan langkah-langkah perhitungan jika ada..." ${disabled}>${savedText}</textarea>
+      <div class="essay-charcount" id="essayCharCount" style="${disabled?'display:none':''}">0 karakter</div>
       <div class="essay-actions">
         <button class="btn pri" id="submitEssayBtn" ${existingAnswer&&existingAnswer.answered?'style="display:none"':''}>Submit & Lihat Model Answer</button>
       </div>
@@ -953,7 +1538,7 @@ function renderQuestion(){
   }
 
   card.innerHTML = `
-    <div class="qcat">${q.category}</div>
+    <div class="qcat"><span class="qcat-icon" style="background:var(--${colorVar})"></span>${q.category}</div>
     <div class="qtext">${q.question.replace('★ SOAL KLASIK J.P. MORGAN ★','<span class="star">★ SOAL KLASIK J.P. MORGAN ★</span>')}</div>
     ${bodyHtml}
     <div class="feedback-box" id="feedbackBox"></div>
@@ -966,12 +1551,19 @@ function renderQuestion(){
     });
   } else {
     const submitBtn = document.getElementById('submitEssayBtn');
+    const textarea = document.getElementById('essayInput');
+    const charCount = document.getElementById('essayCharCount');
+    if(textarea && charCount){
+      textarea.addEventListener('input',()=>{
+        charCount.textContent = textarea.value.length+' karakter';
+      });
+      charCount.textContent = textarea.value.length+' karakter';
+    }
     if(submitBtn){
       submitBtn.addEventListener('click',()=>handleEssaySubmit(q));
     }
   }
 
-  // restore feedback/explanation if already answered
   if(existingAnswer && existingAnswer.answered){
     showFeedbackAndExplanation(q, existingAnswer.correct, true);
   }
@@ -984,13 +1576,12 @@ function renderQuestion(){
    MC ANSWER HANDLING
 ════════════════════════════════════════════════════════ */
 function handleMcAnswer(q, selectedIdx){
-  if(session.answers[q.id] && session.answers[q.id].answered) return; // already answered
+  if(session.answers[q.id] && session.answers[q.id].answered) return;
 
   const correct = selectedIdx === q.answer;
   session.answers[q.id] = {answered:true, correct, selectedIdx};
   if(correct) session.score++;
 
-  // update global stats
   if(!stats.answered[q.id]){
     stats.answered[q.id] = true;
     stats.totalDone++;
@@ -1001,22 +1592,30 @@ function handleMcAnswer(q, selectedIdx){
 
   document.querySelectorAll('#mcOpts .mc-opt').forEach(btn=>{
     const oi = parseInt(btn.dataset.oi);
+    btn.disabled = true;
     btn.classList.remove('sel','ok','bad');
     if(oi===selectedIdx) btn.classList.add('sel', correct?'ok':'bad');
     else if(oi===q.answer && !correct) btn.classList.add('ok');
   });
 
+  flashScore();
   document.getElementById('qtScore').textContent = session.score+' benar';
   showFeedbackAndExplanation(q, correct, false);
 }
 
+function flashScore(){
+  const el = document.getElementById('qtScore');
+  el.classList.remove('flash');
+  void el.offsetWidth; // restart animation
+  el.classList.add('flash');
+}
+
 /* ════════════════════════════════════════════════════════
-   ESSAY ANSWER HANDLING
+   ESSAY HANDLING
 ════════════════════════════════════════════════════════ */
 function handleEssaySubmit(q){
   const textarea = document.getElementById('essayInput');
   const text = textarea.value.trim();
-
   session.answers[q.id] = {answered:true, correct:null, text};
 
   if(!stats.answered[q.id]){
@@ -1028,75 +1627,78 @@ function handleEssaySubmit(q){
 
   textarea.disabled = true;
   document.getElementById('submitEssayBtn').style.display = 'none';
+  const charCount = document.getElementById('essayCharCount');
+  if(charCount) charCount.style.display = 'none';
   showFeedbackAndExplanation(q, null, false);
 }
 
-/* self-grade essay: user marks themselves correct/incorrect after seeing model answer */
 function handleSelfGrade(q, gradedCorrect){
   const ans = session.answers[q.id];
-  if(ans.correct !== null) return; // already self-graded
+  if(ans.correct !== null) return;
   ans.correct = gradedCorrect;
   if(gradedCorrect){
     session.score++;
-    if(!stats.totalCorrect) stats.totalCorrect = 0;
-    stats.totalCorrect++;
+    stats.totalCorrect = (stats.totalCorrect||0)+1;
     saveStats();
     updateNavStats();
   }
+  flashScore();
   document.getElementById('qtScore').textContent = session.score+' benar';
-  renderQuestion(); // re-render to lock in the self-grade UI
+  showFeedbackAndExplanation(q, gradedCorrect, true);
 }
 window.handleSelfGrade = handleSelfGrade;
 
 /* ════════════════════════════════════════════════════════
-   FEEDBACK + EXPLANATION DISPLAY
+   FEEDBACK + EXPLANATION
 ════════════════════════════════════════════════════════ */
 function showFeedbackAndExplanation(q, correct, isRestore){
   const fb = document.getElementById('feedbackBox');
   const ex = document.getElementById('explainBox');
 
   if(q.type==='mc'){
-    fb.className = 'feedback-box show '+(correct?'ok':'bad');
-    fb.innerHTML = `<div class="fb-title ${correct?'ok':'bad'}">${correct?'✓ Benar!':'✕ Belum tepat'}</div>`;
-    ex.className = 'explain-box show';
-    ex.innerHTML = `<div class="explain-title">Logika Penyelesaian</div>${q.explanation}`;
+    requestAnimationFrame(()=>{
+      fb.className = 'feedback-box show '+(correct?'ok':'bad');
+      fb.innerHTML = `<div class="fb-title ${correct?'ok':'bad'}"><span class="fb-icon ${correct?'ok':'bad'}">${correct?'✓':'✕'}</span>${correct?'Benar!':'Belum tepat'}</div>`;
+      ex.className = 'explain-box show';
+      ex.innerHTML = `<div class="explain-title">Logika Penyelesaian</div>${q.explanation}`;
+    });
   } else if(q.type==='essay'){
     const ans = session.answers[q.id];
-    fb.className = 'feedback-box show ok';
+    requestAnimationFrame(()=>{
+      if(ans.correct===null){
+        fb.className = 'feedback-box show ok';
+        fb.innerHTML = `<div class="fb-title ok"><span class="fb-icon ok">✓</span>Jawabanmu sudah disubmit</div>
+          <div style="font-size:13px;color:var(--muted2);margin-top:6px">Bandingkan dengan model answer di bawah, lalu nilai sendiri apakah jawabanmu sudah mencakup poin-poin kunci.</div>`;
+      } else {
+        fb.className = 'feedback-box show '+(ans.correct?'ok':'bad');
+        fb.innerHTML = `<div class="fb-title ${ans.correct?'ok':'bad'}"><span class="fb-icon ${ans.correct?'ok':'bad'}">${ans.correct?'✓':'○'}</span>${ans.correct?'Ditandai sebagai jawaban baik':'Ditandai perlu belajar lagi'}</div>`;
+      }
 
-    if(ans.correct===null){
-      // show self-grade prompt
-      fb.innerHTML = `<div class="fb-title ok">Jawabanmu sudah disubmit</div>
-        <div style="font-size:13px;color:var(--muted2);margin-top:6px">Bandingkan dengan model answer di bawah, lalu nilai sendiri apakah jawabanmu sudah mencakup poin-poin kunci.</div>`;
-    } else {
-      fb.className = 'feedback-box show '+(ans.correct?'ok':'bad');
-      fb.innerHTML = `<div class="fb-title ${ans.correct?'ok':'bad'}">${ans.correct?'✓ Ditandai sebagai jawaban baik':'○ Ditandai perlu belajar lagi'}</div>`;
-    }
+      let keyPointsHtml = '';
+      if(q.keyPoints && q.keyPoints.length){
+        keyPointsHtml = `<div class="keypoints-box">
+          <div class="keypoints-title">Poin Kunci yang Harus Ada</div>
+          <ul>${q.keyPoints.map(kp=>`<li>${kp}</li>`).join('')}</ul>
+        </div>`;
+      }
 
-    let keyPointsHtml = '';
-    if(q.keyPoints && q.keyPoints.length){
-      keyPointsHtml = `<div class="keypoints-box">
-        <div class="keypoints-title">Poin Kunci yang Harus Ada</div>
-        <ul>${q.keyPoints.map(kp=>`<li>${kp}</li>`).join('')}</ul>
-      </div>`;
-    }
-
-    ex.className = 'explain-box show';
-    ex.innerHTML = `<div class="explain-title">Model Answer</div>${q.modelAnswer}${keyPointsHtml}
-      ${ans.correct===null ? `<div style="margin-top:18px;display:flex;gap:10px">
-        <button class="btn pri" onclick="handleSelfGrade(QUESTIONS.find(x=>x.id==='${q.id}'), true)">✓ Jawaban saya sudah baik</button>
-        <button class="btn" onclick="handleSelfGrade(QUESTIONS.find(x=>x.id==='${q.id}'), false)">○ Saya masih perlu belajar ini</button>
-      </div>` : ''}`;
+      ex.className = 'explain-box show';
+      ex.innerHTML = `<div class="explain-title">Model Answer</div>${q.modelAnswer}${keyPointsHtml}
+        ${ans.correct===null ? `<div class="selfgrade-row">
+          <button class="btn pri" onclick="handleSelfGrade(QUESTIONS.find(x=>x.id==='${q.id}'), true)">✓ Jawaban saya sudah baik</button>
+          <button class="btn" onclick="handleSelfGrade(QUESTIONS.find(x=>x.id==='${q.id}'), false)">○ Saya masih perlu belajar ini</button>
+        </div>` : ''}`;
+    });
   }
 }
 
 /* ════════════════════════════════════════════════════════
-   NAVIGATION WITHIN QUIZ
+   QUIZ NAVIGATION
 ════════════════════════════════════════════════════════ */
 function nextQuestion(){
   if(session.idx < session.questions.length-1){
     session.idx++;
-    renderQuestion();
+    renderQuestion(true);
   } else {
     showResults();
   }
@@ -1104,42 +1706,60 @@ function nextQuestion(){
 function prevQuestion(){
   if(session.idx>0){
     session.idx--;
-    renderQuestion();
+    renderQuestion(true);
   }
 }
 
 /* ════════════════════════════════════════════════════════
    RESULTS PAGE
 ════════════════════════════════════════════════════════ */
+const RESULT_MESSAGES = [
+  {min:90, msg:'Luar biasa — kamu siap menghadapi interview quant tier-1.'},
+  {min:75, msg:'Sangat solid. Pertajam sedikit lagi di soal yang masih salah.'},
+  {min:60, msg:'Fondasi sudah bagus. Ulangi soal yang salah sampai benar-benar paham logikanya.'},
+  {min:40, msg:'Masih perlu banyak latihan — fokus pahami logika di tiap penjelasan, bukan hafal jawaban.'},
+  {min:0, msg:'Jangan menyerah — quant interview susah untuk semua orang di awal. Ulangi dari level Easy.'}
+];
+
 function showResults(){
   const total = session.questions.length;
-  const answeredCount = Object.keys(session.answers).length;
-  const mcQuestions = session.questions.filter(q=>q.type==='mc');
-  const essayQuestions = session.questions.filter(q=>q.type==='essay');
-
-  const mcCorrect = mcQuestions.filter(q=>session.answers[q.id] && session.answers[q.id].correct).length;
-  const essayGraded = essayQuestions.filter(q=>session.answers[q.id] && session.answers[q.id].correct!==null);
-  const essayGood = essayGraded.filter(q=>session.answers[q.id].correct).length;
-
   const pct = total>0 ? Math.round((session.score/total)*100) : 0;
 
   document.getElementById('resultsScore').textContent = pct+'%';
-  document.getElementById('resultsScore').style.color = pct>=70?'var(--green)':pct>=40?'var(--hard)':'var(--red)';
+  const color = pct>=70?'var(--green)':pct>=40?'var(--hard)':'var(--red)';
+  document.getElementById('resultsScore').style.color = color;
   document.getElementById('resultsSub').textContent = `Kamu menjawab benar ${session.score} dari ${total} soal`;
 
+  const msgObj = RESULT_MESSAGES.find(m=>pct>=m.min);
+  document.getElementById('resultsMsg').textContent = msgObj ? msgObj.msg : '';
+
   let breakdownHtml = '';
+  let delay = 0;
   LEVELS.forEach(lv=>{
     const lvQs = session.questions.filter(q=>q.level===lv);
     if(lvQs.length===0) return;
     const lvCorrect = lvQs.filter(q=>session.answers[q.id] && session.answers[q.id].correct).length;
-    breakdownHtml += `<div class="rb-card">
+    breakdownHtml += `<div class="rb-card" style="animation-delay:${delay}s">
       <div class="rb-num" style="color:var(--${levelColorVar(lv)})">${lvCorrect}/${lvQs.length}</div>
       <div class="rb-label">${LEVEL_LABEL[lv]}</div>
     </div>`;
+    delay += 0.08;
   });
   document.getElementById('resultsBreakdown').innerHTML = breakdownHtml;
 
   goToPage('results');
+
+  // animate progress ring
+  const circumference = 2*Math.PI*88;
+  const ring = document.getElementById('resultsRingProgress');
+  ring.style.stroke = color;
+  ring.setAttribute('stroke-dasharray', circumference);
+  ring.setAttribute('stroke-dashoffset', circumference);
+  setTimeout(()=>{
+    const offset = circumference - (pct/100)*circumference;
+    ring.style.transition = 'stroke-dashoffset 1.1s cubic-bezier(.16,1,.3,1), stroke 0.3s';
+    ring.setAttribute('stroke-dashoffset', offset);
+  }, 100);
 }
 
 /* ════════════════════════════════════════════════════════
@@ -1161,6 +1781,36 @@ function resetAllProgress(){
 }
 
 /* ════════════════════════════════════════════════════════
+   AMBIENT BACKGROUND CANVAS
+════════════════════════════════════════════════════════ */
+(function(){
+  const cv = document.getElementById('bgcanvas');
+  const cx = cv.getContext('2d');
+  let W,H,particles=[];
+  function resize(){ W=cv.width=window.innerWidth; H=cv.height=window.innerHeight; }
+  function init(){
+    particles = [];
+    const n = Math.min(45, Math.floor(W*H/22000));
+    for(let i=0;i<n;i++){
+      particles.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.15,vy:(Math.random()-.5)*.15,r:Math.random()*1+.4,a:Math.random()*.4+.1});
+    }
+  }
+  function draw(){
+    cx.clearRect(0,0,W,H);
+    particles.forEach(p=>{
+      p.x+=p.vx; p.y+=p.vy;
+      if(p.x<0||p.x>W) p.vx*=-1;
+      if(p.y<0||p.y>H) p.vy*=-1;
+      cx.fillStyle = `rgba(160,170,200,${p.a})`;
+      cx.beginPath(); cx.arc(p.x,p.y,p.r,0,Math.PI*2); cx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+  window.addEventListener('resize',()=>{resize();init();});
+  resize(); init(); draw();
+})();
+
+/* ════════════════════════════════════════════════════════
    INIT
 ════════════════════════════════════════════════════════ */
 function initApp(){
@@ -1168,6 +1818,7 @@ function initApp(){
   initTypeFilter();
   updateStartButton();
   updateNavStats();
+  updateBgGlow();
 
   document.getElementById('startBtn').addEventListener('click', startSession);
   document.getElementById('nextBtn').addEventListener('click', nextQuestion);
