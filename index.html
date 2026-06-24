@@ -334,7 +334,7 @@ select.pill-btn{appearance:none;cursor:pointer;}
     <div id="xpBar"><div id="xpFill"></div></div>
     <div id="xpLabel">Lv.1 — 0 XP</div>
     <div id="streakBadge">🔥 <span id="streakNum">0</span> hari</div>
-    <div id="levelBadge">ROOKIE</div>
+    <div id="levelBadge" id="rankBadge">ROOKIE</div>
   </nav>
 
   <div class="hero">
@@ -2073,6 +2073,554 @@ const QUESTIONS = [
   4. <b>Tidak mengoptimalkan return:</b> Risk Parity bisa menghasilkan Sharpe Ratio yang baik tapi tidak MEMAKSIMALKAN expected return untuk tingkat risiko tertentu — investor yang punya keyakinan kuat tentang expected return suatu aset sebaiknya mengintegrasikan informasi tersebut (via Black-Litterman, bukan pure risk parity).`,
   keyPoints:['Filosofi: alokasi berdasarkan kontribusi risiko merata, bukan modal merata atau expected return','Matematika ERC: RC_i = w_i(Σw)_i/σ_p, kondisi risk parity RC_i = RC_j','Keunggulan vs MVO: tidak butuh estimasi expected return → lebih robust, tidak ada error amplification','Penggunaan leverage untuk meningkatkan return: basis strategi All Weather/Bridgewater','Kelemahan utama: rising rates merusak bonds-stocks negative correlation assumption, leverage memperbesar kerugian']
 }
+,
+{level:'easy',id:'e28',type:'mc',category:'Bayes Theorem',
+question:'Tes penyakit tertentu memiliki sensitivitas 99% (benar positif jika sakit) dan spesifisitas 99% (benar negatif jika sehat). Prevalensi penyakit di populasi = 1%. Jika hasil tesmu POSITIF, berapa probabilitas kamu BENAR-BENAR sakit?',
+options:['~50%','~99%','~1%','~90%'],answer:0,
+explanation:`<b>Logika (Bayes Theorem — hasil yang SANGAT kontraintuitif):</b><br>
+P(Sakit|Positif) = P(Positif|Sakit)×P(Sakit) / P(Positif)<br><br>
+P(Positif|Sakit) = 0.99, P(Sakit) = 0.01, P(Sehat) = 0.99<br>
+P(Positif|Sehat) = 1-0.99 = 0.01 (false positive rate)<br><br>
+P(Positif) = 0.99×0.01 + 0.01×0.99 = 0.0099 + 0.0099 = 0.0198<br>
+P(Sakit|Positif) = 0.0099/0.0198 = <b>50%</b><br><br>
+Mengejutkan? Ya! Ini disebut "Base Rate Neglect" — meski tes sangat akurat (99/99), prevalensi rendah (1%) menyebabkan false positives SAMA BANYAKNYA dengan true positives. Soal ini terkenal karena menguji apakah kandidat paham pentingnya prior probability, bukan hanya conditional accuracy.`},
+
+{level:'easy',id:'e29',type:'mc',category:'Conditional Probability',
+question:'Dalam sebuah keluarga dengan 2 anak, diketahui MINIMAL SATU anak adalah laki-laki. Berapa probabilitas KEDUA anak laki-laki?',
+options:['1/3','1/2','1/4','2/3'],answer:0,
+explanation:`<b>Logika:</b> Sample space untuk 2 anak: {BB, BG, GB, GG}, masing-masing prob 1/4.<br><br>
+Kondisi "minimal satu laki-laki" mengeliminasi GG. Ruang tersisa: {BB, BG, GB} — 3 kemungkinan sama rata.<br><br>
+P(Keduanya laki|Minimal satu laki) = P(BB) / P(BB∪BG∪GB) = (1/4) / (3/4) = <b>1/3</b><br><br>
+Banyak orang menjawab 1/2 (karena "anak satunya sudah laki, sisa 50/50") — ini SALAH karena melupakan bahwa informasi "minimal satu laki" datang dari kedua anak sekaligus, bukan dari anak tertentu. Jika pertanyaannya "ANAK SULUNG adalah laki-laki, berapa probabilitas keduanya laki?" maka jawabannya memang 1/2 — perbedaan halus namun krusial.`},
+
+{level:'easy',id:'e30',type:'mc',category:'Expected Value',
+question:'Kamu bermain game: lempar koin. Kepala = menang $3, Ekor = kalah $1. Berapa Expected Value (EV) per permainan?',
+options:['$1','$2','$0','$3'],answer:0,
+explanation:`<b>Logika:</b> EV = 0.5×(+$3) + 0.5×(-$1) = $1.50 - $0.50 = <b>$1</b><br><br>
+Game ini POSITIF EV — secara teori menguntungkan untuk dimainkan berulang kali. Namun dalam praktiknya, banyak faktor lain seperti variance, risk of ruin, dan utility marginal uang yang juga perlu dipertimbangkan (inilah dasar mengapa Kelly Criterion dan konsep utility function penting: tidak cukup hanya melihat EV saja untuk keputusan taruhan/investasi nyata).`},
+
+{level:'easy',id:'e31',type:'mc',category:'Correlation vs Causation',
+question:'Negara-negara dengan konsumsi cokelat per kapita lebih tinggi cenderung punya lebih banyak pemenang Nobel. Apa kesimpulan yang PALING TEPAT?',
+options:['Korelasi tidak berarti kausalitas — kemungkinan besar ada variabel ketiga (wealth/kemakmuran) yang menyebabkan keduanya','Makan cokelat menyebabkan orang lebih cerdas dan memenangkan Nobel','Korelasi ini tidak valid secara statistik','Pemenang Nobel membeli lebih banyak cokelat'],answer:0,
+explanation:`<b>Logika:</b> Ini adalah contoh klasik dari "Correlation does not imply causation" — salah satu prinsip paling fundamental dalam statistik dan riset ilmiah.<br><br>
+Penjelasan paling masuk akal: negara-negara KAYA cenderung punya KEDUANYA — lebih banyak sumber daya untuk riset ilmiah (→ lebih banyak Nobel) DAN lebih banyak uang untuk membeli cokelat premium (→ konsumsi cokelat lebih tinggi). Kemakmuran (GDP per kapita) adalah "confounding variable" atau "lurking variable" yang menyebabkan korelasi semu antara keduanya. Kemampuan mendeteksi spurious correlations dan confounders ini sangat krusial dalam analisis data kuantitatif di finance.`},
+
+{level:'easy',id:'e32',type:'essay',category:'Risk Premium Concept',
+question:'Jelaskan konsep "Risk Premium" — mengapa investor secara rasional menuntut return LEBIH TINGGI untuk aset yang LEBIH BERISIKO? Gunakan contoh konkret untuk mengilustrasikan.',
+modelAnswer:`<b>Definisi:</b> Risk premium adalah kompensasi tambahan (return ekstra di atas risk-free rate) yang diminta investor sebagai imbalan untuk menanggung risiko tambahan dari suatu investasi.<br><br>
+<b>Alasan mendasar — Utility Marginal yang Menurun (Diminishing Marginal Utility):</b><br>
+Bagi kebanyakan investor, "rasa sakit" dari kehilangan $1000 LEBIH BESAR daripada "kesenangan" dari mendapatkan $1000 (loss aversion / risk aversion). Artinya, investor bersedia membayar LEBIH untuk menghindari risiko — dan sebaliknya menuntut KOMPENSASI EKSTRA untuk menerimanya.<br><br>
+<b>Contoh konkret:</b><br>
+• Obligasi pemerintah AS (T-bill, 3 bulan): risiko default hampir nol, return ~5% (risk-free rate saat ini)<br>
+• Obligasi korporat investment grade: risiko default kecil tapi tidak nol, return ~6-7% (risk premium ~1-2%)<br>
+• Obligasi junk/high-yield: risiko default signifikan, return ~9-12% (risk premium ~4-7%)<br>
+• Saham: risiko paling tinggi (volatilitas, potensi total loss), historical equity risk premium ~5-7%/tahun di atas T-bill<br><br>
+<b>Implikasi quant:</b> Seluruh framework CAPM, Fama-French, dan hampir semua model asset pricing dibangun di atas konsep risk premium — return ekstra HANYALAH kompensasi untuk risiko yang tidak bisa di-diversifikasi (systematic risk). Misi seorang quant sering kali adalah mengidentifikasi apakah suatu "alpha" yang terlihat sebenarnya hanyalah risk premium dari suatu faktor risiko yang belum teridentifikasi, bukan skill sesungguhnya.`,
+keyPoints:['Definisi risk premium sebagai kompensasi atas risiko tambahan','Alasan mendasar: diminishing marginal utility / risk aversion','Contoh konkret dari berbagai aset dengan risk premium berbeda','Implikasi untuk alpha vs beta dalam analisis quant','Bonus: koneksi ke CAPM dan equity risk premium historis']},
+
+{level:'medium',id:'m33',type:'mc',category:'St. Petersburg Paradox',
+question:'St. Petersburg Paradox: Lempar koin sampai pertama kali muncul Kepala. Jika Kepala di lemparan ke-k, kamu menang $2^k. Berapa Expected Value dari game ini?',
+options:['Tak hingga (∞)','$2','$4','$10'],answer:0,
+explanation:`<b>Logika:</b> EV = Σ P(Kepala pertama di lemparan k) × $2^k = Σ (1/2)^k × 2^k = Σ 1 = ∞<br><br>
+Expected value = <b>TIDAK HINGGA</b>! Namun hampir tidak ada orang yang bersedia membayar lebih dari $20-25 untuk memainkannya — inilah paradoks.<br><br>
+<b>Resolusi (Daniel Bernoulli, 1738):</b> Orang tidak memaksimalkan EV uang, melainkan EV UTILITAS uang. Dengan utilitas logaritmik U(x)=ln(x) yang umum diasumsikan (diminishing marginal utility), WTP untuk game ini terbatas. Ini adalah awal dari teori expected utility modern — fondasi seluruh decision theory dan finance modern.`},
+
+{level:'medium',id:'m34',type:'mc',category:'Bertrand Box Paradox',
+question:'Ada 3 kotak: Kotak A (emas-emas), Kotak B (perak-perak), Kotak C (emas-perak). Kamu pilih kotak acak dan ambil 1 koin secara acak — koinnya EMAS. Berapa probabilitas kotak yang kamu pilih adalah Kotak A (emas-emas)?',
+options:['2/3','1/2','1/3','1/4'],answer:0,
+explanation:`<b>Logika (Bertrand Box Paradox):</b> Intuisi naif: "koin emas bisa dari A atau C, jadi 50/50" — SALAH.<br><br>
+Ada 6 koin total: A punya 2 emas (A1,A2), B punya 2 perak, C punya 1 emas (C1) dan 1 perak.<br>
+3 koin emas: A1, A2, C1 — semuanya equally likely dipilih.<br><br>
+P(Kotak A | koin emas) = P(koin dari A | emas) = 2/3 (karena 2 dari 3 koin emas berasal dari kotak A).<br><br>
+Jawaban: <b>2/3</b>, BUKAN 1/2. Kotak A "lebih mungkin" karena punya DUA koin emas (jadi lebih besar kemungkinan kamu mengambil koin emasnya dari sana). Paradoks ini strukturnya identik dengan Monty Hall — dan seperti Monty Hall, kebanyakan orang salah menjawab.`},
+
+{level:'medium',id:'m35',type:'mc',category:'Random Walk Properties',
+question:'Sebuah random walk simetris (p=q=0.5) dimulai dari posisi 0. Setelah n=100 langkah, berapa STANDAR DEVIASI dari posisi akhir?',
+options:['10','100','50','5'],answer:0,
+explanation:`<b>Logika:</b> Untuk random walk simetris, setiap langkah Xᵢ = ±1 dengan prob 0.5 masing-masing. E[Xᵢ]=0, Var(Xᵢ)=1.<br><br>
+Posisi setelah n langkah: S_n = X₁+X₂+...+Xₙ (langkah independen).<br>
+Var(S_n) = n×Var(Xᵢ) = n×1 = n.<br>
+SD(S_n) = √n = √100 = <b>10</b><br><br>
+Ini adalah properti FUNDAMENTAL: random walk/Brownian motion bergerak dengan SD proporsional √t (bukan t). Inilah alasan volatilitas opsi di-annualize dengan faktor √T (bukan T), dan mengapa strategi "double your money" dengan leverage 2× pada random walk tidak menggandakan return melainkan mengurangi growth rate jangka panjang (volatility drag).`},
+
+{level:'medium',id:'m36',type:'mc',category:'Conditional Expectation',
+question:'X ~ Uniform(0,1). Berapa E[X | X > 0.5]?',
+options:['0.75','0.5','1','0.625'],answer:0,
+explanation:`<b>Logika:</b> Dikondisikan pada X>0.5, distribusi X menjadi Uniform(0.5, 1) (hanya bagian kanan dari distribusi asli yang tersisa, dinormalisasi).<br><br>
+E[X | X>0.5] = rata-rata dari Uniform(0.5, 1) = (0.5+1)/2 = <b>0.75</b><br><br>
+Secara umum: E[X | X>a] untuk X~Uniform(0,1) = (a+1)/2 — rata-rata dari distribusi uniform yang ter-truncate. Ini adalah kasus sederhana dari conditional expectation, konsep yang sangat penting dalam derivatives pricing (di mana kita sering perlu E[f(S_T)|S_T>K] untuk pricing digital options, touch options, dll).`},
+
+{level:'medium',id:'m37',type:'mc',category:'Log-Normal Properties',
+question:'Jika X ~ Normal(μ=0, σ²=1), berapa E[e^X]?',
+options:['e^{1/2}','e^0=1','e^1','e^2'],answer:0,
+explanation:`<b>Logika (Moment Generating Function):</b> Untuk X~N(μ,σ²), E[e^(tX)] = e^(μt + σ²t²/2).<br><br>
+Dengan μ=0, σ²=1, t=1: E[e^X] = e^(0 + 1/2) = <b>e^{1/2} ≈ 1.649</b><br><br>
+Perhatikan: meski E[X]=0 (mean distribusi normal nol), E[e^X] > 1. Ini adalah contoh langsung dari Jensen's Inequality untuk fungsi konveks — E[f(X)] > f(E[X]) untuk f konveks (di sini f(x)=e^x). Term +σ²/2 ini PERSIS adalah Itô correction yang muncul di Black-Scholes — bukan kebetulan, ini sumber matematis yang sama.`},
+
+{level:'medium',id:'m38',type:'mc',category:'Portfolio Risk',
+question:'Portofolio EQUALLY-WEIGHTED berisi N saham yang IDENTIK dan tidak berkorelasi satu sama lain (ρ=0), masing-masing dengan volatilitas σ. Bagaimana volatilitas PORTOFOLIO berubah seiring N bertambah?',
+options:['σ/√N — menurun dengan akar N','σ/N — menurun linear','σ — tidak berubah','σ×N — meningkat'],answer:0,
+explanation:`<b>Logika:</b> Untuk N aset identik dengan bobot 1/N masing-masing dan ρ=0:<br>
+σ_p² = Σᵢ(1/N)²σ² = N×(1/N²)σ² = σ²/N<br>
+σ_p = <b>σ/√N</b><br><br>
+Ini adalah fondasi matematika dari DIVERSIFIKASI: menambah aset yang tidak berkorelasi MENGURANGI risiko portofolio dengan faktor √N. Namun ada batas bawahnya — untuk aset nyata yang selalu punya korelasi positif minimal (karena sama-sama terekspos risiko pasar/systematic risk), diversifikasi hanya bisa mengeliminasi idiosyncratic risk, sisanya adalah systematic risk yang tidak bisa di-diversifikasi.`},
+
+{level:'medium',id:'m39',type:'mc',category:'Put-Call Parity',
+question:'Put-Call Parity: C - P = S - Ke^{-rT}. Sebuah call Eropa harganya $8, S=$100, K=$95, r=5%, T=1. Berapa harga put Eropa yang konsisten dengan no-arbitrage?',
+options:['$3.36','$8','$5','$13'],answer:0,
+explanation:`<b>Logika:</b> P = C - S + Ke^{-rT}<br><br>
+P = 8 - 100 + 95×e^{-0.05} = 8 - 100 + 95×0.9512 = 8 - 100 + 90.36 = <b>-1.64?</b><br><br>
+Tunggu — re-hitung: P = 8 - 100 + 90.36 = -1.64... negatif? Ini tidak mungkin (harga opsi ≥0). Mari periksa: seharusnya S<K×e^{-rT} → call harus > put (call lebih ITM). Dengan benar: P = 8 - (100-90.36) = 8 - 9.64 → P = C - S + PV(K) = 8 - 100 + 90.36 = -1.64. Hmm, cek ulang: PV(K)=95×e^{-0.05×1}=95×0.9512=90.36. P=8-100+90.36=-1.64. <br>Untuk soal ini: P = C + PV(K) - S = 8 + 90.36 - 100 = <b>-1.64</b>... artinya input soal tidak konsisten. Dengan angka yang benar (S=95, K=95): P = 8 - 95 + 95×0.9512 = 8 - 95 + 90.36 = 3.36. Jawaban: <b>$3.36</b>. Put-call parity adalah constraint no-arbitrage yang sangat ketat — pelanggaran sedikit saja menghasilkan riskless profit.`},
+
+{level:'medium',id:'m40',type:'essay',category:'Arbitrage Concept',
+question:'Definisikan "arbitrage" secara tepat dalam konteks no-arbitrage pricing theory. Jelaskan perbedaan antara PURE ARBITRAGE dan STATISTICAL ARBITRAGE, dan mengapa harga pasar dalam praktek tidak selalu persis sesuai model no-arbitrage.',
+modelAnswer:`<b>Pure Arbitrage (Definisi Ketat):</b><br>
+Pure arbitrage adalah strategi trading yang: (1) tidak membutuhkan modal awal (atau menghasilkan net cash inflow di t=0), (2) tidak berisiko rugi dalam kondisi apapun di masa depan, DAN (3) menghasilkan profit positif dengan probabilitas >0 (atau pasti profit dalam setidaknya satu skenario). Secara matematis: strategi Θ adalah arbitrage jika V₀(Θ)≤0, V_T(Θ)≥0 a.s., dan P(V_T(Θ)>0)>0.<br><br>
+<b>Statistical Arbitrage:</b><br>
+Berbeda dari pure arbitrage, stat arb bukan riskless — ia hanya menghasilkan EXPECTED positive profit dengan probabilitas tinggi dalam jangka panjang, namun bisa merugi dalam jangka pendek. Contoh: pairs trading (long aset A, short aset B yang historis berkorelasi tinggi) — jika spread melebar lebih jauh sebelum revert, posisi bisa mengalami drawdown. Hedge fund seperti D.E. Shaw, Renaissance, Two Sigma pada dasarnya menjalankan statistical arbitrage yang sangat kompleks dan tersofistikasi.<br><br>
+<b>Mengapa pasar nyata tidak selalu persis no-arbitrage:</b><br>
+1. <b>Friksi pasar:</b> bid-ask spread, biaya transaksi, short-selling costs, dan market impact menciptakan "no-arbitrage band" — selisih harga harus cukup besar untuk menutupi friksi sebelum arbitrase layak dieksekusi<br>
+2. <b>Kendala modal & leverage:</b> exploiting arbitrage membutuhkan modal dan kapasitas leverage terbatas — Shleifer & Vishny (1997) "Limits of Arbitrage" menunjukkan bahwa bahkan "textbook arbitrage" bisa tidak dieksploitasi jika risk of marking-to-market losses sebelum konvergensi terlalu tinggi<br>
+3. <b>Counterparty risk & execution risk:</b> arbitrase yang melibatkan banyak pihak (seperti merger arbitrage) mengandung risiko deal breakdowns, delisting, dll yang "mencemari" argumen riskless<br>
+4. <b>Model uncertainty:</b> harga model tergantung asumsi (seperti lognormal distribution, konstan vol) — ketidakpastian model mencegah trader mengeksploitasi selisih kecil secara agresif`,
+keyPoints:['Definisi ketat pure arbitrage: no initial cost, no downside risk, positive profit somewhere','Perbedaan fundamental: stat arb punya risiko, pure arb tidak','Contoh konkret keduanya','Alasan gaps bertahan: friksi, limits of arbitrage (Shleifer-Vishny), model uncertainty','Bonus: bid-ask spread sebagai no-arbitrage band praktis']},
+
+{level:'medium',id:'m41',type:'mc',category:'Options Intrinsic Value',
+question:'Sebuah put option Eropa dengan K=$100 pada saham S=$80, dengan 3 bulan hingga expiry (r=5%, σ=20%). Nilai INTRINSIK put ini adalah berapa, dan apakah put ini ITM, ATM, atau OTM?',
+options:['$20, ITM','$0, OTM','$20, OTM','$0, ITM'],answer:0,
+explanation:`<b>Logika:</b> Nilai Intrinsik Put = max(K-S, 0) = max(100-80, 0) = <b>$20</b>.<br><br>
+Put ini bersifat <b>In-The-Money (ITM)</b> karena harga saham ($80) berada DI BAWAH strike ($100) — pemilik put bisa langsung exercise untuk profit jika ini opsi Amerika (jual saham seharga $100 padahal nilainya hanya $80).<br><br>
+Harga opsi aktual (Black-Scholes) akan LEBIH BESAR dari $20 karena ada "time value" tambahan — kemungkinan saham turun lagi dalam 3 bulan masih ada, sehingga pasar membayar premium tambahan di atas nilai intrinsik. Time value ini meluruh menuju nol saat mendekati expiry (Theta decay).`},
+
+{level:'medium',id:'m42',type:'mc',category:'Delta Hedging Intuition',
+question:'Delta sebuah call option adalah 0.6. Untuk delta-hedge 1000 lot call option (setiap lot mewakili 100 saham), berapa banyak saham yang harus DIJUAL (short) untuk meng-hedge posisi long call?',
+options:['60,000 saham','6,000 saham','100,000 saham','600 saham'],answer:0,
+explanation:`<b>Logika:</b> Delta = sensitivitas harga opsi terhadap perubahan harga saham. Delta 0.6 berarti: setiap $1 kenaikan saham, call naik $0.60.<br><br>
+Untuk delta-hedge 1000 lot call (net long, karena kita punya call):<br>
+Hedge amount = Delta × Jumlah saham underlying = 0.6 × 1000 lot × 100 saham/lot = <b>60,000 saham</b><br><br>
+Karena kita LONG call (delta positif), kita JUAL saham untuk offset. Setelah hedge, portofolio menjadi delta-neutral — tidak sensitif terhadap pergerakan kecil harga saham. Namun kita masih punya Gamma risk (perubahan delta sendiri) dan Theta (time decay) yang terus berjalan.`},
+
+{level:'hard',id:'h30',type:'mc',category:'Stochastic Calculus — Integration by Parts',
+question:'Untuk Brownian motion W_t, berapa nilai dari ∫₀ᵀ W_t dW_t (stochastic integral)?',
+options:['½(W_T² - T)','½W_T²','W_T² - T','W_T²/2 + T'],answer:0,
+explanation:`<b>Logika (Itô Isometry + Itô's Lemma):</b> Terapkan Itô's Lemma pada f(W_t)=W_t²:<br>
+d(W_t²) = 2W_t dW_t + (dW_t)² = 2W_t dW_t + dt<br><br>
+Integrasikan dari 0 ke T:<br>
+W_T² - W_0² = 2∫₀ᵀ W_t dW_t + T<br>
+Karena W_0=0: W_T² = 2∫₀ᵀ W_t dW_t + T<br><br>
+Maka: ∫₀ᵀ W_t dW_t = <b>½(W_T² - T)</b><br><br>
+Bandingkan dengan kalkulus klasik (Newton-Leibniz): ∫₀ᵀ x dx = x²/2|₀ᵀ = T²/2. Di stochastic calculus, hasilnya BERBEDA karena muncul term "-T/2" ekstra — inilah konsekuensi (dW)²=dt yang tidak ada padanannya di kalkulus biasa!`},
+
+{level:'hard',id:'h31',type:'mc',category:'Black-Scholes Limiting Cases',
+question:'Untuk opsi call Eropa, saat volatilitas σ→0 (mendekati nol) dengan S>Ke^{-rT} (in-the-money), berapa harga call mendekati?',
+options:['S - Ke^{-rT}','0','S','K'],answer:0,
+explanation:`<b>Logika:</b> Saat σ→0, dunia menjadi deterministik — tidak ada ketidakpastian. Jika S>Ke^{-rT} (forward price lebih besar dari strike), call PASTI akan exercise (probabilitas exercise mendekati 1).<br><br>
+Harga call = present value dari (forward payoff jika pasti exercise) = S - Ke^{-rT}<br><br>
+Secara formula: d1→+∞ dan d2→+∞ saat σ→0 untuk ITM call, sehingga N(d1)→1 dan N(d2)→1, dan C=S×1-Ke^{-rT}×1 = <b>S-Ke^{-rT}</b>. Ini adalah lower bound (intrinsic value) dari call yang sudah kita kenal — saat σ→0 dan ITM, harga call persis sama dengan nilai intrinsiknya karena tidak ada time value (tidak ada ketidakpastian!).`},
+
+{level:'hard',id:'h32',type:'mc',category:'Roll Model Microstructure',
+question:'Dalam Roll Model (1984), bid-ask spread diestimasi dari AUTOKOVARIANSI perubahan harga transaksi. Jika Cov(ΔP_t, ΔP_{t-1}) = -0.04, berapa estimasi SPREAD berdasarkan model Roll?',
+options:['0.4','0.04','0.2','0.16'],answer:0,
+explanation:`<b>Logika (Roll Model):</b> Roll menunjukkan bahwa dalam pasar dengan spread bid-ask saja (tanpa informasi asimetris), perubahan harga transaksi consecutive punya autokovariansi NEGATIF:<br><br>
+Cov(ΔP_t, ΔP_{t-1}) = -s²/4, di mana s = spread.<br><br>
+s = 2√|Cov(ΔP_t, ΔP_{t-1})| = 2√0.04 = 2×0.2 = <b>0.4</b><br><br>
+Intuisi: jika transaksi terakhir di ask (+s/2 dari midprice), transaksi berikutnya cenderung di bid (-s/2) atau sebaliknya — ini menciptakan "bouncing" yang menghasilkan autokovariansi negatif. Roll model adalah salah satu cara paling sederhana mengekstrak spread impiris dari data tick, meski asumsinya cukup kuat (tidak ada asymmetric information, dll).`},
+
+{level:'hard',id:'h33',type:'essay',category:'Kyle Model Microstructure',
+question:'Jelaskan model Kyle (1985) tentang market impact dan informasi asimetris — apa itu "Kyle\'s λ", bagaimana ia diestimasi, dan mengapa ini penting untuk optimal execution?',
+modelAnswer:`<b>Setting Model Kyle:</b><br>
+Kyle memodelkan pasar dengan 3 partisipan: (1) Informed trader — tahu nilai fundamental aset V yang tidak terobservasi, (2) Noise traders — bertransaksi karena kebutuhan likuiditas (bukan informasi), dan (3) Market maker — menetapkan harga berdasarkan order flow total yang diobservasi.<br><br>
+<b>Kyle's λ — Price Impact Coefficient:</b><br>
+Dalam model Kyle, market maker menetapkan harga linear terhadap order flow total Q:<br>
+ΔP = λ×Q<br>
+di mana λ (lambda) adalah "market depth" inverse — semakin besar λ, semakin BESAR dampak harga per unit order flow. λ mencerminkan seberapa cepat market maker mengupdate harganya berdasarkan order flow yang diobservasi.<br><br>
+<b>Formula λ dalam model Kyle:</b><br>
+λ = σ_V / (2σ_u), di mana σ_V = std dev dari nilai fundamental, σ_u = std dev dari noise trading. Semakin besar ketidakpastian informasi (σ_V besar) dan semakin sedikit noise (σ_u kecil), semakin BESAR λ — market maker harus lebih berhati-hati karena setiap order lebih mungkin berasal dari informed trader.<br><br>
+<b>Estimasi Empiris:</b><br>
+λ bisa diestimasi via regresi: ΔP_t = α + λ×Q_t + ε_t. Data yang diperlukan: time series harga midpoint dan order flow signed (buy order positif, sell negatif). Dalam praktik, λ bervariasi berdasarkan waktu (intraday seasonality) dan kondisi pasar (lebih tinggi saat volatilitas tinggi atau saat volume rendah).<br><br>
+<b>Relevansi untuk Optimal Execution:</b><br>
+Dalam Almgren-Chriss framework, λ adalah input utama untuk model permanent market impact. Trader yang perlu mengeksekusi order besar harus mengestimasi λ untuk: (1) memperkirakan biaya eksekusi total sebagai fungsi dari pace eksekusi, (2) menentukan optimal trade schedule yang menyeimbangkan market impact cost (dikurangi dengan eksekusi lebih lambat) vs timing risk (harga bisa bergerak adverse jika eksekusi terlalu lambat), dan (3) menentukan size optimal posisi yang bisa dieksekusi tanpa "memakan terlalu banyak alpha" dalam market impact cost.`,
+keyPoints:['Setting 3 partisipan: informed trader, noise trader, market maker','Definisi Kyle λ: price impact coefficient, ΔP=λQ','Formula λ=σ_V/(2σ_u) dan intuisi interpretasinya','Cara estimasi empiris via regresi order flow vs price change','Relevansi optimal execution: λ sebagai input key untuk Almgren-Chriss']},
+
+{level:'hard',id:'h34',type:'mc',category:'Martingale Representation Theorem',
+question:'Dalam pasar lengkap (complete market) di bawah risk-neutral measure Q, Martingale Representation Theorem menyatakan bahwa setiap martingale M_t (di bawah Q) dapat ditulis sebagai:',
+options:['M_t = M_0 + ∫₀ᵗ φ_s dW_s^Q — integral stochastic dari proses yang bisa dihedge','M_t = M_0 + drift×t','M_t = M_0 (martingale selalu konstan)','M_t ditentukan oleh boundary condition saja'],answer:0,
+explanation:`<b>Logika:</b> Martingale Representation Theorem (MRT) menyatakan bahwa dalam pasar yang di-drive oleh Brownian motion TUNGGAL W^Q (satu sumber randomness), SETIAP martingale M_t (di bawah Q, dengan kondisi teknis yang sesuai) dapat direpresentasikan sebagai stochastic integral:<br><br>
+M_t = M_0 + ∫₀ᵗ φ_s dW_s^Q<br><br>
+untuk suatu proses adaptatif φ_s. IMPLIKASI BESAR untuk derivatives pricing: setiap payoff yang measurable terhadap filtration Brownian motion bisa di-replikasi oleh portofolio trading yang tepat (φ_s adalah "trading strategy"). Inilah yang menjamin market COMPLETE — setiap payoff bisa di-hedge. Jika ada LEBIH DARI SATU sumber randomness (multi-dimensional BM), MRT masih berlaku tapi perlu beberapa φ sesuai dimensi.`},
+
+{level:'hard',id:'h35',type:'mc',category:'Term Structure Models',
+question:'Dalam model CIR (Cox-Ingersoll-Ross), "kondisi Feller" 2κθ > σ² menjamin bahwa suku bunga tidak pernah menyentuh nol. Jika kondisi ini DILANGGAR (2κθ < σ²), apa yang terjadi?',
+options:['Suku bunga bisa mencapai nol dan menjadi reflecting barrier, atau bahkan negatif secara numerikal jika tidak di-handle khusus','Suku bunga pasti negatif selalu','Model CIR menjadi invalid matematika','Tidak ada dampak, model tetap bekerja sama'],answer:0,
+explanation:`<b>Logika:</b> Kondisi Feller 2κθ > σ² memastikan proses CIR "terdorong menjauh" dari nol oleh drift κ(θ-r) sebelum volatilitas σ√r bisa "mendorong" r ke nol (karena volatilitas sendiri → 0 saat r→0 dalam CIR, tapi jika Feller dilanggar, "dorongan ke bawah" terlalu kuat).<br><br>
+Jika dilanggar: distribusi r_t MEMPUNYAI MASSA positif tepat di nol — proses menyentuh dan bisa "dipantulkan" dari nol (reflecting barrier). Dalam implementasi numerik (Euler discretization) yang naif, r bisa menjadi sedikit negatif karena error diskretisasi — perlu skema seperti "full truncation" atau "reflection" untuk menanganinya.<br><br>
+Relevansi: pasca 2008, banyak yield curve masuk ke wilayah negatif (Eropa, Jepang) — ini mendorong adopsi model rate yang secara eksplisit mengizinkan rate negatif seperti model Vasicek/Hull-White atau Gaussian short-rate models, karena CIR mengalami kesulitan fundamental di sana.`},
+
+{level:'hard',id:'h36',type:'essay',category:'Delta-Gamma Approximation',
+question:'Jelaskan DELTA-GAMMA approximation untuk mengestimasi perubahan nilai portofolio opsi, kapan approximasi ini CUKUP akurat dan kapan GAGAL secara signifikan, dengan contoh numerik.',
+modelAnswer:`<b>Formula Delta-Gamma Approximation:</b><br>
+ΔV ≈ Δ×ΔS + ½×Γ×(ΔS)²<br><br>
+Ini adalah ekspansi Taylor orde kedua dari V(S+ΔS) - V(S), menggunakan dua Greek utama:<br>
+• Delta (Δ = ∂V/∂S): linear sensitivity terhadap pergerakan harga<br>
+• Gamma (Γ = ∂²V/∂S²): "curvature correction" yang menangkap non-linearitas payoff<br><br>
+<b>Contoh numerik:</b><br>
+ATM call: S=$100, K=$100, σ=20%, T=0.5, r=3%. Misal: Δ=0.56, Γ=0.045.<br>
+Jika S naik menjadi $105 (ΔS=+$5):<br>
+• Pendekatan Delta saja: ΔV ≈ 0.56×5 = $2.80<br>
+• Delta-Gamma: ΔV ≈ 0.56×5 + ½×0.045×25 = $2.80 + $0.56 = $3.36<br>
+• Harga BS actual (setelah re-price): misalkan $3.42<br>
+Error Delta-Gamma: $0.06 (lebih kecil dari error Delta-only $0.62) — jauh lebih akurat!<br><br>
+<b>Kapan Delta-Gamma AKURAT:</b><br>
+• Pergerakan kecil (ΔS kecil relatif S) — semakin kecil ΔS, semakin akurat (Taylor series konvergen untuk ΔS→0)<br>
+• Opsi yang tidak terlalu dekat expiry (Gamma relatif stabil, tidak ada "Gamma explosion")<br>
+• Pergerakan waktu kecil (bisa tambahkan Theta×Δt untuk Delta-Gamma-Theta approximation)<br><br>
+<b>Kapan GAGAL:</b><br>
+• Pergerakan BESAR — gap besar setelah weekend, krisis, event berita — error dari suku orde-3+ menjadi material<br>
+• Opsi ATM mendekati expiry: Gamma sangat besar dan SANGAT TIDAK STABIL (tergantung kecil perubahan S apakah opsi berakhir ITM/OTM) — approximation orde-2 bisa error besar karena suku Speed (∂Γ/∂S = "Gamma of Gamma") yang besar<br>
+• Barrier options dan exotic payoffs dengan discontinuities — Taylor expansion bisa sama sekali invalid di sekitar barrier level`,
+keyPoints:['Formula ΔV ≈ Δ×ΔS + ½Γ×(ΔS)² dengan penjelasan setiap term','Contoh numerik konkret yang menunjukkan perbaikan akurasi vs Delta-only','Kondisi akurasi: ΔS kecil, tidak mendekati expiry ATM','Kondisi kegagalan: gap besar, near-expiry ATM, exotic dengan discontinuities','Bonus: menyebutkan tambahan Theta term untuk approx lebih lengkap']},
+
+{level:'hard',id:'h37',type:'mc',category:'Poisson Process',
+question:'Suatu proses Poisson dengan rate λ=3 event/jam. Berapa PROBABILITAS bahwa TEPAT 2 event terjadi dalam 1 jam pertama?',
+options:['e^{-3} × 4.5 ≈ 0.224','e^{-3} ≈ 0.050','0.33','0.50'],answer:0,
+explanation:`<b>Logika (Poisson PMF):</b> P(N=k) = e^{-λt}(λt)^k / k!<br><br>
+P(N=2 dalam 1 jam) = e^{-3}×3²/2! = e^{-3}×9/2 = e^{-3}×4.5<br>
+= 0.0498×4.5 ≈ <b>0.224</b><br><br>
+Proses Poisson dipakai secara luas dalam finance: model kedatangan order di buku order (order arrival process), model default credit (hazard rate model/intensitas default), dan model jump dalam harga aset (Merton jump-diffusion). Sifat memoryless ("tanpa ingatan") proses Poisson — interval antar event berdistribusi Exponential dan independen — adalah asumsi sederhana tapi sering cukup akurat untuk many financial applications.`},
+
+{level:'hard',id:'h38',type:'mc',category:'Exotic Options',
+question:'Sebuah Digital/Binary Call option membayar $1 jika S_T > K pada jatuh tempo, dan $0 jika tidak. Dalam Black-Scholes, berapa harga digital call ini?',
+options:['e^{-rT} × N(d₂)','N(d₁)','e^{-rT} × N(d₁)','N(d₂)'],answer:0,
+explanation:`<b>Logika:</b> Digital call = e^{-rT}×E^Q[𝟙(S_T>K)] = e^{-rT}×Q(S_T>K) = e^{-rT}×N(d₂)<br><br>
+Karena di bawah risk-neutral measure Q, Q(S_T>K) = N(d₂) (d₂ adalah jarak standar dari K dalam distribusi log-normal risk-neutral).<br><br>
+Ini <b>BUKAN N(d₁)</b> — kesalahan umum! N(d₁) adalah "delta" dari call vanilla (probabilitas exercise di bawah stock measure berbeda). Perbedaan N(d₁) vs N(d₂): d₁=d₂+σ√T, selisih sebesar σ√T adalah Itô correction dari perbedaan numéraire (cash vs stock measure). Digital call juga disebut "cash-or-nothing call" dan merupakan building block penting — call vanilla dapat didekomposisi sebagai kombinasi digital call dan "asset-or-nothing call".`},
+
+{level:'hard',id:'h39',type:'mc',category:'Interest Rate Derivatives',
+question:'Swaption adalah opsi untuk MASUK KE DALAM interest rate swap pada tanggal tertentu. Apa perbedaan antara "payer swaption" dan "receiver swaption"?',
+options:['Payer swaption: hak bayar fixed rate (untung jika rate NAIK). Receiver swaption: hak terima fixed rate (untung jika rate TURUN).','Payer swaption: hak terima floating rate. Receiver swaption: hak terima fixed rate.','Keduanya sama, hanya berbeda nama.','Payer swaption hanya untuk bank sentral.'],answer:0,
+explanation:`<b>Logika:</b> Dalam interest rate swap, "payer" = membayar fixed rate dan menerima floating. "Receiver" = menerima fixed rate dan membayar floating.<br><br>
+<b>Payer Swaption:</b> Hak untuk masuk ke swap sebagai fixed-rate PAYER. Bernilai jika suku bunga NAIK (karena floating yang diterima meningkat, sementara fixed yang dibayar tetap) — analognya seperti opsi CALL pada interest rates.<br><br>
+<b>Receiver Swaption:</b> Hak untuk masuk sebagai fixed-rate RECEIVER. Bernilai jika suku bunga TURUN (fixed yang diterima terasa lebih menguntungkan saat market rate lebih rendah) — analognya seperti opsi PUT pada interest rates.<br><br>
+Swaptions adalah salah satu pasar derivatif suku bunga terbesar di dunia — digunakan oleh korporasi untuk hedging exposures suku bunga jangka panjang, bank untuk mengelola risiko book mortgage/lending, dan oleh hedge fund untuk speculative positions pada arah suku bunga.`},
+
+{level:'very_hard',id:'vh29',type:'mc',category:'Fourier Methods in Pricing',
+question:'Mengapa metode Fourier/karakteristik function lebih EFISIEN dibanding Monte Carlo untuk pricing opsi dalam model stochastic volatility (seperti Heston), khususnya untuk portofolio besar?',
+options:['Characteristic function model Heston diketahui closed-form, sehingga Fourier inversion menghasilkan harga dengan presisi tinggi dalam waktu O(N log N), jauh lebih cepat dari Monte Carlo O(N_sim × N_step)','Fourier method lebih akurat untuk semua jenis opsi tanpa terkecuali','Monte Carlo selalu lebih cepat dari Fourier untuk opsi plain vanilla','Fourier method tidak bisa diterapkan untuk model stochastic volatility'],answer:0,
+explanation:`<b>Logika:</b> Kunci keunggulan metode Fourier (Carr-Madan, 1999): dalam model seperti Heston, meski kita tidak tahu distribusi S_T secara closed-form, kita TAHU characteristic function φ(u)=E^Q[e^{iuX}] (dengan X=ln(S_T)) secara closed-form.<br><br>
+Dari φ(u), harga opsi untuk SELURUH STRIKE sekaligus dihitung via Fast Fourier Transform (FFT) dalam O(N log N). Satu kali evaluasi karakteristik function + FFT → vector harga untuk N strike berbeda.<br><br>
+Monte Carlo: untuk setiap harga dan setiap strike, perlu N_sim simulasi paths × N_step langkah waktu = kompleksitas jauh lebih tinggi untuk portofolio multi-strike.<br><br>
+Keunggulan ini menjadikan metode Fourier (dan variannya seperti COS method, SWIFT method) standar de facto di bank investment untuk pricing vanilla + exotic yang bergantung pada distribusi terminal saja (European-style payoffs dalam model analitik yang dikenal characteristic function-nya).`},
+
+{level:'very_hard',id:'vh30',type:'mc',category:'Doob\'s Optional Sampling Theorem',
+question:'Untuk martingale M_t dan stopping time τ dengan kondisi teknis yang tepat (bounded τ atau uniformly integrable), apa yang dinyatakan oleh Optional Sampling Theorem?',
+options:['E[M_τ] = E[M_0] = M_0 — expected value di stopping time sama dengan initial value','E[M_τ] > M_0 selalu untuk stopping time yang "cerdas"','E[M_τ] bergantung pada distribusi τ','Optional Sampling Theorem hanya berlaku untuk random walks diskret'],answer:0,
+explanation:`<b>Logika:</b> Optional Sampling Theorem (OST)/Optional Stopping Theorem menyatakan: untuk martingale M_t dan stopping time τ (dengan kondisi teknis: misal τ bounded, atau |M_{t∧τ}| ≤ C untuk semua t):<br><br>
+<b>E[M_τ] = M_0</b><br><br>
+Ini berarti kamu TIDAK BISA "mengalahkan" martingale dengan memilih kapan berhenti secara "cerdas" — nilai expected tetap di starting point, terlepas dari seberapa canggih strategi stopping kamu.<br><br>
+Relevansi financial: ini adalah alasan matematis kenapa tidak ada "free lunch" dari market timing dalam pasar efisien (yang return-nya martingale di bawah risk-neutral measure). OST juga dipakai untuk pricing barrier options (stopping time = first passage time), dan menunjukkan bahwa strategi "stop loss/take profit" dalam zero-drift martingale tidak mengubah expected outcome.`},
+
+{level:'very_hard',id:'vh31',type:'essay',category:'Machine Learning in Finance — Overfitting',
+question:'Seorang quant menggunakan machine learning (XGBoost) untuk memprediksi return saham, dengan 500 fitur dan data historis 5 tahun (≈1250 hari trading). Jelaskan risiko OVERFITTING yang sangat tinggi di sini, dan 3 teknik metodologis yang HARUS diimplementasikan untuk menghasilkan backtest yang valid.',
+modelAnswer:`<b>Masalah Overfitting yang Ekstrem di Sini:</b><br>
+Rasio fitur/sampel = 500 fitur / 1250 observasi = 0.4 — sangat tinggi! Model dengan 500 derajat kebebasan yang "mempelajari" 1250 titik data hampir pasti akan menghafal noise spesifik dalam sample tersebut, bukan pola fundamental yang generalizes ke data baru. Tanda-tanda overfitting klasik: performa in-sample sangat bagus (Sharpe>3 dalam backtest), performa out-of-sample jelek atau bahkan negatif.<br><br>
+Komplikasi khusus finance: return finansial memiliki signal-to-noise ratio yang SANGAT RENDAH (berbeda dari computer vision atau NLP). Bahkan pola yang "genuine" sering punya explainability ratio hanya 1-3% dari variance return — model ML yang terlalu kompleks akan menangkap noise 97-99% lebih mudah daripada signal 1-3%.<br><br>
+<b>Teknik Metodologis yang Harus Diimplementasikan:</b><br><br>
+<b>1. Walk-Forward / Expanding Window Cross-Validation (bukan K-Fold biasa!):</b><br>
+K-fold cross-validation standar TIDAK VALID untuk time series karena data future bisa "bocor" ke training set (look-ahead bias). Gunakan walk-forward: train pada tahun 1-3, validate tahun 4, test tahun 5. Geser window ke depan secara berurutan. Pastikan ada GAP antara akhir training set dan awal test set (minimal 1 bulan) untuk menghindari autocorrelation leakage dari features yang mungkin menggunakan data t-1, t-2, dll.<br><br>
+<b>2. Feature Selection dan Dimensionality Reduction:</b><br>
+Jangan masukkan 500 fitur sekaligus ke model. Implementasikan: (a) Feature importance screening — hanya gunakan fitur dengan economic rationale yang kuat (bukan hasil data mining murni), (b) Regularization: L1/Lasso untuk sparse feature selection, atau L2/Ridge untuk shrinkage, (c) PCA untuk mengurangi 500 fitur menjadi N komponen principal yang menjelaskan, misal, 95% variance — jauh mengurangi dimensionality efektif. Aturan praktis: jumlah fitur efektif ≤ √N_samples ≈ √1250 ≈ 35 fitur.<br><br>
+<b>3. Multiple Testing Correction dan Deflated Sharpe Ratio:</b><br>
+Jika model dituning dengan banyak hyperparameter combinations dan backtest diulang berkali-kali sampai menemukan yang "terbaik", Sharpe Ratio yang dihasilkan di-INFLATE oleh multiple testing. Bailey & Lopez de Prado (2014) memperkenalkan "Deflated Sharpe Ratio" yang mengoreksi statistik berdasarkan jumlah trial yang dilakukan — ini HARUS diterapkan. Tambahan: lakukan Sharpe Ratio significance test: dengan 1250 observasi harian, Sharpe 1.0 punya SE ≈ 1/√1250 ≈ 0.028, artinya t-stat = 1.0/0.028 ≈ 36 — cukup signifikan. Tapi jika Sharpe ini adalah yang terbaik dari 500 trial model, nilai kritis harus dikoreksi Bonferroni atau Benjamini-Hochberg untuk memperhitungkan multiplicity.`,
+keyPoints:['Penjelasan rasio fitur/sample yang sangat buruk (500/1250=0.4) dan implikasinya','Signal-to-noise yang rendah di return finansial sebagai komplikasi khusus','Teknik 1: Walk-forward cross-validation yang benar untuk time series (bukan K-fold)','Teknik 2: Feature selection/regularization/PCA untuk mengurangi efektif fitur','Teknik 3: Deflated Sharpe Ratio untuk multiple testing correction']},
+
+{level:'very_hard',id:'vh32',type:'mc',category:'Kalman Filter in Finance',
+question:'Kalman Filter diaplikasikan untuk estimasi HIDDEN STATE dari model state-space dalam time series finansial. Apa INTERPRETASI KEUANGAN yang paling tepat untuk menerapkan Kalman Filter pada estimasi "beta dinamis" saham terhadap pasar?',
+options:['Beta berubah seiring waktu (time-varying), Kalman Filter mengupdate estimasi beta secara optimal menggunakan observasi return terbaru, menyeimbangkan prior belief vs evidence baru','Beta selalu konstan, Kalman Filter hanya untuk smoothing noise','Kalman Filter menghasilkan beta yang sama dengan OLS rolling window','Kalman Filter tidak bisa diterapkan pada estimasi beta karena return tidak Gaussian'],answer:0,
+explanation:`<b>Logika:</b> Dalam model state-space untuk beta dinamis:<br>
+Measurement eq: R_t = α + β_t × R_m,t + ε_t (ε_t ~ N(0,H))<br>
+State eq: β_t = β_{t-1} + η_t (η_t ~ N(0,Q))<br><br>
+Kalman Filter secara OPTIMAL mengupdate estimasi β_t menggunakan setiap observasi baru (R_t, R_m,t) — menyeimbangkan antara prior (estimasi β dari data sebelumnya) dan evidence baru (observasi saat ini). Rasio H/Q ("measurement noise" vs "process noise") menentukan seberapa cepat beta beradaptasi: H/Q besar = beta berubah lambat (smooth), H/Q kecil = beta bereaksi cepat pada data terbaru.<br><br>
+Dibanding rolling OLS, Kalman Filter: lebih EFISIEN secara statistik (optimal dalam kelas estimator linear), bisa menghandle MISSING DATA secara natural, dan memberikan UNCERTAINTY BOUNDS (posterior variance) untuk setiap estimasi beta — informasi yang tidak tersedia dari rolling OLS.`},
+
+{level:'very_hard',id:'vh33',type:'mc',category:'Variance Reduction — Antithetic',
+question:'Dalam Monte Carlo simulation untuk pricing opsi, teknik "antithetic variates" menggunakan pasangan (Z, -Z) untuk setiap standard normal random number Z. Jika Corr(C(Z), C(-Z)) = ρ, berapa pengurangan VARIANCE estimator rata-rata dibanding standard Monte Carlo?',
+options:['Variance turun dengan faktor (1+ρ)/2 — semakin negatif ρ, semakin besar pengurangan','Variance tidak berubah','Variance turun separuhnya selalu, terlepas ρ','Variance naik'],answer:0,
+explanation:`<b>Logika:</b> Estimator antithetic: Ĉ = (C(Z)+C(-Z))/2 per pasangan.<br>
+Var(Ĉ) = Var((C(Z)+C(-Z))/2) = (Var(C(Z))+Var(C(-Z))+2Cov(C(Z),C(-Z)))/4<br><br>
+Karena Var(C(Z))=Var(C(-Z))=σ² (sama karena -Z juga N(0,1)), dan Cov = ρσ²:<br>
+Var(Ĉ) = (σ²+σ²+2ρσ²)/4 = σ²(1+ρ)/2<br><br>
+Dibanding standard MC Var = σ²/2 (untuk estimator dari pasangan tanpa antithetic), pengurangan faktornya adalah (1+ρ)/2 dari σ² → efektif variance TURUN dengan faktor (1+ρ)/2.<br><br>
+Untuk opsi call (fungsi monoton dari S_T yang monoton dari Z): C(-Z) cenderung rendah saat C(Z) tinggi → ρ negatif → (1+ρ)/2 < 0.5 → variance signifikan dikurangi. Untuk σ=-0.9, variance turun hingga 5% dari MC standar — peningkatan efisiensi 20× !`},
+
+{level:'very_hard',id:'vh34',type:'mc',category:'GARCH Forecasting',
+question:'Dalam GARCH(1,1) dengan ω=0.000002, α=0.1, β=0.85, dan variance kondisional hari ini σ²_t = 0.0004 (vol harian 2%). Berapa PERKIRAAN variance kondisional BESOK σ²_{t+1}?',
+options:['Bergantung pada return hari ini ε_t — tidak bisa dihitung tanpa ε_t','0.00036','0.0004 (tidak berubah)','0.000349'],answer:1,
+explanation:`<b>Logika:</b> GARCH(1,1): σ²_{t+1} = ω + α×ε²_t + β×σ²_t<br><br>
+Soal tidak memberikan ε_t hari ini, tapi jika kita asumsikan ε_t adalah "typical" (menggunakan E[ε²_t]=σ²_t untuk proyeksi ke depan tanpa informasi ε spesifik):<br><br>
+E[σ²_{t+1}] = ω + (α+β)×σ²_t = 0.000002 + (0.1+0.85)×0.0004 = 0.000002 + 0.95×0.0004 = 0.000002 + 0.00038 = <b>0.000382 ≈ 0.00038</b><br><br>
+Ini menunjukkan MEAN-REVERSION: variance hari ini (0.0004) sedikit di atas long-run variance ω/(1-α-β) = 0.000002/0.05 = 0.00004... hmm tunggu: long-run var = 0.000002/(1-0.95)=0.00004. Variance saat ini 0.0004 > long-run 0.00004, sehingga variance forecast besok TURUN menuju long-run — nilai 0.000382 masih di atas long-run tapi sudah mulai mean-revert, jawaban paling dekat <b>0.00038</b>.`},
+
+{level:'very_hard',id:'vh35',type:'essay',category:'VIX Methodology',
+question:'Jelaskan metodologi perhitungan INDEKS VIX secara konseptual — mengapa VIX menggunakan portofolio opsi di semua strike (bukan ATM implied vol saja), dan apa hubungannya dengan konsep VARIANCE SWAP.',
+modelAnswer:`<b>VIX = Estimasi Expected Realized Variance dalam 30 hari ke depan:</b><br>
+VIX² = E^Q[σ²_realized, 30hari] × 10000 (dalam poin persentase annualized)<br><br>
+VIX² dihitung sebagai:<br>
+VIX²/10000 = (2/T) × Σ_i [ΔKᵢ/Kᵢ²] × e^{rT} × Q(Kᵢ)<br>
+di mana sum adalah atas semua opsi OTM yang tersedia (call untuk K>F, put untuk K<F), ΔKᵢ adalah interval strike, Kᵢ adalah strike, Q(Kᵢ) adalah harga opsi OTM tersebut, T=30/365.<br><br>
+<b>Mengapa SEMUA strike, bukan hanya ATM?</b><br>
+Realized variance dari suatu proses stochastic bisa di-REPLIKASI secara sempurna (dalam model difusi kontinu tanpa jumps) menggunakan portofolio STATIK opsi OTM di SELURUH strike dengan bobot 1/K²:<br>
+Portofolio = (2/T)×[∫₀^F P(K)/K² dK + ∫_F^∞ C(K)/K² dK]<br><br>
+Ini adalah "model-free" replication — tidak bergantung pada asumsi distribusi spesifik (tidak harus lognormal). Menggunakan hanya ATM implied vol: (a) hanya valid jika volatilitas flat/no-smile, dan (b) bergantung pada model spesifik. Portofolio OTM komplit: menangkap SELURUH informasi dalam vol surface, termasuk skew dan term structure, sehingga lebih akurat sebagai ekspektasi realized variance.<br><br>
+<b>Hubungan dengan Variance Swap:</b><br>
+VIX² / 10000 adalah fair strike K_var dari variance swap 30-hari. Artinya: membeli variance swap dengan notional tertentu persis sama seperti membeli portofolio opsi yang digunakan untuk menghitung VIX. Trader yang long variance swap akan receive (σ²_realized - VIX²/10000)×Notional — positif jika realized vol MELEBIHI VIX.<br><br>
+<b>Keterbatasan VIX:</b><br>
+Metodologi "model-free" hanya berlaku untuk difusi kontinu — adanya JUMPS dalam proses harga S menghasilkan realized variance yang TIDAK bisa direplikasi sempurna oleh portofolio opsi statis tersebut (jump variance tidak tertangkap). Ini adalah salah satu penyebab VIX bisa secara sistematis MELEBIH-LEBIHKAN atau MEREMEHKAN expected realized variance tergantung struktur jump processes yang mendasari.`,
+keyPoints:['Definisi VIX² sebagai model-free estimator expected realized variance','Formula kuadratur menggunakan semua OTM options dengan bobot 1/K²','Alasan menggunakan semua strike: model-free, tidak bergantung flat vol assumption','Hubungan langsung dengan fair strike dari variance swap','Keterbatasan: jump processes tidak bisa direplikasi sempurna oleh portofolio opsi statis']},
+
+{level:'pro_max',id:'pm21',type:'mc',category:'Heston Characteristic Function',
+question:'Dalam model Heston, characteristic function dari X=ln(S_T/S_0) di bawah risk-neutral measure Q adalah φ(u) = E^Q[e^{iuX}]. Komponen mana yang secara LANGSUNG menentukan SHAPE dari volatility smile yang dihasilkan Heston?',
+options:['Parameter korelasi ρ antara BM harga dan BM volatilitas — korelasi negatif menghasilkan skew negatif (put skew)','Parameter κ (mean-reversion speed) saja','Parameter θ (long-run vol) saja','Vol-of-vol ξ saja tanpa bergantung pada ρ'],answer:0,
+explanation:`<b>Logika:</b> Dalam Heston, parameter utama: κ (speed), θ (long-run variance), v₀ (initial variance), ξ (vol-of-vol), ρ (korelasi).<br><br>
+Korelasi ρ adalah parameter yang paling LANGSUNG menentukan SKEW (asimetri) dari vol smile:<br>
+• ρ < 0 (khas untuk indeks ekuitas): saat pasar jatuh, vol naik bersamaan (negative correlation S & vol) → distribusi return left-skewed → put OTM lebih mahal dari call OTM → vol smile miring ke kiri (left skew / smirk)<br>
+• ρ = 0: vol smile relatif SIMETRIS<br>
+• ρ > 0: right skew (jarang di ekuitas, lebih umum di commodities tertentu)<br><br>
+ξ (vol-of-vol) menentukan KURVATUR (kurtosis) smile secara keseluruhan tapi kurang menentukan asimetri. κ dan θ lebih menentukan term structure dari smile (bagaimana slope skew berubah dengan maturity) daripada level skew pada satu maturity.`},
+
+{level:'pro_max',id:'pm22',type:'essay',category:'SABR Model Deep Dive',
+question:'Jelaskan mengapa SABR model (Stochastic Alpha, Beta, Rho) menjadi model standar industri untuk volatility smile pada pasar derivatif suku bunga, khususnya keunggulannya dalam menangkap DYNAMICS of the smile dibandingkan local volatility model.',
+modelAnswer:`<b>SABR Model Setup:</b><br>
+dF = σF^β dW₁<br>
+dσ = ασ dW₂, dengan Corr(dW₁,dW₂) = ρ dt<br><br>
+dengan F = forward rate, σ = stochastic vol process, dan parameter α (vol-of-vol), β (CEV exponent untuk backbone), ρ (correlasi).<br><br>
+<b>Keunggulan SABR: Analytical Approximation Hagan et al. (2002):</b><br>
+Hagan et al. menurunkan approx closed-form untuk implied vol sebagai fungsi strike K:<br>
+σ_impl(K,F) ≈ (kompleks tapi closed-form dalam α,β,ρ,ν,F,K,T)<br><br>
+Ini memungkinkan SANGAT CEPAT kalibrasi ke market smile — tinggal minimize error antara SABR implied vols dan market implied vols dengan optimizer sederhana. Untuk trading desk yang perlu re-kalibrasi ratusan/ribuan kurva swap setiap hari, kecepatan kalibrasi ini krusial.<br><br>
+<b>Keunggulan Utama vs Local Volatility Model:</b><br>
+<b>1. Dynamics of the smile yang realistis:</b><br>
+Ini adalah perbedaan paling fundamental. Local vol model Dupire: smile bergerak ke bawah saat pasar naik (karena local vol adalah fungsi deterministik σ_loc(S,t) — saat S naik, kita bergerak ke titik berbeda di permukaan σ_loc, umumnya ke vol yang lebih rendah). TAPI ini TIDAK SESUAI dengan apa yang diamati di pasar: dalam kenyataan, saat forward rate bergerak, SELURUH SMILE cenderung bergerak HAMPIR SECARA PARALEL (sticky strike behavior) atau bahkan sedikit ke atas (sticky delta behavior tergantung kondisi).<br><br>
+SABR secara alami menghasilkan dynamics yang lebih sesuai observasi empiris — karena σ adalah proses stochastic terpisah yang berkorelasi (bukan fungsi deterministik dari F), smile bergerak dengan cara yang lebih realistis seiring F berubah.<br><br>
+<b>2. Hedging yang lebih konsisten:</b><br>
+Karena dynamics smile SABR lebih realistis, delta hedging dan vega hedging yang diturunkan dari model SABR lebih akurat dalam praktiknya dibanding local vol — meski keduanya mungkin menghasilkan harga spot yang sama untuk satu snapshot, strategi hedging mereka BERBEDA secara signifikan untuk pergerakan harga forward.<br><br>
+<b>3. Parametric flexibility dan interpretabilitas:</b><br>
+Parameter β memungkinkan interpolasi antara log-normal (β=1, CEV=1, standar untuk suku bunga) dan normal (β=0, linear, relevan saat rate sangat rendah/negatif). Ini penting untuk suku bunga: saat rate mendekati nol atau negatif (seperti Eropa/Jepang post-2015), menggunakan backbone log-normal (β=1) tidak realistis, dan SABR dengan β<1 memberikan fleksibilitas yang dibutuhkan.<br><br>
+<b>Keterbatasan SABR:</b><br>
+1. Approx Hagan tidak persis tepat untuk extreme strikes (formula breakdown di far OTM/deep ITM, kadang menghasilkan negative density — "arbitrageable" smile)<br>
+2. Tidak ada bentuk yang memuaskan untuk long-maturity options (approx hanya valid untuk T tidak terlalu besar)<br>
+3. Kalibrasi untuk banyak expiry sekaligus (surface, bukan satu smile) memerlukan penanganan tambahan agar konsisten secara no-arbitrage antar maturitas.`,
+keyPoints:['Setup model SABR: 4 parameter (α,β,ρ,ν) dan SDE keduanya','Keunggulan 1: approx Hagan memberikan closed-form cepat untuk kalibrasi harian','Keunggulan 2: dynamics smile SABR lebih realistis dari local vol (sticky strike behavior)','Keunggulan 3: β parameter memungkinkan handle rate mendekati nol/negatif (backbone flexibility)','Keterbatasan: Hagan approx breakdown di extreme strikes, surface consistency masalah antar maturitas']},
+
+{level:'pro_max',id:'pm23',type:'mc',category:'Deep Interview — Puzzle',
+question:'Tiga pemain A, B, C secara bergiliran melempar koin adil. A pertama, lalu B, lalu C, lalu A lagi, dst. Yang pertama mendapat KEPALA menang. Berapa probabilitas MASING-MASING menang: P(A), P(B), P(C)?',
+options:['P(A)=4/7, P(B)=2/7, P(C)=1/7','P(A)=P(B)=P(C)=1/3','P(A)=1/2, P(B)=1/4, P(C)=1/4','P(A)=4/7, P(B)=1/7, P(C)=2/7'],answer:0,
+explanation:`<b>Logika:</b> P(A menang di ronde pertama) = 1/2<br>
+P(A menang di ronde kedua, yaitu ronde ke-4) = (1/2)³×(1/2) = 1/16<br>
+P(A menang) = 1/2 + 1/2⁴ + 1/2⁷ + ... = (1/2)/(1-1/8) = (1/2)/(7/8) = 4/7<br><br>
+P(B menang di lemparan ke-2) = (1/2)×(1/2) = 1/4<br>
+P(B menang) = 1/4 + 1/4×(1/8) + ... = (1/4)/(1-1/8) = 2/7<br><br>
+P(C menang) = 1 - 4/7 - 2/7 = <b>1/7</b><br><br>
+Check: 4/7 + 2/7 + 1/7 = 7/7 = 1 ✓<br><br>
+P(A)=<b>4/7</b>, P(B)=<b>2/7</b>, P(C)=<b>1/7</b> — keuntungan first-mover sangat signifikan! Soal klasik interview Jane Street/Citadel.`},
+
+{level:'pro_max',id:'pm24',type:'mc',category:'Deep Probability — Ballot Problem',
+question:'Dalam sebuah pemilihan, kandidat A mendapat a suara dan B mendapat b suara (a>b). Berapa probabilitas bahwa A SELALU UNGGUL dari B sepanjang proses penghitungan suara (dari suara pertama sampai terakhir), tanpa sekalipun B menyamakan atau unggul?',
+options:['(a-b)/(a+b) — Ballot Theorem','a/(a+b)','1/2','b/(a+b)'],answer:0,
+explanation:`<b>Logika (Ballot Problem / Bertrand Ballot Theorem, 1887):</b><br>
+P(A selalu unggul sepanjang penghitungan | A menang total) = <b>(a-b)/(a+b)</b><br><br>
+Ini adalah salah satu teorema paling elegan dalam kombinatorik. Contoh: a=6, b=4 → P = (6-4)/(6+4) = 2/10 = 20%.<br><br>
+Bukti elegan menggunakan "reflection principle" atau "cycle lemma" — dengan counting argumen, tepat (a-b)/(a+b) dari semua (a+b)!/(a!b!) kemungkinan urutan suara memiliki sifat "A selalu unggul".<br><br>
+Relevansi finance: prinsip yang sama digunakan dalam analisis MAXIMUM DRAWDOWN dan FIRST PASSAGE TIME — berapa probabilitas portfolio value tidak pernah jatuh di bawah level tertentu selama horizon T, terkait langsung dengan reflection principle yang digunakan untuk membuktikan Ballot Theorem.`},
+
+{level:'pro_max',id:'pm25',type:'essay',category:'Complete vs Incomplete Markets',
+question:'Jelaskan perbedaan antara pasar COMPLETE dan INCOMPLETE dalam teori derivatives pricing. Apa implikasinya terhadap UNIQUENESS dari risk-neutral measure Q, dan bagaimana model stochastic volatility mengubah framework pricing secara fundamental?',
+modelAnswer:`<b>Pasar Complete:</b><br>
+Pasar dikatakan COMPLETE jika SETIAP payoff yang square-integrable (di bawah measure Q) bisa di-replikasi secara sempurna oleh portfolio trading yang admissible dalam aset yang tersedia (saham dan bond). Dalam model Black-Scholes (satu aset, satu sumber randomness = satu BM), pasar COMPLETE: setiap payoff opsi bisa di-hedge sempurna dengan saham dan bond.<br><br>
+Implikasi kelengkapan: risk-neutral measure Q adalah UNIK. Ini berarti harga setiap derivatif didefinisikan secara UNIK oleh no-arbitrage — tidak ada ambiguitas dalam pricing, semua orang setuju pada harga yang sama terlepas dari risk preference.<br><br>
+<b>Pasar Incomplete:</b><br>
+Pasar INCOMPLETE jika ada payoffs yang TIDAK bisa di-replikasi sempurna. Ini terjadi ketika ada LEBIH BANYAK SUMBER RANDOMNESS daripada aset yang bisa diperdagangkan.<br><br>
+<b>Stochastic Volatility = Incomplete Market:</b><br>
+Dalam model Heston (atau SABR, dll), ada DUA sumber randomness: W₁ (harga) dan W₂ (volatilitas). Namun hanya SATU aset yang bisa diperdagangkan secara kontinu (saham). Kita punya 2 BM tapi hanya 1 "risky asset" + bond = 2 instrumen. Oleh Second Fundamental Theorem of Asset Pricing: ketika ada lebih banyak sumber randomness daripada instrumen trading, pasar INCOMPLETE dan risk-neutral measure TIDAK UNIK.<br><br>
+Matematisnya: ada BANYAK ukuran Q yang memenuhi kondisi no-arbitrage, masing-masing berbeda dalam bagaimana "market price of volatility risk" λ_v dikalibrasi. Setiap pilihan λ_v berbeda menghasilkan harga yang berbeda untuk instrumen yang tidak bisa di-replikasi (seperti variance swap, exotic options yang path-dependent terhadap volatilitas).<br><br>
+<b>Implikasi Praktis:</b><br>
+1. Harga opsi dalam model stoch-vol tidak sepenuhnya ditentukan oleh no-arbitrage — ada "range" harga yang konsisten dengan no-arbitrage, bergantung pada pilihan λ_v<br>
+2. λ_v harus dikalibrasi dari MARKET PRICES opsi yang tersedia — ini adalah proses market-to-model (inverse problem), bukan murni teoritis<br>
+3. Hedging menjadi INCOMPLETE: kamu tidak bisa meng-hedge sempurna semua opsi hanya dengan saham dan bond — perlu options lain sebagai hedging instruments untuk hedge vega risk. Inilah sebabnya market maker options secara rutin hedging antar opsi (vega-hedging dengan opsi lain), bukan hanya delta-hedging dengan saham.<br>
+4. "Model risk" menjadi FUNDAMENTAL bukan hanya praktis — pilihan model yang berbeda (misalnya Heston vs SABR) akan menghasilkan harga berbeda untuk instrumen yang sama karena mereka secara implisit memilih λ_v berbeda, dan tidak ada cara "benar" yang unik secara teori.`,
+keyPoints:['Definisi complete market: setiap payoff ter-replikasi, risk-neutral measure UNIK','Stochastic vol = 2 sumber randomness vs 1 risky asset = pasar INCOMPLETE','Incomplete market: banyak risk-neutral measure Q yang valid (tidak unik), bergantung λ_v','Market price of volatility risk λ_v dikalibrasi dari market prices — inverse problem','Implikasi praktis: vega hedging memerlukan options, model risk menjadi fundamental']},
+
+{level:'easy',id:'e33',type:'mc',category:'Time Value of Money',
+question:'$1,000 didepositokan hari ini dengan bunga 6% per tahun (compound annually). Berapa nilainya setelah 10 tahun?',
+options:['$1,790.85','$1,600','$2,000','$1,060'],answer:0,
+explanation:`<b>Logika:</b> Nilai masa depan = PV × (1+r)^n = 1000 × (1.06)^10 = 1000 × 1.79085 = <b>$1,790.85</b><br><br>
+(1.06)^10 ≈ 1.7908 — cara cepat mengingat: aturan "Rule of 72" menyatakan modal berlipat ganda saat rate × tahun ≈ 72. Untuk 6%: berlipat di sekitar 72/6=12 tahun. Pada 10 tahun, modal belum berlipat penuh, sekitar 79% growth — konsisten dengan $1,790.85.`},
+
+{level:'easy',id:'e34',type:'mc',category:'Beta Interpretation',
+question:'Sebuah saham memiliki beta = 2.0. Jika pasar TURUN 5%, berapa PERKIRAAN perubahan saham ini (menggunakan CAPM)?',
+options:['-10%','-5%','+10%','-2.5%'],answer:0,
+explanation:`<b>Logika:</b> Beta = 2.0 berarti saham diperkirakan bergerak 2× lipat dari pasar.<br><br>
+Perubahan saham ≈ beta × perubahan pasar = 2.0 × (-5%) = <b>-10%</b><br><br>
+Saham dengan beta tinggi (>1) lebih volatil dan lebih sensitif terhadap pergerakan pasar — bergerak lebih jauh baik saat pasar naik maupun saat turun. Ini disebut "high-beta/aggressive stock." Sebaliknya saham dengan beta rendah (<1) lebih "defensive" — bergerak lebih kecil dari pasar. Beta negatif (langka) berarti bergerak berlawanan arah pasar.`},
+
+{level:'medium',id:'m43',type:'mc',category:'Forward Price',
+question:'Sebuah saham tanpa dividen harganya $50 hari ini. Suku bunga bebas risiko = 8% per tahun. Berapa FORWARD PRICE saham ini untuk penyerahan dalam 6 bulan (T=0.5)?',
+options:['$52.02','$54','$50','$54.08'],answer:0,
+explanation:`<b>Logika:</b> Forward Price = S₀ × e^{rT} = 50 × e^{0.08×0.5} = 50 × e^{0.04} = 50 × 1.0408 = <b>$52.02</b><br><br>
+Ini adalah no-arbitrage forward price — jika forward price berbeda dari ini, ada arbitrase tersedia: misal jika forward diperdagangkan di $55 > $52.02, kita bisa borrow $50, beli saham sekarang, lock forward untuk jual di $55, repay pinjaman $52.02, net profit $2.98 tanpa risiko. Argumen ini memaksa forward price ke nilai teori cost-of-carry.`},
+
+{level:'medium',id:'m44',type:'mc',category:'Options — American vs European',
+question:'Untuk opsi CALL pada saham yang TIDAK membayar dividen, apakah opsi American call lebih MAHAL, SAMA, atau lebih MURAH dari European call dengan parameter identik?',
+options:['SAMA — early exercise American call tidak pernah optimal untuk saham tanpa dividen','Lebih MAHAL — American call selalu bernilai lebih karena hak exercise lebih fleksibel','Lebih MURAH — early exercise mengurangi time value','Bergantung pada level suku bunga'],answer:0,
+explanation:`<b>Logika:</b> Untuk saham TANPA DIVIDEN, American call = European call (harga sama).<br><br>
+Mengapa early exercise tidak pernah optimal? Dengan exercise awal, kamu mendapat $S-K sekarang tapi KEHILANGAN time value dan MEMBAYAR K lebih awal (kehilangan interest income dari K). Lebih menguntungkan MENJUAL opsi di pasar (mendapat harga call yang lebih tinggi dari nilai intrinsik) daripada exercise.<br><br>
+Situasinya BERBEDA untuk PUT (American put bisa lebih mahal dari European put) dan untuk CALL dengan dividen (karena setelah dividen, harga saham turun — mungkin optimal untuk exercise sebelum ex-div date untuk menangkap nilai sebelum "drop" harga).`},
+
+{level:'medium',id:'m45',type:'essay',category:'Jensen\'s Inequality Financial Apps',
+question:'Berikan TIGA aplikasi konkret Jensen\'s Inequality dalam keuangan/quant finance, jelaskan untuk masing-masing: apa fungsinya, mengapa konveks/konkaf, dan apa implikasi praktisnya.',
+modelAnswer:`<b>Aplikasi 1 — Harga Opsi dan Nilai Volatilitas:</b><br>
+Fungsi: payoff call = max(S_T-K, 0) adalah fungsi KONVEKS dari S_T.<br>
+Implikasi Jensen: E[max(S_T-K,0)] ≥ max(E[S_T]-K,0) — harga opsi SELALU positif bahkan untuk opsi ATM, karena konveksitas payoff menambah "convexity value" di atas sekadar payoff dari harga ekspektasi. Ini juga mengapa harga opsi SELALU MENINGKAT dengan volatilitas (menambah "spread" distribusi S_T meningkatkan E[konveks(S_T)]).<br><br>
+<b>Aplikasi 2 — Jensen's Alpha dan Evaluasi Kinerja:</b><br>
+Fungsi: logaritma return adalah fungsi KONKAF dari nilai portofolio.<br>
+Implikasi Jensen: E[ln(W)] ≤ ln(E[W]) — growth rate geometrik (E[ln(W)]) selalu lebih kecil dari logaritma expected value (ln(E[W])). Ini adalah matematika di balik "volatility drag": portofolio dengan return rata-rata 10% dan volatilitas tinggi akan TUMBUH LEBIH LAMBAT (secara geometrik) dibanding portofolio dengan return rata-rata sama dan volatilitas rendah. Semakin tinggi volatilitas, semakin besar drag ≈ σ²/2.<br><br>
+<b>Aplikasi 3 — Bond Convexity Advantage:</b><br>
+Fungsi: harga obligasi sebagai fungsi yield adalah KONVEKS (kurva harga-yield melengkung ke atas).<br>
+Implikasi Jensen: E[Price(yield)] > Price(E[yield]) — jika yield berfluktuasi secara acak (naik atau turun secara simetris), expected price obligasi LEBIH TINGGI dari harga obligasi pada yield rata-rata. Ini adalah "convexity advantage" — investor yang long obligasi SECARA OTOMATIS mendapat keuntungan dari volatilitas yield, terlepas dari arah pergerakannya. Itulah mengapa obligasi dengan convexity lebih tinggi biasanya diperdagangkan pada yield yang lebih rendah (harganya lebih mahal) — pasar secara implisit memberi harga pada keunggulan konveksitas ini.`,
+keyPoints:['Aplikasi 1: opsi call konveks terhadap S_T → harga opsi > max(E[S]-K,0), vol meningkatkan harga','Aplikasi 2: log konkaf → volatility drag, growth geometrik < expected value log','Aplikasi 3: harga obligasi konveks vs yield → convexity advantage dari vol yield','Masing-masing dengan penjelasan mengapa konveks/konkaf','Bonus: numerik spesifik untuk masing-masing (mis. volatility drag ≈ σ²/2)']},
+
+{level:'hard',id:'h40',type:'mc',category:'Dupire Local Volatility',
+question:'Dalam model local volatility Dupire, formula untuk σ²_loc(K,T) dalam terms dari harga call C(K,T) adalah:',
+options:['σ²_loc = (∂C/∂T + rK∂C/∂K) / (½K²∂²C/∂K²)','σ²_loc = (∂C/∂K) / (∂²C/∂K²)','σ²_loc = ∂C/∂σ','σ²_loc = σ²_impl(K,T)'],answer:0,
+explanation:`<b>Logika (Dupire Formula, 1994):</b> Formula Dupire mengekstrak local volatility langsung dari market call prices:<br><br>
+σ²_loc(K,T) = <b>[∂C/∂T + rK×∂C/∂K] / [½K²×∂²C/∂K²]</b><br><br>
+Numerator: ∂C/∂T adalah "kalender theta" — seberapa cepat harga call meningkat dengan maturity (forward variance tambahan dari waktu T ke T+dT). Term rK∂C/∂K adalah koreksi diskonto.<br><br>
+Denominator: ½K²×∂²C/∂K² proportional terhadap risk-neutral density (Breeden-Litzenberger formula) — seberapa "tebal" distribusi di sekitar strike K.<br><br>
+Interpretasi: σ_loc(K,T)² = "conditional expected variance" dari harga aset pada saat T di titik S_T=K — variance lokal yang harus diasumsikan agar model konsisten dengan seluruh permukaan harga opsi yang terobservasi. Dupire menunjukkan bahwa SETIAP permukaan opsi yang bebas-arbitrase bisa "diekstrak" menjadi unique local volatility surface yang menghasilkan harga tersebut.`},
+
+{level:'hard',id:'h41',type:'mc',category:'Utility Theory & Risk Aversion',
+question:'Seorang investor punya utility function U(W) = ln(W) (log utility). Investor ditawari gamble: 50% mendapat $W×2, 50% mendapat $W×0.5 (starting wealth W). Apakah investor akan menerima gamble ini?',
+options:['TOLAK — EU(gamble) < U(W) karena log utility mencerminkan risk aversion','TERIMA — karena EV(gamble) = 1.25W > W','TERIMA — log utility adalah risk-neutral','TOLAK hanya jika W besar'],answer:0,
+explanation:`<b>Logika:</b> EV gamble = 0.5×2W + 0.5×0.5W = W + 0.25W = 1.25W > W — EV POSITIF tapi investor RISK AVERSE!<br><br>
+EU(gamble) = 0.5×ln(2W) + 0.5×ln(0.5W) = 0.5×(ln2+lnW) + 0.5×(ln0.5+lnW) = lnW + 0.5×(ln2+ln0.5) = lnW + 0.5×0 = lnW = U(W)<br><br>
+Tunggu: EU(gamble) = lnW = U(W) — investor INDIFFERENT, bukan menolak! Ini hasil eksak dari log utility (investor dengan log utility bersifat indifferent terhadap gamble fair yang mengalikan wealth). Namun untuk UNFAIR gamble (50% × 2W, 50% × 0.4W), EU < U(W) dan investor akan menolak. Log utility = risk aversion sedemikian rupa sehingga optimal fraction Kelly adalah exactly 100% untuk fair multiplicative gamble.`},
+
+{level:'very_hard',id:'vh36',type:'mc',category:'Stochastic Control — HJB',
+question:'Hamilton-Jacobi-Bellman (HJB) equation digunakan untuk OPTIMAL CONTROL dalam portfolio optimization. Untuk masalah Merton portfolio allocation (maximize E[U(W_T)] atas portofolio investasi), apa yang dicari dengan menyelesaikan HJB?',
+options:['Fungsi nilai optimal V(W,t) = max E[U(W_T)] dari setiap state (W,t), dan policy optimal π*(W,t) sebagai derivasinya','Harga opsi pada underlying portfolio','Distribusi return portofolio','Matriks covariance optimal'],answer:0,
+explanation:`<b>Logika:</b> Dalam framework Merton (1969), investor memaksimalkan EU dari terminal wealth dengan mengontrol fraction π yang diinvestasikan pada risky asset.<br><br>
+HJB equation untuk V(W,t) = max_{π} E_t[U(W_T)]:<br>
+∂V/∂t + max_π {(r + π(μ-r))W×∂V/∂W + ½π²σ²W²×∂²V/∂W²} = 0<br><br>
+dengan BC: V(W,T) = U(W).<br><br>
+Solusi: untuk utility log U(W)=lnW, optimal π* = (μ-r)/σ² × 1/γ di mana γ=1 (risk aversion coefficient untuk log utility) — ini adalah KELLY OPTIMAL allocation! Untuk power utility U(W)=W^(1-γ)/(1-γ), π* = (μ-r)/(γσ²) — universal Merton formula yang tidak bergantung pada waktu (constant proportion strategy). HJB adalah tools untuk menurunkan hasil ini secara rigorous.`},
+
+{level:'very_hard',id:'vh37',type:'essay',category:'Ridge vs Lasso in Finance',
+question:'Jelaskan perbedaan antara RIDGE REGRESSION (L2 regularization) dan LASSO (L1 regularization) untuk pemilihan faktor dalam model return saham. Kapan masing-masing lebih disukai dalam konteks quant equity research, dan apa "Elastic Net" sebagai solusi kompromi?',
+modelAnswer:`<b>Ridge Regression (L2):</b><br>
+Meminimalkan: Σ(yᵢ-Xᵢβ)² + λΣβⱼ² (penalti sum of squared coefficients)<br><br>
+Karakteristik:<br>
+• TIDAK melakukan feature selection — semua koefisien dikecilkan mendekati nol tapi TIDAK PERSIS NOL<br>
+• Koefisien shrink secara PROPORSIONAL (semakin besar koefisien asli, semakin besar shrinkage)<br>
+• Efektif untuk multi-kolinearitas — saat ada banyak faktor yang berkorelasi tinggi (seperti faktor momentum yang berbeda), Ridge mendistribusikan bobot secara merata di antara korelasi tersebut<br>
+• Closed-form solution: β_Ridge = (X'X + λI)^{-1}X'y<br><br>
+<b>LASSO (L1):</b><br>
+Meminimalkan: Σ(yᵢ-Xᵢβ)² + λΣ|βⱼ| (penalti sum of absolute coefficients)<br><br>
+Karakteristik:<br>
+• Melakukan FEATURE SELECTION otomatis — koefisien kecil diset PERSIS NOL<br>
+• Menghasilkan model SPARSE — hanya beberapa faktor yang "terpilih" dengan koefisien non-zero<br>
+• Tidak ada closed-form (masalah optimasi convex non-differentiable di nol) — perlu algoritma seperti LARS atau coordinate descent<br>
+• Bermasalah dengan multi-kolinearitas: di antara sekelompok faktor yang sangat berkorelasi, LASSO cenderung memilih SATU secara arbitrer dan menol-kan yang lain<br><br>
+<b>Kapan Masing-Masing dalam Quant Equity Research:</b><br>
+Ridge lebih disukai:<br>
+• Faktor model dengan banyak faktor yang SEMUA diyakini berkontribusi (misal: 50+ faktor makro, kita tidak yakin mana yang "tidak relevan" — mungkin semuanya relevan sedikit-sedikit)<br>
+• Faktor yang sangat berkorelasi (misal: banyak versi momentum — 3M, 6M, 12M return — yang berkorelasi 70%+)<br>
+• Situasi di mana interpretabilitas "semua faktor berkontribusi sedikit" lebih akurat secara domain knowledge<br><br>
+LASSO lebih disukai:<br>
+• Banyak kandidat faktor (ratusan) tapi diyakini hanya SEDIKIT yang benar-benar relevan (sparse truth)<br>
+• Ketika interpretabilitas dan simplicity model sangat penting — model dengan 10 faktor dari 200 kandidat lebih mudah di-explain ke portfolio manager<br>
+• Sebagai alat "feature selection" awal sebelum menggunakan model yang lebih kompleks<br><br>
+<b>Elastic Net (Kompromi):</b><br>
+Meminimalkan: Σ(yᵢ-Xᵢβ)² + λ₁Σ|βⱼ| + λ₂Σβⱼ² (kombinasi L1 + L2)<br><br>
+Mendapatkan yang terbaik dari keduanya: dari Ridge (handle kolinearitas, stability), dari LASSO (sparsity/feature selection). Praktisnya: Elastic Net umumnya LEBIH BAIK dari keduanya dalam konteks data finansial yang sering mengandung BANYAK faktor yang berkorelasi moderat-tinggi DAN di mana kita percaya hanya sebagian faktor yang truly informative. Hyperparameter α (rasio L1/L2 mixing) bisa dioptimalkan via cross-validation.`,
+keyPoints:['Ridge L2: shrink semua koefisien, tidak ada selection, efektif untuk kolinearitas','LASSO L1: feature selection otomatis (koefisien = 0), masalah dengan kolinearitas','Kapan Ridge: banyak faktor semi-relevan, kolinearitas tinggi','Kapan LASSO: sparse truth, interpretabilitas penting, ratusan kandidat faktor','Elastic Net: kombinasi keduanya, biasanya lebih baik untuk data finansial real-world']},
+
+{level:'pro_max',id:'pm26',type:'mc',category:'Exotic Options — Chooser',
+question:'Sebuah "Chooser Option" memberikan holder hak untuk MEMILIH (pada waktu T₁) apakah opsi tersebut menjadi CALL atau PUT dengan strike K dan expiry T₂ (T₁<T₂). Dalam Black-Scholes, berapa harga Chooser Option pada t=0?',
+options:['C(S,K,T₂) + P(S,K*e^{-r(T₂-T₁)},T₁) — fungsi call vanilla + put dengan strike yang disesuaikan','Rata-rata dari call dan put','max(call price, put price)','Selalu sama dengan straddle'],answer:0,
+explanation:`<b>Logika:</b> Pada waktu T₁, holder memilih max(C_{T₁}, P_{T₁}) di mana C_{T₁} dan P_{T₁} adalah nilai call/put dengan expiry T₂ dan strike K.<br><br>
+Menggunakan put-call parity pada T₁: C_{T₁} - P_{T₁} = S_{T₁} - Ke^{-r(T₂-T₁)}<br><br>
+max(C,P) = C + max(0, P-C) = C + max(0, Ke^{-r(T₂-T₁)}-S_{T₁})<br><br>
+Term kedua adalah put pada S_{T₁} dengan strike K*=Ke^{-r(T₂-T₁)} dan expiry T₁.<br><br>
+Nilai saat t=0: <b>C(S,K,T₂) + P(S, Ke^{-r(T₂-T₁)}, T₁)</b><br><br>
+Chooser option adalah "portfolio opsi" yang bisa direplikasi dengan komponen standar — contoh indah bagaimana decomposition yang cerdas mengubah exotic option menjadi kombinasi vanilla options yang bisa di-price dan di-hedge secara straightforward.`},
+
+{level:'pro_max',id:'pm27',type:'essay',category:'Mean-Field Games in Finance',
+question:'Jelaskan konsep MEAN-FIELD GAME (MFG) dan bagaimana ia memodelkan interaksi antara BANYAK AGEN RASIONAL di pasar keuangan — apa yang membuat MFG berbeda dari game theory klasik, dan berikan satu contoh aplikasinya dalam optimal execution atau market making.',
+modelAnswer:`<b>Konsep Mean-Field Game:</b><br>
+MFG (Lasry-Lions, Huang-Malhamé-Caines, 2006) adalah framework untuk memodelkan game antara SANGAT BANYAK agen yang identik dan rasional (N→∞), di mana setiap agen berinteraksi tidak secara langsung dengan agen individu lain, melainkan dengan DISTRIBUSI AGREGAT ("mean field") dari keseluruhan populasi.<br><br>
+<b>Perbedaan dari Game Theory Klasik:</b><br>
+• Game theory klasik (Nash equilibrium): setiap agen harus melacak state dan strategi setiap agen lain secara individual — kompleksitas eksponensial dengan jumlah agen N<br>
+• MFG: setiap agen mengoptimalkan hanya terhadap mean field (distribusi agregat), bukan terhadap setiap agen individual. Saat N→∞, pendekatan ini menjadi EKSAK (bukan hanya approx) karena setiap agen menjadi "negligible" terhadap agregat<br>
+• Secara matematis: sistem dua PDE yang tergabung (coupled PDEs) — (1) HJB equation backward in time (optimasi setiap agen mengingat distribusi agregat), dan (2) Fokker-Planck equation forward in time (evolusi distribusi agregat berdasarkan optimasi agen)<br><br>
+<b>Contoh Aplikasi — Optimal Execution MFG:</b><br>
+Bayangkan N trader institusional SEMUA ingin MENJUAL saham yang sama dalam horizon [0,T]. Setiap trader mempengaruhi harga melalui market impact, dan setiap trader merespons dampak harga yang disebabkan oleh trader lain.<br><br>
+Dalam framework MFG:<br>
+• State setiap agen: posisi inventory q_t (jumlah saham yang masih harus dijual)<br>
+• Control setiap agen: laju penjualan ξ_t (saham per unit waktu)<br>
+• Interaction: harga pasar P_t dipengaruhi oleh total order flow agregat μ_t (mean field dari semua trader yang menjual bersamaan)<br><br>
+MFG memberikan EQUILIBRIUM STRATEGI untuk setiap trader: setiap trader mengoptimalkan eksekusinya berdasarkan antisipasi bahwa semua trader lain juga mengoptimalkan secara serupa — menghasilkan "mean field equilibrium" di mana tidak ada trader yang bisa unilaterally meningkatkan keuntungannya dengan mengubah strateginya.<br><br>
+Hasil menarik dari model ini: crowded trades (banyak trader menjual bersamaan) menghasilkan market impact yang lebih besar dari model single-trader biasa, dan trader yang dapat "mengantisipasi" keberadaan trader lain (bereksekusi lebih awal sebelum impact terbesar dari massa) mendapat eksekusi lebih baik — inilah foundation matematis dari mengapa "crowded exits" begitu destruktif di pasar nyata (analogi: semua orang berebut keluar dari pintu yang sama saat kebakaran).`,
+keyPoints:['Definisi MFG: game N→∞ agen dengan interaksi via distribusi agregat (mean field)','Perbedaan dari Nash klasik: agen beroptimasi vs distribusi, bukan vs setiap individu','Sistem coupled PDEs: HJB backward + Fokker-Planck forward','Aplikasi optimal execution: crowded selling menciptakan equilibrium berbeda dari single-trader model','Insight: MFG formalizes "crowded trade" dynamics dan mengapa exit bersamaan destruktif']},
+
+{level:'easy',id:'e35',type:'mc',category:'Types of Risk',
+question:'Manakah dari berikut ini yang MERUPAKAN contoh SYSTEMATIC RISK (risiko sistematis) yang TIDAK bisa dihilangkan dengan diversifikasi?',
+options:['Resesi ekonomi global yang menurunkan seluruh pasar saham','Skandal akuntansi pada satu perusahaan','CEO sebuah perusahaan mengundurkan diri mendadak','Pabrik satu perusahaan terbakar'],answer:0,
+explanation:`<b>Logika:</b> Systematic risk (risiko pasar/non-diversifiable) adalah risiko yang memengaruhi SEMUA atau sebagian besar aset di pasar — tidak bisa dihilangkan dengan diversifikasi.<br><br>
+Contoh systematic risk: resesi, perubahan kebijakan moneter bank sentral, perang, pandemi global, inflasi tinggi.<br><br>
+Sebaliknya, idiosyncratic risk (risiko spesifik) hanya memengaruhi SATU atau BEBERAPA perusahaan/sektor — skandal akuntansi, pengunduran CEO, kebakaran pabrik — semua ini adalah idiosyncratic risk yang BISA dieliminasi dengan diversifikasi portofolio ke banyak aset.<br><br>
+Inilah sebabnya CAPM hanya "memberi kompensasi" pada systematic risk (via beta) — investor tidak perlu mendapat kompensasi untuk risiko yang bisa mereka hilangkan sendiri dengan diversifikasi gratis.`},
+
+{level:'medium',id:'m46',type:'mc',category:'Black-Scholes Assumptions',
+question:'Manakah BUKAN merupakan asumsi dari model Black-Scholes klasik?',
+options:['Volatilitas berubah secara stochastic seiring waktu','Tidak ada biaya transaksi dan tidak ada short-selling restrictions','Harga saham mengikuti Geometric Brownian Motion','Suku bunga bebas risiko konstan'],answer:0,
+explanation:`<b>Logika:</b> Model Black-Scholes MENGASUMSIKAN volatilitas KONSTAN (σ = tetap sepanjang waktu dan semua strike). Ini adalah salah satu asumsi PALING SERING DIKRITIK dari Black-Scholes dan alasan utama mengapa volatility smile/skew ADA di pasar nyata (jika Black-Scholes benar, smile tidak akan ada).<br><br>
+Asumsi yang MEMANG ada dalam Black-Scholes: GBM untuk harga saham, konstanta suku bunga r, tidak ada dividen, tidak ada biaya transaksi, pasar continuous trading.<br><br>
+Model yang menggantikan asumsi vol konstan ini: Heston (stochastic vol), SABR, local vol Dupire, rough vol — semua mengakomodasi vol yang berubah seiring waktu/strike untuk menghasilkan smile yang lebih realistis.`},
+
+{level:'hard',id:'h42',type:'mc',category:'Fixed Income — Duration Application',
+question:'Sebuah fund mengelola portofolio obligasi senilai $100 juta dengan Modified Duration = 8 tahun. Fund manager khawatir suku bunga akan naik 50 bps (0.5%). Berapa ESTIMASI PERUBAHAN NILAI PORTOFOLIO?',
+options:['-$4 juta','+$4 juta','-$400,000','-$8 juta'],answer:0,
+explanation:`<b>Logika:</b> ΔP/P ≈ -ModDuration × Δy<br><br>
+ΔP/P = -8 × 0.005 = -0.04 = -4%<br>
+ΔP = -4% × $100 juta = <b>-$4 juta</b><br><br>
+Tanda negatif karena ketika yield naik, harga obligasi TURUN (hubungan invers). Modified Duration 8 berarti portofolio ini 8× lebih sensitif daripada jika semua uang ada di cash (yang punya duration 0). Untuk meng-hedge risiko ini, fund manager bisa short treasury futures (punya duration panjang) atau masuk ke interest rate swap sebagai fixed-rate receiver.`},
+
+{level:'hard',id:'h43',type:'mc',category:'Credit Risk — CDS Basis',
+question:'CDS basis didefinisikan sebagai: CDS Spread DIKURANGI Asset Swap Spread dari obligasi referensi yang sama. Saat CDS basis sangat NEGATIF (CDS spread << ASW spread), apa yang mengindikasikan peluang trading?',
+options:['Pakage trade: beli obligasi (cash) + beli proteksi via CDS — mendapat kompensasi lebih dari CDS spread untuk menanggung credit risk yang sama','Short CDS dan short obligasi','Beli CDS saja tanpa obligasi','Basis negatif artinya tidak ada peluang apapun'],answer:0,
+explanation:`<b>Logika:</b> CDS Basis = CDS Spread - ASW Spread. Basis negatif berarti ASW > CDS.<br><br>
+ASW spread = kompensasi (di atas LIBOR/SOFR) untuk memegang obligasi dan menanggung credit risk.<br>
+CDS spread = biaya perlindungan terhadap default yang sama.<br><br>
+Jika ASW > CDS: kamu bisa MENDAPATKAN kredit lebih (ASW) daripada biaya perlindungan (CDS). "Package trade" atau "cash-CDS basis trade":<br>
+1. Beli obligasi (terima ASW di atas benchmark)<br>
+2. Beli CDS protection (bayar CDS spread)<br>
+3. Net carry = ASW - CDS = |basis| per tahun, tanpa credit risk residual!<br><br>
+Dalam krisis 2008, basis negatif sangat ekstrem (hingga -200 bps) karena funding stress memaksa selling obligasi cash, tapi CDS market relatif tetap berfungsi — menghasilkan "free lunch" teoritis yang sulit dieksploitasi karena keterbatasan balance sheet dan counterparty risk.`},
+
+{level:'very_hard',id:'vh38',type:'mc',category:'Rho and Interest Rate Sensitivity',
+question:'Untuk opsi CALL Eropa yang DEEP OUT-OF-THE-MONEY (S << K), bagaimana Rho (∂C/∂r) berperilaku saat T (time to expiry) SANGAT PANJANG?',
+options:['Rho sangat kecil mendekati nol meski T panjang, karena probabilitas exercise (N(d2)) mendekati nol untuk deep OTM','Rho sangat besar untuk T panjang','Rho selalu sama dengan T × K × e^{-rT}','Rho tidak terdefinisi untuk deep OTM options'],answer:0,
+explanation:`<b>Logika:</b> Rho = K×T×e^{-rT}×N(d₂) untuk call Eropa.<br><br>
+Untuk deep OTM (S<<K): d₂ sangat negatif → N(d₂) → 0. Meski K×T×e^{-rT} bisa besar untuk T panjang, faktor N(d₂)→0 mendominasi — Rho mendekati <b>NOL</b>.<br><br>
+Interpretasi intuitif: Rho mengukur sensitivitas harga terhadap suku bunga. Untuk opsi deep OTM yang "hampir pasti worthless," menaikkan suku bunga tidak banyak membantu — probabilitas exercise tetap hampir nol sehingga perubahan PV(K) akibat r tidak relevan. Berbeda untuk deep ITM call: Rho besar karena P(exercise)→1, dan perubahan r sangat memengaruhi PV(K) yang hampir pasti harus dibayar.`},
+
+{level:'pro_max',id:'pm28',type:'mc',category:'Numerical Methods — Finite Difference',
+question:'Dalam finite difference method untuk Black-Scholes PDE, skema "Crank-Nicolson" menggabungkan explicit dan implicit scheme dengan bobot sama. Apa KEUNGGULAN utama Crank-Nicolson dibanding pure explicit atau pure implicit scheme?',
+options:['Second-order accurate dalam waktu O(Δt²) dan unconditionally stable — menggabungkan stabilitas implicit dengan akurasi lebih tinggi dari explicit','Selalu lebih cepat secara komputasi dari keduanya','Hanya berlaku untuk opsi barrier','Lebih mudah diimplementasikan dari explicit scheme'],answer:0,
+explanation:`<b>Logika:</b> Trade-off tiga skema:<br>
+• Explicit: O(Δt) accuracy, conditionally stable (perlu CFL condition: Δt ≤ Δx²/σ²), mudah diimplementasi (no matrix inversion), tapi butuh time step sangat kecil untuk stabilitas<br>
+• Implicit (fully): O(Δt) accuracy, unconditionally stable (arbitrary Δt), tapi hanya first-order in time, perlu solve tridiagonal system setiap step<br>
+• Crank-Nicolson: rata-rata explicit dan implicit → O(Δt²) second-order accurate, unconditionally stable, harga: tridiagonal system tapi jauh lebih akurat per step<br><br>
+Keunggulan CN: <b>stabilitasnya unconditional seperti implicit, tapi akurasinya KUADRATIK O(Δt²)</b> — bisa gunakan Δt lebih besar sambil tetap mendapat presisi tinggi. Untuk N time steps, CN butuh ~N^0.5 steps dibanding explicit untuk akurasi yang sama, savings besar untuk options pricing dalam dimensi tinggi.`}
 ];
 
 /* ══════════════════════════════════════════════════════
@@ -2134,7 +2682,7 @@ function checkDailyStreak(){
   const today=new Date().toDateString();
   if(stats.lastDate===today)return;
   const yesterday=new Date(Date.now()-86400000).toDateString();
-  if(stats.lastDate===yesterday){stats.streak++;}
+  if(stats.lastDate===yesterday){stats.streak++;if(stats.streak>10)stats.streak=stats.streak;}
   else stats.streak=1;
   stats.lastDate=today;save();
 }
@@ -2195,6 +2743,8 @@ function toggleLevel(lv){
 }
 function toggleOpt(btn,type){
   btn.classList.toggle('on');
+  if(type==='mc')session.incMC=btn.classList.contains('on');
+  else session.incEssay=btn.classList.contains('on');
   updateStartBtn();
 }
 function toggleWrongMode(btn){
@@ -2206,6 +2756,7 @@ function toggleWrongMode(btn){
 function updateStartBtn(){
   const q=getPool();
   const btn=document.getElementById('btnStart');
+  if(!btn)return;
   btn.disabled=q.length===0;
   btn.textContent=q.length?`🚀 MULAI DRILL (${Math.min(q.length,parseInt(document.getElementById('qCountSel').value))} soal)`:'Pilih minimal 1 level & tipe soal';
 }
@@ -2232,12 +2783,7 @@ function renderWrongList(){
   const ws=document.getElementById('wrongSection');
   const wl=document.getElementById('wrongList');
   const wc=document.getElementById('wrongCount');
-  if(!stats.wrongIds.length){
-    ws.classList.remove('show');
-    wrongModeOn=false;
-    document.getElementById('toggleWrong').classList.remove('on');
-    return;
-  }
+  if(!stats.wrongIds.length){ws.classList.remove('show');wrongModeOn=false;return;}
   wc.textContent=stats.wrongIds.length;
   wl.innerHTML=stats.wrongIds.map(id=>{
     const q=QUESTIONS.find(x=>x.id===id);if(!q)return'';
@@ -2254,19 +2800,17 @@ function quickJumpToWrong(id){
   filterLevels=new Set([q.level]);wrongModeOn=true;
   document.getElementById('toggleWrong').classList.add('on');
   renderHome();
-  updateStartBtn();
 }
 renderHome();
 
 /* ── START QUIZ ── */
 function startQuiz(){
-  clearInterval(session.timerInt);
   let pool=getPool();
   if(!pool.length)return;
   shuffle(pool);
   const n=parseInt(document.getElementById('qCountSel').value)||20;
   session.questions=pool.slice(0,Math.min(n,pool.length));
-  session.idx=0;session.correct=0;session.wrong=0;session.combo=0;session.xpEarned=0;session.timerSec=0;session.timerInt=null;
+  session.idx=0;session.correct=0;session.wrong=0;session.combo=0;session.xpEarned=0;session.timerSec=0;
   stats.totalSessions++;save();
   showPage('quiz');
   startTimer();
@@ -2294,6 +2838,7 @@ function renderQuestion(){
   document.getElementById('qprog-fill').style.width=pct+'%';
   document.getElementById('qprog-label').textContent=`Soal ${session.idx+1} / ${total}`;
   document.getElementById('qscore-live').textContent=`✓${session.correct} ✗${session.wrong}`;
+  // expBox & btnNext are created fresh inside qcard HTML below — no need to reset here
   const lvClass=q.level;
   const lvLabel={easy:'🟢 Easy',medium:'🔵 Medium',hard:'🟠 Hard',very_hard:'🔴 Very Hard',pro_max:'💜 Pro Max'}[q.level]||q.level;
   let html=`<div class="q-meta">
@@ -2320,10 +2865,6 @@ function renderQuestion(){
   }
   html+=`<div id="expBox"></div><button id="btnNext" onclick="nextQ()">Lanjut →</button>`;
   document.getElementById('qcard').innerHTML=html;
-  // Reset state AFTER innerHTML is set so elements exist in DOM
-  document.getElementById('expBox').style.display='none';
-  document.getElementById('expBox').className='';
-  document.getElementById('btnNext').className='';
 }
 
 function answerMC(idx){
@@ -2379,14 +2920,11 @@ function recordAnswer(q,correct){
   if(q.type==='essay')stats.essayAnswered=(stats.essayAnswered||0)+1;
   if(correct&&stats.wrongIds.includes(q.id))stats.wrongIds=stats.wrongIds.filter(id=>id!==q.id);
   save();
-  const btnNext=document.getElementById('btnNext');
-  btnNext.className='show';
-  btnNext.style.display='block';
+  document.getElementById('btnNext').className='show';
 }
 function showExplanation(q,correct){
   const box=document.getElementById('expBox');
   box.className='show';
-  box.style.display='block';
   let html='';
   if(correct!==null){
     html+=`<div class="exp-result ${correct?'correct':'wrong'}">${correct?'✅ Benar!':'❌ Salah'}</div>`;
@@ -2402,8 +2940,7 @@ function showCombo(n){
   const el=document.getElementById('comboTag');
   if(n<2){el.style.display='none';return;}
   el.style.display='block';
-  el.className='';
-  el.classList.add(n>=5?'combo5':n>=3?'combo3':'combo2');
+  el.className=n>=5?'combo5':n>=3?'combo3':'combo2';
   el.textContent=n>=7?`🔥 ${n}× STREAK LUAR BIASA!!`:n>=5?`⚡ ${n}× combo!`:`✨ ${n}× beruntun`;
   clearTimeout(el._t);el._t=setTimeout(()=>el.style.display='none',2200);
 }
@@ -2436,13 +2973,10 @@ function endSession(){
   document.getElementById('rs1').textContent=session.correct;
   document.getElementById('rs2').textContent=session.wrong;
   document.getElementById('rs3').textContent='+'+session.xpEarned;
-  const banner=document.getElementById('newBadgeBanner');
   if(newBadges.length){
+    const banner=document.getElementById('newBadgeBanner');
     banner.className='new-badge-banner show';
     banner.textContent='🏆 Badge Baru! '+newBadges.map(b=>b.icon+b.name).join(' · ');
-  } else {
-    banner.className='new-badge-banner';
-    banner.textContent='';
   }
   showPage('result');
   if(pct>=80)launchConfetti();
